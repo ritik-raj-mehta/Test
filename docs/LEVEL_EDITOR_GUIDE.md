@@ -54,6 +54,26 @@ The **Zumpa Level Editor** is located at `addons/zumpa_level_editor/` and integr
 2. Locate **Zumpa Level Editor** and check **Enable**.
 3. Click the **Level Editor** tab at the top of the Godot Editor window.
 
+### Streamlined Single-Sidebar Layout & Top Toolbar Toggles
+- **Full Screen Canvas Width**: To maximize editing screen real estate, the left panel has been consolidated into the right-side **Inspector Panel**.
+- **Top Bar Quick Visibility Toggles**:
+  - `🛠️ Items & Tools`: Toggles the visibility of the Obstacles, Tools, and Tile Palette selection section within the Inspector.
+  - `⚙️ Inspector`: Toggles the visibility of the selected object property editing section.
+
+### Inspector Layout Order (Top to Bottom)
+1. **Primary Tools & Obstacle Palette (Top)**:
+   - `✋ Select / Move` tool
+   - `🚩 Player Start` placement tool
+   - Obstacle buttons (`+ Booster`, `+ Moving Gear`, `+ Path Moving Gear`, `+ Spike`, `+ Trigger Area`, `+ Falling Stone`, `+ Goal`)
+2. **Selected Object Inspector & Apply Button (Middle)**:
+   - `Apply Changes` button placed conveniently right between the top tools and tile palette for fast property updates.
+   - Selected object fields (Position, Rotation, Scale, Speeds, Delays, Spacing, and Path settings).
+3. **Tile Map Tools & Atlas Palette (Bottom)**:
+   - `🧱 Draw Tile`, `🧹 Erase Tile`, `📐 Area Select & Fill`, `🎲 Scatter Tiles`
+   - Fill Mode dropdown (`🎲 Random Pattern`, `🧱 100% Solid Fill`, `🎨 Multi-Tile Mix`)
+   - `Tile Count` spinbox & action buttons (`🎲 Fill Area`, `🔀 Re-roll Pattern`, `🧹 Clear Tiles`, `✕ Deselect Area`, `📱 Scatter in View`)
+   - Interactive Atlas Sheet Tile Palette Picker grid & Quick Presets.
+
 ### Editor Controls & Shortcuts
 | Control / Key | Action | Description |
 |---|---|---|
@@ -74,31 +94,14 @@ The **Zumpa Level Editor** is located at `addons/zumpa_level_editor/` and integr
 - **Yellow Center Guide ($X = 540$)**: Symmetrical screen axis line.
 - **Grid Snapping (32px)**: Centered on $X = 540.0$ so symmetrical obstacle placement is effortless.
 - **Pixel Coordinates Tooltip**: Real-time `[X: ..., Y: ...]` display at cursor.
-- **Dashed Guideline Visualizers**: Visualizes travel paths, endpoint turn-around caps, direction arrows, and delay durations directly in the editor.
-
-### 📐 Grid Area Selection & 🎲 Random Pattern Tile Fill
-- **2-Step Intuitive Workflow**:
-  1. **Select Grid Area**: Activate `📐 Area Select & Fill` (or hold `Shift` while dragging). Drag across any region in the grid. The selection stays **persistent** with a high-contrast glowing border, golden corner brackets, and an information badge displaying exact dimensions and cell count.
-  2. **Select Tile from Palette**: Click any tile (or multiple tiles using Shift/Ctrl or dragging in the palette) from the Atlas Palette Picker or click a preset tile (Grass Top, Dirt, Stone, Sand, etc.).
-  3. **Instant Pattern Fill**: The selected area is immediately filled with the chosen tile arranged in the active pattern mode!
-- **Fill Modes**:
-  - `🎲 Random Pattern (Stochastic)`: Select a tile count or density percentage. Tiles are placed across the bounding area in a pure stochastic Fisher-Yates partial shuffle (guaranteed zero repetitive sub-patterns).
-  - `🧱 Full Fill (100% Solid)`: Fills all grid cells in the selected area.
-  - `🎨 Multi-Tile Random Mix`: When multiple tiles are selected in the Atlas Palette Picker, all cells in the area are filled with a random stochastic mixture of the chosen tiles.
-- **Interactive Quick Controls**:
-  - **Live Tile Count SpinBox**: Adjusting count instantly updates the random layout in the selected area without re-selecting.
-  - **`🔀 Re-roll` Button / `R` Key**: Instantly re-shuffles the layout with a new stochastic arrangement.
-  - **`🧹 Clear Tiles` Button / `Delete` Key**: Erases all tiles within the selected area.
-  - **`✕ Deselect` Button / `Escape` Key**: Clears the persistent selection bounding box.
-  - **`📱 Scatter in View`**: Quickly scatters random tiles across the active $1080 \times 1920$ mobile screen viewport.
-- **High Performance & Serialization**: Batch updates `level_data.packed_tiles` in $O(N)$ with zero lag. Full `Ctrl + Z` undo history and seamless persistence to `.tres`, `.res`, and `.tscn` on `Ctrl + S`.
+- **Dashed Guideline Visualizers**: Visualizes travel paths, endpoint turn-around caps, direction arrows, connecting theme rods, and delay durations directly in the editor.
 
 ---
 
 ## 3. Complete Obstacle Catalog & Configuration
 
 ### 1. `gear_path` (Path / Shape Moving Gear)
-A multi-shape trajectory hazard that travels in closed geometric loops with corner pauses and variable rotation speeds.
+A multi-shape trajectory hazard that travels in closed geometric loops with corner pauses, variable rotation speeds, connecting theme rods, and sinusoidal speed wave curves.
 
 * **Scene**: `res://game/scenes/Obstacles/PathMovingGear.tscn`
 * **Controller**: `PathMovingGearController.gd`
@@ -109,31 +112,43 @@ A multi-shape trajectory hazard that travels in closed geometric loops with corn
   - `move_direction`: Travel direction (`"Clockwise"`, `"Counter-Clockwise"`, `"Alternating"`).
   - `alternate_interval`: Time in seconds between direction reversals when using `Alternating` (0 = reverse after every full loop).
   - `corner_delay`: Pause duration in seconds at each corner vertex.
-  - `move_speed`: Linear travel speed along the perimeter path (in pixels/sec).
+  - `move_speed`: Base linear travel speed along the perimeter path (in pixels/sec).
   - `rotation_speed`: Self-rotation speed of the gear sprites (radians/sec).
   - `gear_count`: Number of synchronized gears spaced evenly around the loop (1 to 10).
-  - `show_track_line` & `track_color`: Track rendering options.
-  - `world_theme`: Auto-applied world theme texture skin.
-* **Editor Visuals**: Real-time cyan trajectory shape, direction indicator arrows on segment midpoints, and red corner vertex markers.
+  - `gear_scale`: Uniform scale factor applied to all gears along the path (resizes gear sprites and physics collision shapes in 1:1 sync).
+  - `show_path_rods` & `rod_breadth`: Renders connecting theme rods (`WorldThemeRegistry.gear_rod_texture`) along all edges of the path.
+  - **Interval Movement & Speed Curve**:
+    - `enable_interval_movement`: Toggles fixed-time interval travel.
+    - `interval_time`: Duration in seconds per movement cycle (e.g. `3.0s`).
+    - `interval_speed`: Fixed speed during interval execution.
+    - `enable_speed_modulation`: Smooth sinusoidal speed curve wave ("start move a little -> slow down -> speed up -> slow down").
+    - `min_speed_scale` & `max_speed_scale`: Speed multiplier limits during slow and fast wave phases.
+* **Editor Visuals**: Real-time cyan trajectory shape, direction indicator arrows on segment midpoints, theme rod overlays, and red corner vertex markers.
 
 ---
 
-### 2. `gear_m` (Moving Gear)
-A linear moving gear with independent positive and negative travel distances, customizable angles, start delays, direction change delays, and multi-gear cloning.
+### 2. `gear_m` (Moving Gear) & `gear_with_rod`
+Linear moving gear with independent positive/negative travel distances, customizable angles, start delays, direction change delays, theme rods, loop wrap-around, and interval speed modulation curves.
 
 * **Scene**: `res://game/scenes/Obstacles/MovingGear.tscn`
 * **Controller**: `MovingGearController.gd`
 * **Key Properties**:
-  - `move_angle`: Travel direction in degrees (`0` = Right, `90` = Down, `180` = Left, `-90` = Up, or any free angle).
+  - `move_angle`: Travel direction in degrees (`0` = Right, `90` = Down, `180` = Left, `-90` = Up, or any custom angle).
   - `move_dist_pos`: Distance to travel in the positive direction along `move_angle`.
   - `move_dist_neg`: Distance to travel in the negative direction along `move_angle`.
   - `move_speed`: Linear travel speed (pixels/sec).
   - `rotation_speed`: Self-rotation speed of gear sprites.
   - `start_delay`: Initial delay in seconds before movement begins upon level start.
-  - `direction_change_delay` (or `delay`): Pause duration in seconds at each travel end before reversing direction.
-  - `gear_count`: Number of moving gears replicated along the track (1 to 20).
-  - `gear_spacing`: Distance in pixels between each replicated gear.
-  - `world_theme`: Auto-applied theme gear texture.
+  - `direction_change_delay` (or `delay`): Pause duration in seconds at each travel end before reversing.
+  - `loop_reset`: `true` = gear travels along the track and continuously wraps back / respawns at origin; `false` = ping-pong oscillation.
+  - `has_rod` & `rod_breadth`: Displays a theme-skinned track rod beneath the gear.
+  - `gear_count` & `gear_spacing`: Replicates multiple gears riding the same track.
+  - **Interval Movement & Speed Modulation**:
+    - `enable_interval_movement`: Enables fixed-interval timing across oscillation and loop modes.
+    - `interval_time`: Fixed period duration in seconds per cycle.
+    - `interval_speed`: Fixed speed value during interval.
+    - `enable_speed_modulation`: Smooth trigonometric wave curve ("start move a little -> slow down -> speed up -> slow down -> repeat").
+* **Editor Visuals**: Bright cyan dashed line with green origin circle, red end caps, yellow clone resting points, and distance/delay HUD labels.
 * **Movement Dynamics**:
   - **Reverse-only (`neg_d > 0`, `pos_d == 0`)**: Starts at placed position $0$, moves in reverse to $-\text{neg\_d}$, pauses for `direction_change_delay`, and returns.
   - **Forward-only (`pos_d > 0`, `neg_d == 0`)**: Starts at placed position $0$, moves forward to $+\text{pos\_d}$, pauses, and returns.
