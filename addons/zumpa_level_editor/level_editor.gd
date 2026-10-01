@@ -29,7 +29,7 @@ const MAX_UNDO_DEPTH: int = 50
 @onready var canvas_zoom_reset_btn: Button = %CanvasZoomResetBtn
 @onready var toggle_left_btn: Button = %ToggleLeftBtn
 @onready var toggle_right_btn: Button = %ToggleRightBtn
-@onready var left_panel: PanelContainer = %LeftPanel
+@onready var left_panel: PanelContainer = %LeftPanel if has_node("%LeftPanel") else null
 
 # Right Inspector
 @onready var inspector_panel: PanelContainer = %InspectorPanel
@@ -318,6 +318,7 @@ func setup_palette() -> void:
 		child.queue_free()
 	tool_buttons.clear()
 
+	# 1. PRIMARY TOOLS (Top)
 	# Select/Move Tool
 	var select_btn := Button.new()
 	select_btn.text = "✋ Select / Move"
@@ -335,6 +336,29 @@ func setup_palette() -> void:
 	palette_container.add_child(p_btn)
 	tool_buttons["player_start"] = p_btn
 
+	# 2. OBSTACLES & ITEMS BUTTONS
+	var entries = ObjectRegistry.get_all_entries()
+	for id in entries:
+		var entry = entries[id]
+		var btn := Button.new()
+		btn.text = "+ " + entry.get("name", id)
+		btn.toggle_mode = true
+		btn.clip_text = true
+		btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		btn.pressed.connect(func(): set_active_tool(id, btn))
+		palette_container.add_child(btn)
+		tool_buttons[id] = btn
+
+	# Separator before Tile Map Tools
+	var sep_tile := HSeparator.new()
+	palette_container.add_child(sep_tile)
+
+	var tile_hdr := Label.new()
+	tile_hdr.text = "TILE MAP TOOLS"
+	tile_hdr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	palette_container.add_child(tile_hdr)
+
+	# 3. TILE MAP TOOLS (Bottom)
 	# Tile Brush Tool
 	var tb_btn := Button.new()
 	tb_btn.text = "🧱 Draw Tile"
@@ -457,23 +481,6 @@ func setup_palette() -> void:
 
 	palette_container.add_child(area_box)
 
-	# Separator
-	var sep := HSeparator.new()
-	palette_container.add_child(sep)
-
-	# Registered Objects
-	var entries = ObjectRegistry.get_all_entries()
-	for id in entries:
-		var entry = entries[id]
-		var btn := Button.new()
-		btn.text = "+ " + entry.get("name", id)
-		btn.toggle_mode = true
-		btn.clip_text = true
-		btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		btn.pressed.connect(func(): set_active_tool(id, btn))
-		palette_container.add_child(btn)
-		tool_buttons[id] = btn
-
 func populate_level_selector() -> void:
 	level_select_opt.clear()
 	level_paths_list = LevelManager.get_all_level_paths()
@@ -567,14 +574,34 @@ func connect_signals() -> void:
 				canvas.set_zoom_level(1.0, scroll_container)
 		)
 
-	if toggle_left_btn and left_panel:
+	if toggle_left_btn:
 		toggle_left_btn.toggled.connect(func(pressed):
-			left_panel.visible = pressed
+			var items_hdr = get_node_or_null("MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/ItemsHeader") as Control
+			if items_hdr: items_hdr.visible = pressed
+			var sep_items = get_node_or_null("MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/HSeparatorItems") as Control
+			if sep_items: sep_items.visible = pressed
+			if palette_container: palette_container.visible = pressed
+			var sep_end = get_node_or_null("MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/HSeparatorItemsEnd") as Control
+			if sep_end: sep_end.visible = pressed
 		)
 
-	if toggle_right_btn and inspector_panel:
+	if toggle_right_btn:
 		toggle_right_btn.toggled.connect(func(pressed):
-			inspector_panel.visible = pressed
+			var obj_hdr = get_node_or_null("MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/Header") as Control
+			if obj_hdr: obj_hdr.visible = pressed
+			var type_row = get_node_or_null("MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/TypeRow") as Control
+			if type_row: type_row.visible = pressed
+			var pos_x = get_node_or_null("MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PosXRow") as Control
+			if pos_x: pos_x.visible = pressed
+			var pos_y = get_node_or_null("MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PosYRow") as Control
+			if pos_y: pos_y.visible = pressed
+			var rot_r = get_node_or_null("MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/RotRow") as Control
+			if rot_r: rot_r.visible = pressed
+			var sx_r = get_node_or_null("MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/ScaleXRow") as Control
+			if sx_r: sx_r.visible = pressed
+			var sy_r = get_node_or_null("MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/ScaleYRow") as Control
+			if sy_r: sy_r.visible = pressed
+			if apply_btn: apply_btn.visible = pressed
 		)
 
 	resized.connect(on_container_resized)

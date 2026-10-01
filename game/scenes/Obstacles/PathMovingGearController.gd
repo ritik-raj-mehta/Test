@@ -66,6 +66,44 @@ enum MoveDirection {
 		move_speed = max(0.0, v)
 		_update_caches()
 
+@export_group("Interval Movement & Speed Curve")
+@export var enable_interval_movement: bool = false:
+	set(v):
+		enable_interval_movement = v
+		_update_caches()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var interval_time: float = 3.0: # Time duration in seconds per interval movement cycle
+	set(v):
+		interval_time = max(0.1, v)
+		_update_caches()
+
+@export var interval_speed: float = 150.0: # Fixed movement speed during interval
+	set(v):
+		interval_speed = v
+		_update_caches()
+
+@export var enable_speed_modulation: bool = false: # Smooth speed wave: start move -> slow down -> speed up -> slow down
+	set(v):
+		enable_speed_modulation = v
+		_update_caches()
+
+@export var min_speed_scale: float = 0.25: # Minimum speed multiplier during slow phase
+	set(v):
+		min_speed_scale = clampf(v, 0.0, 3.0)
+		_update_caches()
+
+@export var max_speed_scale: float = 1.75: # Peak speed multiplier during fast phase
+	set(v):
+		max_speed_scale = max(0.1, v)
+		_update_caches()
+
+@export var speed_pulses_per_interval: float = 2.0: # Number of speed-up/slow-down pulses per interval
+	set(v):
+		speed_pulses_per_interval = max(0.5, v)
+		_update_caches()
+
 @export var rotation_speed: float = 2.0:
 	set(v):
 		rotation_speed = v
@@ -256,20 +294,36 @@ func _update_caches() -> void:
 	_cycle_duration = travel_time + float(n_corners) * corner_delay
 	_update_gears_positions(0.0)
 
+func _get_effective_speed(t_active: float) -> float:
+	var base_spd = interval_speed if enable_interval_movement else move_speed
+	if not enable_speed_modulation:
+		return base_spd
+	var duration = interval_time if (enable_interval_movement and interval_time > 0.0) else max(0.5, _cycle_duration)
+	var phase = (t_active / max(0.1, duration)) * speed_pulses_per_interval * TAU
+	var wave = 0.5 * (1.0 + sin(phase))
+	return base_spd * lerpf(min_speed_scale, max_speed_scale, wave)
+
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
 
+	var cur_spd = _get_effective_speed(_elapsed_time)
+
 	# Rotate all gear sprites
 	if rotation_speed != 0.0:
+		var base_ref = interval_speed if enable_interval_movement else move_speed
+		var spin_scale = (cur_spd / max(1.0, base_ref)) if base_ref > 0.0 else 1.0
 		for spr in _gear_sprites:
 			if spr:
-				spr.rotation += rotation_speed * delta
+				spr.rotation += rotation_speed * spin_scale * delta
 
-	if move_speed <= 0.0 or _total_perimeter <= 0.0:
+	if cur_spd <= 0.0 or _total_perimeter <= 0.0:
 		return
 
-	_elapsed_time += delta
+	# Effective movement time progression scaled by cur_spd
+	var base_spd = interval_speed if enable_interval_movement else move_speed
+	var speed_ratio = cur_spd / max(1.0, base_spd)
+	_elapsed_time += delta * speed_ratio
 
 	# Handle Direction
 	var norm_dir = move_direction.to_upper()

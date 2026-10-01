@@ -161,6 +161,50 @@ class_name MovingGearController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
+@export_group("Interval Movement & Speed Curve")
+@export var enable_interval_movement: bool = false:
+	set(v):
+		enable_interval_movement = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var interval_time: float = 3.0: # Time duration in seconds per interval movement cycle
+	set(v):
+		interval_time = max(0.1, v)
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var interval_speed: float = 150.0: # Fixed movement speed during interval
+	set(v):
+		interval_speed = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var enable_speed_modulation: bool = false: # Smooth speed wave: start move -> slow down -> speed up -> slow down
+	set(v):
+		enable_speed_modulation = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var min_speed_scale: float = 0.25: # Minimum speed multiplier during slow phase
+	set(v):
+		min_speed_scale = clampf(v, 0.0, 3.0)
+		_update_movement_cache()
+
+@export var max_speed_scale: float = 1.75: # Peak speed multiplier during fast phase
+	set(v):
+		max_speed_scale = max(0.1, v)
+		_update_movement_cache()
+
+@export var speed_pulses_per_interval: float = 2.0: # Number of speed-up/slow-down pulses per interval
+	set(v):
+		speed_pulses_per_interval = max(0.5, v)
+		_update_movement_cache()
+
 @export var world_theme: String = "":
 	set(v):
 		world_theme = v
@@ -430,27 +474,45 @@ func _update_rod_dimensions() -> void:
 # 7. PHYSICS PROCESS & MOVEMENT EXECUTION
 # ==============================================================================
 
+func _get_effective_speed(t_active: float) -> float:
+	var base_spd = interval_speed if enable_interval_movement else move_speed
+	if not enable_speed_modulation:
+		return base_spd
+
+	# Speed modulation wave: start move a little -> slow down -> speed up -> slow down
+	var duration = interval_time if (enable_interval_movement and interval_time > 0.0) else max(0.5, _total_span / max(1.0, base_spd))
+	var phase = (t_active / max(0.1, duration)) * speed_pulses_per_interval * TAU
+	var wave = 0.5 * (1.0 + sin(phase))
+	var mult = lerpf(min_speed_scale, max_speed_scale, wave)
+	return base_spd * mult
+
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
 
-	# Spin all gear sprites
+	if not _has_movement and not (has_gear and rotation_speed != 0.0):
+		return
+
+	_elapsed_time += delta
+	var t_active = max(0.0, _elapsed_time - start_delay)
+	var cur_spd = _get_effective_speed(t_active)
+
+	# Spin all gear sprites with speed-proportional rotation
 	if has_gear and rotation_speed != 0.0:
+		var base_ref = interval_speed if enable_interval_movement else move_speed
+		var spin_scale = (cur_spd / max(1.0, base_ref)) if base_ref > 0.0 else 1.0
 		for spr in _gear_sprites:
 			if spr:
-				spr.rotation += rotation_speed * delta
+				spr.rotation += rotation_speed * spin_scale * delta
 
 	# Process movement
 	if _has_movement:
-		_elapsed_time += delta
 		if _elapsed_time < start_delay:
 			return
 
-		var t_active = _elapsed_time - start_delay
-
 		if loop_reset:
-			# Continuous wrap-around along the rod track
-			_progress += (move_speed / max(1.0, _total_span)) * delta
+			# Continuous wrap-around along the rod track (respawns cleanly at origin in loop)
+			_progress += (cur_spd / max(1.0, _total_span)) * delta
 			if _progress >= 1.0:
 				_progress = fmod(_progress, 1.0)
 			_update_gears_positions(0.0)
@@ -462,7 +524,7 @@ func _physics_process(delta: float) -> void:
 			var t_pause = direction_change_delay
 
 			if pos_d > 0.0 and neg_d <= 0.001:
-				var t_one = pos_d / max(1.0, move_speed)
+				var t_one = pos_d / max(1.0, cur_spd)
 				if t_pause > 0.0:
 					var cycle = 2.0 * (t_one + t_pause)
 					var t = fmod(t_active, cycle)
@@ -477,11 +539,11 @@ func _physics_process(delta: float) -> void:
 					else:
 						offset_scalar = 0.0
 				else:
-					var phase = t_active * (move_speed / max(1.0, pos_d)) * PI
+					var phase = t_active * (cur_spd / max(1.0, pos_d)) * PI
 					offset_scalar = pos_d * 0.5 * (1.0 - cos(phase))
 
 			elif neg_d > 0.0 and pos_d <= 0.001:
-				var t_one = neg_d / max(1.0, move_speed)
+				var t_one = neg_d / max(1.0, cur_spd)
 				if t_pause > 0.0:
 					var cycle = 2.0 * (t_one + t_pause)
 					var t = fmod(t_active, cycle)
@@ -496,13 +558,13 @@ func _physics_process(delta: float) -> void:
 					else:
 						offset_scalar = 0.0
 				else:
-					var phase = t_active * (move_speed / max(1.0, neg_d)) * PI
+					var phase = t_active * (cur_spd / max(1.0, neg_d)) * PI
 					offset_scalar = -neg_d * 0.5 * (1.0 - cos(phase))
 
 			else:
-				var t_pos = pos_d / max(1.0, move_speed)
-				var t_neg = neg_d / max(1.0, move_speed)
-				var t_span = (pos_d + neg_d) / max(1.0, move_speed)
+				var t_pos = pos_d / max(1.0, cur_spd)
+				var t_neg = neg_d / max(1.0, cur_spd)
+				var t_span = (pos_d + neg_d) / max(1.0, cur_spd)
 
 				if t_pause > 0.0:
 					var cycle = 2.0 * t_span + 2.0 * t_pause
@@ -521,7 +583,7 @@ func _physics_process(delta: float) -> void:
 						var s = (1.0 - cos(((t - (t_pos + 2.0 * t_pause + t_span)) / max(0.001, t_neg)) * (PI * 0.5)))
 						offset_scalar = -neg_d * (1.0 - s)
 				else:
-					var phase = t_active * (move_speed / max(1.0, _amplitude))
+					var phase = t_active * (cur_spd / max(1.0, _amplitude))
 					offset_scalar = _center_offset + _amplitude * sin(phase)
 
 			_update_gears_positions(offset_scalar)

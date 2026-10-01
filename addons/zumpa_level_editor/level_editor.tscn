@@ -48,14 +48,14 @@ unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
 button_pressed = true
-text = " ◀ Items "
+text = " 🛠️ Items & Tools "
 
 [node name="ToggleRightBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11116]
 unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
 button_pressed = true
-text = " Inspector ▶ "
+text = " ⚙️ Inspector "
 
 [node name="VSeparator0" type="VSeparator" parent="MainVBox/TopBarPanel/TopBar" unique_id=98721034]
 layout_mode = 2
@@ -175,30 +175,6 @@ text = " 🔍 1:1 "
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="LeftPanel" type="PanelContainer" parent="MainVBox/ContentHBox" unique_id=2134968110]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(195, 0)
-layout_mode = 2
-
-[node name="Scroll" type="ScrollContainer" parent="MainVBox/ContentHBox/LeftPanel" unique_id=985894983]
-layout_mode = 2
-
-[node name="VBox" type="VBoxContainer" parent="MainVBox/ContentHBox/LeftPanel/Scroll" unique_id=679354272]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="MainVBox/ContentHBox/LeftPanel/Scroll/VBox" unique_id=1104411735]
-layout_mode = 2
-text = "OBSTACLES & ITEMS"
-horizontal_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="MainVBox/ContentHBox/LeftPanel/Scroll/VBox" unique_id=373106943]
-layout_mode = 2
-
-[node name="PaletteContainer" type="VBoxContainer" parent="MainVBox/ContentHBox/LeftPanel/Scroll/VBox" unique_id=11201]
-unique_name_in_owner = true
-layout_mode = 2
-
 [node name="ScrollContainer" type="ScrollContainer" parent="MainVBox/ContentHBox" unique_id=11301]
 unique_name_in_owner = true
 layout_mode = 2
@@ -228,10 +204,31 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
+[node name="ItemsHeader" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1104411735]
+layout_mode = 2
+text = "OBSTACLES & ITEMS"
+horizontal_alignment = 1
+
+[node name="HSeparatorItems" type="HSeparator" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=373106943]
+layout_mode = 2
+
+[node name="PaletteContainer" type="VBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11201]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparatorItemsEnd" type="HSeparator" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=373106944]
+layout_mode = 2
+
 [node name="Header" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1993687637]
 layout_mode = 2
 text = "SELECTED OBJECT"
 horizontal_alignment = 1
+
+[node name="ApplyBtn" type="Button" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11410]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "Apply Changes"
 
 [node name="HSeparator" type="HSeparator" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1690495357]
 layout_mode = 2
@@ -883,12 +880,6 @@ step = 0.05
 
 [node name="HSeparator2" type="HSeparator" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1690495358]
 layout_mode = 2
-
-[node name="ApplyBtn" type="Button" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11410]
-unique_name_in_owner = true
-layout_mode = 2
-disabled = true
-text = "Apply Changes"
 
 [node name="TileHeader" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1993687638]
 layout_mode = 2
