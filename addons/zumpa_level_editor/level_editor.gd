@@ -985,15 +985,31 @@ func update_inspector_values(obj) -> void:
 		if prop_move_dist_neg_row: prop_move_dist_neg_row.visible = false
 		if prop_move_dir_row: prop_move_dir_row.visible = false
 
-	if obj.object_id in ["gear_with_rod", "gear_m"] or obj.properties.has("gear_count") or obj.properties.has("loop_reset"):
+	if obj.object_id == "spike" or obj.properties.has("spike_count") or obj.properties.has("wall_distance"):
+		if prop_loop_reset_row: prop_loop_reset_row.visible = false
+		if prop_gear_count_row:
+			prop_gear_count_row.visible = true
+			var count_lbl = prop_gear_count_row.get_node_or_null("Lbl")
+			if count_lbl: count_lbl.text = "Spike Count: "
+			if gear_count_spin: gear_count_spin.value = int(obj.properties.get("spike_count", obj.properties.get("count", 1)))
+		if prop_gear_spacing_row:
+			prop_gear_spacing_row.visible = true
+			var dist_lbl = prop_gear_spacing_row.get_node_or_null("Lbl")
+			if dist_lbl: dist_lbl.text = "Wall Distance: "
+			if gear_spacing_spin: gear_spacing_spin.value = float(obj.properties.get("wall_distance", obj.properties.get("spacing", 46.0)))
+	elif obj.object_id in ["gear_with_rod", "gear_m"] or obj.properties.has("gear_count") or obj.properties.has("loop_reset"):
 		if prop_loop_reset_row:
 			prop_loop_reset_row.visible = (obj.object_id == "gear_with_rod" or obj.properties.has("loop_reset"))
 			if loop_reset_check: loop_reset_check.button_pressed = bool(obj.properties.get("loop_reset", true))
 		if prop_gear_count_row:
 			prop_gear_count_row.visible = true
+			var count_lbl = prop_gear_count_row.get_node_or_null("Lbl")
+			if count_lbl: count_lbl.text = "Gear Count: "
 			if gear_count_spin: gear_count_spin.value = int(obj.properties.get("gear_count", 1))
 		if prop_gear_spacing_row:
 			prop_gear_spacing_row.visible = true
+			var dist_lbl = prop_gear_spacing_row.get_node_or_null("Lbl")
+			if dist_lbl: dist_lbl.text = "Gear Spacing: "
 			if gear_spacing_spin: gear_spacing_spin.value = float(obj.properties.get("gear_spacing", 100.0))
 		if prop_breadth_row and (obj.object_id == "gear_with_rod" or obj.properties.has("rod_breadth")):
 			prop_breadth_row.visible = true
@@ -1165,9 +1181,15 @@ func apply_inspector_changes() -> void:
 			obj.properties["move_direction"] = "CUSTOM"
 
 	if prop_gear_count_row and prop_gear_count_row.visible:
-		obj.properties["gear_count"] = int(gear_count_spin.value)
+		if obj.object_id == "spike" or obj.properties.has("spike_count"):
+			obj.properties["spike_count"] = int(gear_count_spin.value)
+		else:
+			obj.properties["gear_count"] = int(gear_count_spin.value)
 	if prop_gear_spacing_row and prop_gear_spacing_row.visible:
-		obj.properties["gear_spacing"] = gear_spacing_spin.value
+		if obj.object_id == "spike" or obj.properties.has("wall_distance"):
+			obj.properties["wall_distance"] = gear_spacing_spin.value
+		else:
+			obj.properties["gear_spacing"] = gear_spacing_spin.value
 	if prop_move_delay_row and prop_move_delay_row.visible:
 		obj.properties["direction_change_delay"] = move_delay_spin.value
 

@@ -36,6 +36,7 @@ const FORCE_TIERS: Dictionary = {
 @onready var sprite: Sprite2D = $Sprite2D if has_node("Sprite2D") else null
 
 var triggered: bool = false
+var _is_boosting: bool = false
 
 
 func _ready() -> void:
@@ -48,6 +49,10 @@ func _on_ready() -> void:
 
 	collision_layer = 2
 	collision_mask = 3  # Detect player on layer 1 & 2
+
+	# Performance optimization: disable unnecessary frame callbacks
+	set_process(false)
+	set_physics_process(false)
 
 	if not Engine.is_editor_hint():
 		if not body_entered.is_connected(_on_body_entered):
@@ -69,29 +74,67 @@ func get_boost_force() -> float:
 
 
 func get_push_direction() -> Vector2:
-	# Local UP vector rotated by the booster's global rotation
+	# Local UP vector rotated by the booster's global rotation (exact perpendicular launch normal)
 	return Vector2.UP.rotated(global_rotation).normalized()
 
 
 func _on_body_entered(body: Node2D) -> void:
-	if body is CharacterBody2D or body.name.begins_with("Player") or body.is_in_group("player"):
-		var push_dir = get_push_direction()
-		var force = get_boost_force()
+	if _is_boosting:
+		return
 
-		if body.has_method("apply_directional_boost"):
-			body.apply_directional_boost(push_dir, force, invulnerability_duration)
-		elif body.has_method("apply_booster"):
-			if data:
-				body.apply_booster(data)
-			else:
-				if "velocity" in body:
-					body.velocity = push_dir * force
-				if "is_invulnerable" in body:
-					body.is_invulnerable = true
+	var is_player = body is Player \
+		or body.is_in_group("player") \
+		or body.name.begins_with("Player") \
+		or (body is CharacterBody2D and body.has_method("die"))
+
+	if not is_player:
+		return
+
+	_is_boosting = true
+	var tree = get_tree()
+	if tree:
+		tree.create_timer(0.2).timeout.connect(func(): _is_boosting = false)
+	else:
+		_is_boosting = false
+
+	var push_dir: Vector2 = get_push_direction()
+	var force: float = get_boost_force()
+	var boost_rot: float = global_rotation
+
+	# 1. Make the player perpendicular to the booster:
+	# Orient player so they stand perpendicular to the booster pad surface
+	body.rotation = boost_rot
+	if "visual" in body and body.visual:
+		body.visual.rotation = 0.0
+
+	# Align player laterally onto the booster's perpendicular centerline
+	var tangent: Vector2 = Vector2.RIGHT.rotated(boost_rot)
+	var to_player: Vector2 = body.global_position - global_position
+	var lateral_offset: float = to_player.dot(tangent)
+	var max_lateral: float = 40.0 * absf(scale.x)
+	lateral_offset = clampf(lateral_offset, -max_lateral, max_lateral)
+	body.global_position -= tangent * lateral_offset
+
+	# Push slightly along launch direction to ensure clean takeoff
+	body.global_position += push_dir * 12.0
+
+	# 2. Throw the player perpendicular up:
+	if body.has_method("apply_directional_boost"):
+		body.apply_directional_boost(push_dir, force, invulnerability_duration, boost_rot)
+	elif body.has_method("apply_booster") and data:
+		body.apply_booster(data)
+	else:
+		if "velocity" in body:
+			body.velocity = push_dir * force
+		if "is_invulnerable" in body:
+			body.is_invulnerable = true
+		if "_input_lock" in body:
+			body.set("_input_lock", invulnerability_duration)
 
 
 func reset() -> void:
 	triggered = false
+	_is_boosting = false
 	visible = true
 	monitoring = true
 

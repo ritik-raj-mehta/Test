@@ -76,7 +76,7 @@ func _on_ready() -> void:
 		visible = false
 		is_falling = false
 		if col_shape:
-			col_shape.set_deferred("disabled", true)
+			col_shape.disabled = true
 		set_physics_process(false)
 	else:
 		visible = true
@@ -316,7 +316,7 @@ func reset() -> void:
 	if not is_in_editor():
 		visible = false
 		if col_shape:
-			col_shape.set_deferred("disabled", true)
+			col_shape.disabled = true
 		set_physics_process(false)
 	else:
 		visible = true

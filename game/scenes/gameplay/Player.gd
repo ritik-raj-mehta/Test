@@ -128,6 +128,8 @@ func _physics_process(delta: float) -> void:
 	_handle_keyboard_input()
 	if is_respawning:
 		velocity.x = 0.0
+	elif _input_lock > 0.0:
+		pass
 	else:
 		velocity.x = lerpf(velocity.x, move_dir * SIDE_SPEED, 1.0 - exp(-STEER_LERP * delta))
 
@@ -137,6 +139,11 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	_update_tilt(delta)
+	if absf(rotation) > 0.001:
+		if is_on_floor() or is_on_wall():
+			rotation = 0.0
+		elif _input_lock <= 0.0:
+			rotation = lerp_angle(rotation, 0.0, 1.0 - exp(-6.0 * delta))
 	if _check_obstacle_collision():
 		return
 	is_respawning = false
@@ -245,14 +252,17 @@ func reset_after_respawn() -> void:
 # BOOSTER
 # ============================================================
 
-func apply_directional_boost(direction: Vector2, force: float, duration: float = 0.6) -> void:
+func apply_directional_boost(direction: Vector2, force: float, duration: float = 0.6, boost_rotation: float = 0.0) -> void:
 	if is_dead or is_goal_reached:
 		return
 
-	print("PLAYER DIRECTIONAL BOOST: dir=", direction, " force=", force)
+	rotation = boost_rotation
+	if visual:
+		visual.rotation = 0.0
 
 	velocity = direction * force
 	is_invulnerable = true
+	_input_lock = duration
 
 	await get_tree().create_timer(duration).timeout
 

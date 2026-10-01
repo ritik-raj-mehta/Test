@@ -210,6 +210,22 @@ Camera control and event trigger volumes.
 
 ---
 
+### 9. `spike` (Spike Trap)
+Hazard obstacle that kills the player on contact. Supports replicating multiple spikes in a continuous row along walls or floors from a single node with unified high-performance collision.
+
+* **Scene**: `res://game/scenes/Obstacles/Spike.tscn`
+* **Controller**: `SpikeController.gd`
+* **Key Properties**:
+  - `spike_count`: Number of spikes generated sequentially in one direction (1 to 100).
+  - `wall_distance`: Distance/spacing in pixels between each consecutive spike (default `46.0px` matches standard spike width).
+  - `direction`: Expansion direction along local X-axis (`1` for Forward/+X, `-1` for Backward/-X).
+  - `rotation_speed`: Self-rotation speed for spinning hazards (`0.0` for stationary wall/floor spikes).
+* **Optimization Architecture**:
+  - **O(1) Unified Collision**: When `wall_distance <= 46.0` (contiguous spikes), a single `RectangleShape2D` encompasses the entire row, reducing collision overhead to a single physics check.
+  - **Node & Resource Pooling**: Spikes and shapes are pooled in memory with zero runtime allocations during gameplay.
+
+---
+
 ## 4. World Themes & Asset Skinning
 
 The project uses a unified **World Theme Registry** located at `game/scripts/registries/world_theme_registry.gd`.

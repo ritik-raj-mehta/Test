@@ -3,17 +3,18 @@
 [ext_resource type="Script" uid="uid://1lwe8eaaf45s" path="res://game/scenes/Obstacles/SpikeController.gd" id="1_y64fm"]
 [ext_resource type="Texture2D" uid="uid://l7upueduqe7x" path="res://game/assets/sprites/obstacles/Spike.png" id="2_x4tfu"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_46ixr"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_27gyg"]
 size = Vector2(46, 19)
 
 [node name="Spike" type="StaticBody2D" unique_id=1312356640 groups=["obstacle"]]
 z_index = 100
 collision_layer = 2
+collision_mask = 0
 script = ExtResource("1_y64fm")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=322224644]
 position = Vector2(0, 0.5)
-shape = SubResource("RectangleShape2D_46ixr")
+shape = SubResource("RectangleShape2D_27gyg")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=853520994]
 scale = Vector2(0.72, 0.637)

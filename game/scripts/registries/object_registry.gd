@@ -99,7 +99,12 @@ static var _registry: Dictionary = {
 		"name": "Spike Trap",
 		"scene_path": "res://game/scenes/Obstacles/Spike.tscn",
 		"category": "Obstacles",
-		"default_properties": {"rotation_speed": 0.0},
+		"default_properties": {
+			"spike_count": 1,
+			"wall_distance": 46.0,
+			"direction": 1,
+			"rotation_speed": 0.0
+		},
 		"default_scale": Vector2(1, 1)
 	},
 
@@ -216,14 +221,6 @@ static func get_all_entries() -> Dictionary:
 	return _registry
 
 static var _fallback_objects: Dictionary = {
-	"wall": {
-		"id": "wall",
-		"name": "Wall",
-		"scene_path": "res://game/scenes/Obstacles/Wall.tscn",
-		"category": "Walls",
-		"default_properties": {},
-		"default_scale": Vector2(1, 1)
-	},
 	"platform": {
 		"id": "platform",
 		"name": "Ground Platform",
