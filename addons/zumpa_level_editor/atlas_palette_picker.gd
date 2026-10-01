@@ -131,6 +131,16 @@ func _draw() -> void:
 			draw_rect(sel_rect, fill_col, true)
 			draw_rect(sel_rect, border_col, false, 2.5 if is_primary else 1.8)
 
+@export var multi_select_mode: bool = false:
+	set(val):
+		multi_select_mode = val
+		queue_redraw()
+
+func clear_tile_selection() -> void:
+	selected_tiles = [selected_coords]
+	queue_redraw()
+	emit_signal("multi_tiles_selected", selected_tiles)
+
 func _gui_input(event: InputEvent) -> void:
 	if not texture:
 		return
@@ -150,10 +160,12 @@ func _gui_input(event: InputEvent) -> void:
 			var max_cx = maxi(palette_drag_start.x, col)
 			var min_cy = mini(palette_drag_start.y, row)
 			var max_cy = maxi(palette_drag_start.y, row)
-			var new_tiles: Array[Vector2i] = []
+			var new_tiles: Array[Vector2i] = selected_tiles.duplicate() if multi_select_mode else []
 			for cy in range(min_cy, max_cy + 1):
 				for cx in range(min_cx, max_cx + 1):
-					new_tiles.append(Vector2i(cx, cy))
+					var tile := Vector2i(cx, cy)
+					if not new_tiles.has(tile):
+						new_tiles.append(tile)
 			selected_tiles = new_tiles
 			queue_redraw()
 
@@ -165,8 +177,8 @@ func _gui_input(event: InputEvent) -> void:
 			var clicked_tile = Vector2i(col, row)
 
 			if mb.pressed:
-				if mb.shift_pressed or mb.ctrl_pressed:
-					# Multi-select toggle
+				if multi_select_mode or mb.shift_pressed or mb.ctrl_pressed:
+					# Multi-select toggle mode
 					if selected_tiles.has(clicked_tile) and selected_tiles.size() > 1:
 						selected_tiles.erase(clicked_tile)
 						if selected_coords == clicked_tile and not selected_tiles.is_empty():

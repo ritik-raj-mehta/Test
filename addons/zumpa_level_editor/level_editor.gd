@@ -665,6 +665,26 @@ func connect_signals() -> void:
 				zoom_label.text = "%.1fx" % z
 		)
 
+		if atlas_scroll_container and atlas_scroll_container.get_parent():
+			var p_node = atlas_scroll_container.get_parent()
+			if not p_node.has_node("MultiSelectTileRow"):
+				var ms_row := HBoxContainer.new()
+				ms_row.name = "MultiSelectTileRow"
+				var chk_ms := CheckBox.new()
+				chk_ms.text = "Multi-Select Mode"
+				chk_ms.toggled.connect(func(toggled):
+					atlas_picker.multi_select_mode = toggled
+				)
+				var btn_single := Button.new()
+				btn_single.text = " Reset (1 Tile) "
+				btn_single.pressed.connect(func():
+					atlas_picker.clear_tile_selection()
+				)
+				ms_row.add_child(chk_ms)
+				ms_row.add_child(btn_single)
+				p_node.add_child(ms_row)
+				p_node.move_child(ms_row, atlas_scroll_container.get_index())
+
 	if zoom_out_btn:
 		zoom_out_btn.pressed.connect(func():
 			if atlas_picker:
