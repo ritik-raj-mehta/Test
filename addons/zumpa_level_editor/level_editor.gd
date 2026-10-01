@@ -351,6 +351,112 @@ func setup_palette() -> void:
 	palette_container.add_child(te_btn)
 	tool_buttons["tile_eraser"] = te_btn
 
+	# Area Select & Pattern Fill Tool
+	var as_btn := Button.new()
+	as_btn.text = "📐 Area Select & Fill"
+	as_btn.toggle_mode = true
+	as_btn.pressed.connect(func(): set_active_tool("area_select", as_btn))
+	palette_container.add_child(as_btn)
+	tool_buttons["area_select"] = as_btn
+
+	# Tile Scatter Tool
+	var ts_btn := Button.new()
+	ts_btn.text = "🎲 Scatter Tiles"
+	ts_btn.toggle_mode = true
+	ts_btn.pressed.connect(func(): set_active_tool("tile_scatter", ts_btn))
+	palette_container.add_child(ts_btn)
+	tool_buttons["tile_scatter"] = ts_btn
+
+	# Area Pattern & Fill Controls Container
+	var area_box := VBoxContainer.new()
+	area_box.name = "AreaPatternControls"
+
+	var lbl_mode := Label.new()
+	lbl_mode.text = "Fill Mode:"
+	area_box.add_child(lbl_mode)
+
+	var mode_opt := OptionButton.new()
+	mode_opt.add_item("🎲 Random Pattern", 0)
+	mode_opt.add_item("🧱 100% Solid Fill", 1)
+	mode_opt.add_item("🎨 Multi-Tile Mix", 2)
+	mode_opt.select(0)
+	mode_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	mode_opt.item_selected.connect(func(idx):
+		if canvas:
+			canvas.pattern_fill_mode = idx
+			if canvas.has_selected_area:
+				canvas.queue_redraw()
+	)
+	area_box.add_child(mode_opt)
+
+	var scatter_row := HBoxContainer.new()
+	var lbl_sc := Label.new()
+	lbl_sc.text = "Tile Count:"
+	lbl_sc.custom_minimum_size = Vector2(75, 0)
+	var spin_sc := SpinBox.new()
+	spin_sc.min_value = 1
+	spin_sc.max_value = 2000
+	spin_sc.step = 1
+	spin_sc.value = 30
+	spin_sc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	spin_sc.value_changed.connect(func(v):
+		if canvas:
+			canvas.scatter_tile_count = int(v)
+			if canvas.has_selected_area and canvas.pattern_fill_mode == 0:
+				push_undo_snapshot()
+				canvas.fill_selected_area()
+	)
+	scatter_row.add_child(lbl_sc)
+	scatter_row.add_child(spin_sc)
+	area_box.add_child(scatter_row)
+
+	var btn_fill := Button.new()
+	btn_fill.text = "🎲 Fill Area"
+	btn_fill.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_fill.pressed.connect(func():
+		if canvas and canvas.has_selected_area:
+			push_undo_snapshot()
+			canvas.fill_selected_area()
+	)
+	area_box.add_child(btn_fill)
+
+	var btn_reroll := Button.new()
+	btn_reroll.text = "🔀 Re-roll Pattern"
+	btn_reroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_reroll.pressed.connect(func():
+		if canvas and canvas.has_selected_area:
+			push_undo_snapshot()
+			canvas.reroll_area_pattern()
+	)
+	area_box.add_child(btn_reroll)
+
+	var btn_clear_tiles := Button.new()
+	btn_clear_tiles.text = "🧹 Clear Tiles"
+	btn_clear_tiles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_clear_tiles.pressed.connect(func():
+		if canvas and canvas.has_selected_area:
+			push_undo_snapshot()
+			canvas.clear_tiles_in_selected_area()
+	)
+	area_box.add_child(btn_clear_tiles)
+
+	var btn_deselect := Button.new()
+	btn_deselect.text = "✕ Deselect Area"
+	btn_deselect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_deselect.pressed.connect(func():
+		if canvas:
+			canvas.clear_selected_area()
+	)
+	area_box.add_child(btn_deselect)
+
+	var btn_scatter_view := Button.new()
+	btn_scatter_view.text = "📱 Scatter in View"
+	btn_scatter_view.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_scatter_view.pressed.connect(func(): _scatter_in_current_view())
+	area_box.add_child(btn_scatter_view)
+
+	palette_container.add_child(area_box)
+
 	# Separator
 	var sep := HSeparator.new()
 	palette_container.add_child(sep)
@@ -546,6 +652,14 @@ func connect_signals() -> void:
 	# Tile Palette signals
 	if atlas_picker:
 		atlas_picker.tile_selected.connect(on_atlas_tile_selected)
+		if atlas_picker.has_signal("multi_tiles_selected"):
+			atlas_picker.multi_tiles_selected.connect(func(tiles):
+				if canvas:
+					canvas.current_palette_tiles = tiles
+					if canvas.has_selected_area:
+						push_undo_snapshot()
+						canvas.fill_selected_area()
+			)
 		atlas_picker.zoom_changed.connect(func(z):
 			if zoom_label:
 				zoom_label.text = "%.1fx" % z
@@ -585,12 +699,12 @@ func connect_signals() -> void:
 				canvas.refresh_canvas()
 		)
 
-	btn_grass_top.pressed.connect(func(): set_tile_atlas(6, 5))
-	btn_grass_left.pressed.connect(func(): set_tile_atlas(0, 3))
-	btn_grass_right.pressed.connect(func(): set_tile_atlas(1, 3))
-	btn_dirt.pressed.connect(func(): set_tile_atlas(6, 2))
-	btn_sand.pressed.connect(func(): set_tile_atlas(7, 1))
-	btn_stone.pressed.connect(func(): set_tile_atlas(11, 1))
+	btn_grass_top.pressed.connect(func(): _apply_preset_tile(6, 5))
+	btn_grass_left.pressed.connect(func(): _apply_preset_tile(0, 3))
+	btn_grass_right.pressed.connect(func(): _apply_preset_tile(1, 3))
+	btn_dirt.pressed.connect(func(): _apply_preset_tile(6, 2))
+	btn_sand.pressed.connect(func(): _apply_preset_tile(7, 1))
+	btn_stone.pressed.connect(func(): _apply_preset_tile(11, 1))
 
 	# Bottom bar edits
 	level_id_edit.text_changed.connect(func(t): if current_level: current_level.level_id = t)
@@ -654,8 +768,38 @@ func connect_signals() -> void:
 
 func on_atlas_tile_selected(coords: Vector2i) -> void:
 	set_tile_atlas(coords.x, coords.y)
+	if canvas:
+		canvas.current_tile_atlas = coords
+		if atlas_picker:
+			canvas.current_palette_tiles = atlas_picker.selected_tiles
+		if canvas.has_selected_area:
+			push_undo_snapshot()
+			canvas.fill_selected_area()
+			return
+	if canvas and (canvas.active_placement_id == "tile_scatter" or canvas.active_placement_id == "area_select"):
+		return
 	if tool_buttons.has("tile_brush"):
 		set_active_tool("tile_brush", tool_buttons["tile_brush"])
+
+func _apply_preset_tile(ax: int, ay: int) -> void:
+	set_tile_atlas(ax, ay)
+	if canvas:
+		canvas.current_tile_atlas = Vector2i(ax, ay)
+		canvas.current_palette_tiles = [Vector2i(ax, ay)]
+		if canvas.has_selected_area:
+			push_undo_snapshot()
+			canvas.fill_selected_area()
+
+func _scatter_in_current_view() -> void:
+	if not canvas or not current_level:
+		return
+	push_undo_snapshot()
+	var screen_w: float = 1080.0
+	var screen_h: float = 1920.0
+	var player_pos: Vector2 = current_level.player_start
+	var top_w_y: float = player_pos.y - 1300.0
+	var rect := Rect2(player_pos.x - (screen_w / 2.0), top_w_y, screen_w, screen_h)
+	canvas.scatter_random_tiles_in_rect(rect, canvas.scatter_tile_count)
 
 func set_tile_atlas(ax: int, ay: int) -> void:
 	atlas_x_spin.value = ax
@@ -1436,11 +1580,29 @@ func _unhandled_input(event: InputEvent) -> void:
 			undo_last_change()
 			get_viewport().set_input_as_handled()
 			return
+		elif ke.keycode == KEY_ESCAPE:
+			if canvas and canvas.has_selected_area:
+				canvas.clear_selected_area()
+				get_viewport().set_input_as_handled()
+				return
+		elif ke.keycode == KEY_R and not ke.ctrl_pressed:
+			var focus_owner = get_viewport().gui_get_focus_owner()
+			if not (focus_owner is LineEdit or focus_owner is TextEdit or focus_owner is SpinBox):
+				if canvas and canvas.has_selected_area:
+					push_undo_snapshot()
+					canvas.reroll_area_pattern()
+					get_viewport().set_input_as_handled()
+					return
 		elif ke.keycode == KEY_DELETE or ke.keycode == KEY_BACKSPACE:
 			var focus_owner = get_viewport().gui_get_focus_owner()
 			if not (focus_owner is LineEdit or focus_owner is TextEdit):
 				if canvas and canvas.selected_object:
 					delete_selected()
+					get_viewport().set_input_as_handled()
+					return
+				elif canvas and canvas.has_selected_area:
+					push_undo_snapshot()
+					canvas.clear_tiles_in_selected_area()
 					get_viewport().set_input_as_handled()
 					return
 		elif ke.keycode == KEY_D and ke.ctrl_pressed:

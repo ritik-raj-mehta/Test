@@ -177,7 +177,7 @@ size_flags_vertical = 3
 
 [node name="LeftPanel" type="PanelContainer" parent="MainVBox/ContentHBox" unique_id=2134968110]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(165, 0)
+custom_minimum_size = Vector2(195, 0)
 layout_mode = 2
 
 [node name="Scroll" type="ScrollContainer" parent="MainVBox/ContentHBox/LeftPanel" unique_id=985894983]

@@ -76,6 +76,23 @@ The **Zumpa Level Editor** is located at `addons/zumpa_level_editor/` and integr
 - **Pixel Coordinates Tooltip**: Real-time `[X: ..., Y: ...]` display at cursor.
 - **Dashed Guideline Visualizers**: Visualizes travel paths, endpoint turn-around caps, direction arrows, and delay durations directly in the editor.
 
+### 📐 Grid Area Selection & 🎲 Random Pattern Tile Fill
+- **2-Step Intuitive Workflow**:
+  1. **Select Grid Area**: Activate `📐 Area Select & Fill` (or hold `Shift` while dragging). Drag across any region in the grid. The selection stays **persistent** with a high-contrast glowing border, golden corner brackets, and an information badge displaying exact dimensions and cell count.
+  2. **Select Tile from Palette**: Click any tile (or multiple tiles using Shift/Ctrl or dragging in the palette) from the Atlas Palette Picker or click a preset tile (Grass Top, Dirt, Stone, Sand, etc.).
+  3. **Instant Pattern Fill**: The selected area is immediately filled with the chosen tile arranged in the active pattern mode!
+- **Fill Modes**:
+  - `🎲 Random Pattern (Stochastic)`: Select a tile count or density percentage. Tiles are placed across the bounding area in a pure stochastic Fisher-Yates partial shuffle (guaranteed zero repetitive sub-patterns).
+  - `🧱 Full Fill (100% Solid)`: Fills all grid cells in the selected area.
+  - `🎨 Multi-Tile Random Mix`: When multiple tiles are selected in the Atlas Palette Picker, all cells in the area are filled with a random stochastic mixture of the chosen tiles.
+- **Interactive Quick Controls**:
+  - **Live Tile Count SpinBox**: Adjusting count instantly updates the random layout in the selected area without re-selecting.
+  - **`🔀 Re-roll` Button / `R` Key**: Instantly re-shuffles the layout with a new stochastic arrangement.
+  - **`🧹 Clear Tiles` Button / `Delete` Key**: Erases all tiles within the selected area.
+  - **`✕ Deselect` Button / `Escape` Key**: Clears the persistent selection bounding box.
+  - **`📱 Scatter in View`**: Quickly scatters random tiles across the active $1080 \times 1920$ mobile screen viewport.
+- **High Performance & Serialization**: Batch updates `level_data.packed_tiles` in $O(N)$ with zero lag. Full `Ctrl + Z` undo history and seamless persistence to `.tres`, `.res`, and `.tscn` on `Ctrl + S`.
+
 ---
 
 ## 3. Complete Obstacle Catalog & Configuration

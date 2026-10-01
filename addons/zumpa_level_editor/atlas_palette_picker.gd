@@ -3,6 +3,7 @@ class_name AtlasPalettePicker
 extends Control
 
 signal tile_selected(coords: Vector2i)
+signal multi_tiles_selected(tiles: Array[Vector2i])
 signal zoom_changed(new_zoom: float)
 
 @export var tile_size: Vector2i = Vector2i(16, 16)
@@ -23,6 +24,13 @@ var texture: Texture2D = null:
 var selected_coords: Vector2i = Vector2i(1, 1):
 	set(val):
 		selected_coords = val
+		if not selected_tiles.has(val):
+			selected_tiles = [val]
+		queue_redraw()
+
+var selected_tiles: Array[Vector2i] = [Vector2i(1, 1)]:
+	set(val):
+		selected_tiles = val
 		queue_redraw()
 
 var hover_coords: Vector2i = Vector2i(-1, -1):
@@ -30,6 +38,9 @@ var hover_coords: Vector2i = Vector2i(-1, -1):
 		if hover_coords != val:
 			hover_coords = val
 			queue_redraw()
+
+var is_dragging_palette: bool = false
+var palette_drag_start: Vector2i = Vector2i(-1, -1)
 
 func _ready() -> void:
 	texture_filter = TEXTURE_FILTER_NEAREST
@@ -110,11 +121,15 @@ func _draw() -> void:
 		draw_rect(hover_rect, Color(1.0, 1.0, 1.0, 0.25), true)
 		draw_rect(hover_rect, Color(1.0, 1.0, 1.0, 0.7), false, 1.5)
 
-	# 5. Draw selection box around currently selected tile
-	if selected_coords.x >= 0 and selected_coords.x < cols and selected_coords.y >= 0 and selected_coords.y < rows:
-		var sel_rect := Rect2(selected_coords.x * cell_w, selected_coords.y * cell_w, cell_w, cell_w)
-		draw_rect(sel_rect, Color(1.0, 0.85, 0.0, 0.35), true)
-		draw_rect(sel_rect, Color(1.0, 0.9, 0.0, 1.0), false, 2.5)
+	# 5. Draw selection box around all selected tiles
+	for t in selected_tiles:
+		if t.x >= 0 and t.x < cols and t.y >= 0 and t.y < rows:
+			var is_primary = (t == selected_coords)
+			var sel_rect := Rect2(t.x * cell_w, t.y * cell_w, cell_w, cell_w)
+			var fill_col = Color(1.0, 0.85, 0.0, 0.35) if is_primary else Color(0.2, 0.8, 1.0, 0.3)
+			var border_col = Color(1.0, 0.9, 0.0, 1.0) if is_primary else Color(0.2, 0.9, 1.0, 0.85)
+			draw_rect(sel_rect, fill_col, true)
+			draw_rect(sel_rect, border_col, false, 2.5 if is_primary else 1.8)
 
 func _gui_input(event: InputEvent) -> void:
 	if not texture:
@@ -130,13 +145,55 @@ func _gui_input(event: InputEvent) -> void:
 		var row = clamp(int(mm.position.y / cell_w), 0, rows - 1)
 		hover_coords = Vector2i(col, row)
 
+		if is_dragging_palette and palette_drag_start != Vector2i(-1, -1):
+			var min_cx = mini(palette_drag_start.x, col)
+			var max_cx = maxi(palette_drag_start.x, col)
+			var min_cy = mini(palette_drag_start.y, row)
+			var max_cy = maxi(palette_drag_start.y, row)
+			var new_tiles: Array[Vector2i] = []
+			for cy in range(min_cy, max_cy + 1):
+				for cx in range(min_cx, max_cx + 1):
+					new_tiles.append(Vector2i(cx, cy))
+			selected_tiles = new_tiles
+			queue_redraw()
+
 	elif event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
-		if mb.button_index == MOUSE_BUTTON_LEFT and mb.pressed:
+		if mb.button_index == MOUSE_BUTTON_LEFT:
 			var col = clamp(int(mb.position.x / cell_w), 0, cols - 1)
 			var row = clamp(int(mb.position.y / cell_w), 0, rows - 1)
-			selected_coords = Vector2i(col, row)
-			emit_signal("tile_selected", selected_coords)
+			var clicked_tile = Vector2i(col, row)
+
+			if mb.pressed:
+				if mb.shift_pressed or mb.ctrl_pressed:
+					# Multi-select toggle
+					if selected_tiles.has(clicked_tile) and selected_tiles.size() > 1:
+						selected_tiles.erase(clicked_tile)
+						if selected_coords == clicked_tile and not selected_tiles.is_empty():
+							selected_coords = selected_tiles[0]
+					else:
+						if not selected_tiles.has(clicked_tile):
+							selected_tiles.append(clicked_tile)
+						selected_coords = clicked_tile
+					queue_redraw()
+					emit_signal("tile_selected", selected_coords)
+					emit_signal("multi_tiles_selected", selected_tiles)
+				else:
+					# Normal single select & begin possible drag box
+					is_dragging_palette = true
+					palette_drag_start = clicked_tile
+					selected_coords = clicked_tile
+					selected_tiles = [clicked_tile]
+					queue_redraw()
+					emit_signal("tile_selected", selected_coords)
+					emit_signal("multi_tiles_selected", selected_tiles)
+			else:
+				if is_dragging_palette:
+					is_dragging_palette = false
+					palette_drag_start = Vector2i(-1, -1)
+					emit_signal("tile_selected", selected_coords)
+					emit_signal("multi_tiles_selected", selected_tiles)
+
 		elif mb.ctrl_pressed and mb.pressed:
 			if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
 				zoom_scale += 0.25
