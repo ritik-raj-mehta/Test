@@ -147,7 +147,7 @@ tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_7xcqf")
 
-[node name="LevelRoot" type="Node2D" unique_id=1736600775]
+[node name="LevelRoot" type="Node2D" unique_id=2025045476]
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=927742863 instance=ExtResource("1_y6jld")]
 z_index = 10
@@ -156,7 +156,7 @@ collision_layer = 2
 collision_mask = 23
 script = ExtResource("2_m0yni")
 
-[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=1539305003]
+[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=2079511827]
 z_index = 150
 position = Vector2(40, 0)
 scale = Vector2(1.5, 1.5)
@@ -177,7 +177,7 @@ collision_layer = 2
 collision_mask = 0
 script = ExtResource("7_lmwmx")
 
-[node name="Spike_2" type="StaticBody2D" parent="." unique_id=258321376 groups=["obstacle"] instance=ExtResource("6_mlgga")]
+[node name="Spike_2" type="StaticBody2D" parent="." unique_id=1556703062 groups=["obstacle"] instance=ExtResource("6_mlgga")]
 z_index = 100
 position = Vector2(865.0465, 1129.0067)
 rotation = 1.5707964
@@ -185,7 +185,7 @@ collision_layer = 2
 collision_mask = 0
 script = ExtResource("7_lmwmx")
 
-[node name="Spike_3" type="StaticBody2D" parent="." unique_id=16161829 groups=["obstacle"] instance=ExtResource("6_mlgga")]
+[node name="Spike_3" type="StaticBody2D" parent="." unique_id=1883802999 groups=["obstacle"] instance=ExtResource("6_mlgga")]
 z_index = 100
 position = Vector2(1135.2537, 1085.9082)
 rotation = 4.712389
@@ -193,7 +193,7 @@ collision_layer = 2
 collision_mask = 0
 script = ExtResource("7_lmwmx")
 
-[node name="Spike_4" type="StaticBody2D" parent="." unique_id=915959704 groups=["obstacle"] instance=ExtResource("6_mlgga")]
+[node name="Spike_4" type="StaticBody2D" parent="." unique_id=205520530 groups=["obstacle"] instance=ExtResource("6_mlgga")]
 z_index = 100
 position = Vector2(1135.2766, 1130.484)
 rotation = 4.712389
@@ -201,7 +201,7 @@ collision_layer = 2
 collision_mask = 0
 script = ExtResource("7_lmwmx")
 
-[node name="Spike_5" type="StaticBody2D" parent="." unique_id=1999743858 groups=["obstacle"] instance=ExtResource("6_mlgga")]
+[node name="Spike_5" type="StaticBody2D" parent="." unique_id=1369436283 groups=["obstacle"] instance=ExtResource("6_mlgga")]
 z_index = 100
 position = Vector2(865.09894, 1173.2704)
 rotation = 1.5707964
@@ -209,7 +209,7 @@ collision_layer = 2
 collision_mask = 0
 script = ExtResource("7_lmwmx")
 
-[node name="Spike_6" type="StaticBody2D" parent="." unique_id=68314422 groups=["obstacle"] instance=ExtResource("6_mlgga")]
+[node name="Spike_6" type="StaticBody2D" parent="." unique_id=129155993 groups=["obstacle"] instance=ExtResource("6_mlgga")]
 z_index = 100
 position = Vector2(865.1514, 1218.6051)
 rotation = 1.5707964
@@ -217,7 +217,7 @@ collision_layer = 2
 collision_mask = 0
 script = ExtResource("7_lmwmx")
 
-[node name="Spike_7" type="StaticBody2D" parent="." unique_id=551076730 groups=["obstacle"] instance=ExtResource("6_mlgga")]
+[node name="Spike_7" type="StaticBody2D" parent="." unique_id=1700676096 groups=["obstacle"] instance=ExtResource("6_mlgga")]
 z_index = 100
 position = Vector2(1135.523, 1175.6135)
 rotation = 4.712389
@@ -225,7 +225,7 @@ collision_layer = 2
 collision_mask = 0
 script = ExtResource("7_lmwmx")
 
-[node name="Spike_8" type="StaticBody2D" parent="." unique_id=1835608760 groups=["obstacle"] instance=ExtResource("6_mlgga")]
+[node name="Spike_8" type="StaticBody2D" parent="." unique_id=474450381 groups=["obstacle"] instance=ExtResource("6_mlgga")]
 z_index = 100
 position = Vector2(1135.7693, 1219.4607)
 rotation = 4.712389
@@ -233,7 +233,7 @@ collision_layer = 2
 collision_mask = 0
 script = ExtResource("7_lmwmx")
 
-[node name="Spike_9" type="StaticBody2D" parent="." unique_id=10035501 groups=["obstacle"] instance=ExtResource("6_mlgga")]
+[node name="Spike_9" type="StaticBody2D" parent="." unique_id=1654450593 groups=["obstacle"] instance=ExtResource("6_mlgga")]
 z_index = 100
 position = Vector2(544, 1047)
 collision_layer = 2
@@ -241,32 +241,32 @@ collision_mask = 0
 script = ExtResource("7_lmwmx")
 spike_count = 7
 
-[node name="Sprite2D_2" type="Sprite2D" parent="Spike_9" unique_id=613495964]
+[node name="Sprite2D_2" type="Sprite2D" parent="Spike_9" unique_id=298163282]
 position = Vector2(46, 0)
 scale = Vector2(0.72, 0.637)
 texture = ExtResource("8_8q6b8")
 
-[node name="Sprite2D_3" type="Sprite2D" parent="Spike_9" unique_id=1246083447]
+[node name="Sprite2D_3" type="Sprite2D" parent="Spike_9" unique_id=1213164829]
 position = Vector2(92, 0)
 scale = Vector2(0.72, 0.637)
 texture = ExtResource("8_8q6b8")
 
-[node name="Sprite2D_4" type="Sprite2D" parent="Spike_9" unique_id=899401631]
+[node name="Sprite2D_4" type="Sprite2D" parent="Spike_9" unique_id=659690435]
 position = Vector2(138, 0)
 scale = Vector2(0.72, 0.637)
 texture = ExtResource("8_8q6b8")
 
-[node name="Sprite2D_5" type="Sprite2D" parent="Spike_9" unique_id=947313378]
+[node name="Sprite2D_5" type="Sprite2D" parent="Spike_9" unique_id=1415293256]
 position = Vector2(184, 0)
 scale = Vector2(0.72, 0.637)
 texture = ExtResource("8_8q6b8")
 
-[node name="Sprite2D_6" type="Sprite2D" parent="Spike_9" unique_id=1041567168]
+[node name="Sprite2D_6" type="Sprite2D" parent="Spike_9" unique_id=507621334]
 position = Vector2(230, 0)
 scale = Vector2(0.72, 0.637)
 texture = ExtResource("8_8q6b8")
 
-[node name="Sprite2D_7" type="Sprite2D" parent="Spike_9" unique_id=74094387]
+[node name="Sprite2D_7" type="Sprite2D" parent="Spike_9" unique_id=2000972557]
 position = Vector2(276, 0)
 scale = Vector2(0.72, 0.637)
 texture = ExtResource("8_8q6b8")
@@ -280,12 +280,17 @@ move_dist_neg = 0.0
 move_distance = 0.0
 world_theme = "world_2"
 
-[node name="GearM" type="Node2D" parent="." unique_id=19744870 groups=["obstacle"] instance=ExtResource("9_4j7w6")]
+[node name="GearM" type="Node2D" parent="." unique_id=463125503 groups=["obstacle"] instance=ExtResource("9_4j7w6")]
 position = Vector2(935, -426)
 script = ExtResource("10_q5u74")
+move_dist_pos = 500.0
+move_dist_neg = 500.0
+move_distance = 500.0
+enable_interval_movement = true
+interval_speed = 500.0
 world_theme = "world_2"
 
-[node name="GearWithRod" type="Node2D" parent="." unique_id=20451434 groups=["obstacle"] instance=ExtResource("9_4j7w6")]
+[node name="GearWithRod" type="Node2D" parent="." unique_id=229593133 groups=["obstacle"] instance=ExtResource("9_4j7w6")]
 position = Vector2(978, -768)
 scale = Vector2(2, 2)
 script = ExtResource("10_q5u74")
@@ -304,7 +309,7 @@ position = Vector2(917.72076, -1121.5065)
 script = ExtResource("12_i0a56")
 world_theme = "world_2"
 
-[node name="GearR_2" type="Node2D" parent="." unique_id=12898526 groups=["obstacle"] instance=ExtResource("9_4j7w6")]
+[node name="GearR_2" type="Node2D" parent="." unique_id=1897145166 groups=["obstacle"] instance=ExtResource("9_4j7w6")]
 position = Vector2(1132.9619, 1492.1886)
 script = ExtResource("10_q5u74")
 move_speed = 0.0

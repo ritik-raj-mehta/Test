@@ -105,15 +105,18 @@ object_id = "gear_m"
 position = Vector2(935, -426)
 properties = {
 "direction_change_delay": 0.0,
+"enable_interval_movement": true,
 "gear_count": 1,
 "gear_spacing": 100.0,
 "has_gear": true,
 "has_rod": false,
+"interval_speed": 500.0,
+"interval_time": 3.0,
 "move_angle": 0.0,
 "move_direction": "X",
-"move_dist_neg": 200.0,
-"move_dist_pos": 200.0,
-"move_distance": 200.0,
+"move_dist_neg": 500.0,
+"move_dist_pos": 500.0,
+"move_distance": 500.0,
 "move_speed": 100.0,
 "rotation_speed": 2.0,
 "start_delay": 0.0

@@ -63,6 +63,12 @@ const MAX_UNDO_DEPTH: int = 50
 @onready var gear_spacing_spin: SpinBox = %GearSpacingSpin
 @onready var prop_move_delay_row: HBoxContainer = %PropMoveDelayRow if has_node("%PropMoveDelayRow") else null
 @onready var move_delay_spin: SpinBox = %MoveDelaySpin if has_node("%MoveDelaySpin") else null
+@onready var prop_enable_interval_row: HBoxContainer = %PropEnableIntervalRow if has_node("%PropEnableIntervalRow") else null
+@onready var enable_interval_check: CheckBox = %EnableIntervalCheck if has_node("%EnableIntervalCheck") else null
+@onready var prop_interval_time_row: HBoxContainer = %PropIntervalTimeRow if has_node("%PropIntervalTimeRow") else null
+@onready var interval_time_spin: SpinBox = %IntervalTimeSpin if has_node("%IntervalTimeSpin") else null
+@onready var prop_interval_speed_row: HBoxContainer = %PropIntervalSpeedRow if has_node("%PropIntervalSpeedRow") else null
+@onready var interval_speed_spin: SpinBox = %IntervalSpeedSpin if has_node("%IntervalSpeedSpin") else null
 @onready var prop_path_shape_row: HBoxContainer = %PropPathShapeRow if has_node("%PropPathShapeRow") else null
 @onready var path_shape_opt: OptionButton = %PathShapeOpt if has_node("%PathShapeOpt") else null
 @onready var prop_path_width_row: HBoxContainer = %PropPathWidthRow if has_node("%PropPathWidthRow") else null
@@ -1210,6 +1216,21 @@ func update_inspector_values(obj) -> void:
 		if prop_gear_count_row: prop_gear_count_row.visible = false
 		if prop_gear_spacing_row: prop_gear_spacing_row.visible = false
 
+	if obj.object_id in ["gear_m", "gear_with_rod", "gear_path"] or obj.properties.has("enable_interval_movement") or obj.properties.has("interval_time"):
+		if prop_enable_interval_row:
+			prop_enable_interval_row.visible = true
+			if enable_interval_check: enable_interval_check.button_pressed = bool(obj.properties.get("enable_interval_movement", false))
+		if prop_interval_time_row:
+			prop_interval_time_row.visible = true
+			if interval_time_spin: interval_time_spin.value = float(obj.properties.get("interval_time", 3.0))
+		if prop_interval_speed_row:
+			prop_interval_speed_row.visible = true
+			if interval_speed_spin: interval_speed_spin.value = float(obj.properties.get("interval_speed", obj.properties.get("move_speed", 150.0)))
+	else:
+		if prop_enable_interval_row: prop_enable_interval_row.visible = false
+		if prop_interval_time_row: prop_interval_time_row.visible = false
+		if prop_interval_speed_row: prop_interval_speed_row.visible = false
+
 	if obj.object_id == "gear_m" or obj.properties.has("direction_change_delay") or obj.properties.has("delay"):
 		if prop_move_delay_row:
 			prop_move_delay_row.visible = true
@@ -1383,6 +1404,12 @@ func apply_inspector_changes() -> void:
 			obj.properties["gear_spacing"] = gear_spacing_spin.value
 	if prop_move_delay_row and prop_move_delay_row.visible:
 		obj.properties["direction_change_delay"] = move_delay_spin.value
+	if prop_enable_interval_row and prop_enable_interval_row.visible:
+		obj.properties["enable_interval_movement"] = enable_interval_check.button_pressed
+	if prop_interval_time_row and prop_interval_time_row.visible:
+		obj.properties["interval_time"] = interval_time_spin.value
+	if prop_interval_speed_row and prop_interval_speed_row.visible:
+		obj.properties["interval_speed"] = interval_speed_spin.value
 
 	if prop_path_shape_row and prop_path_shape_row.visible:
 		var shapes = ["Circle", "Rectangle", "Square", "Triangle", "Diamond"]
