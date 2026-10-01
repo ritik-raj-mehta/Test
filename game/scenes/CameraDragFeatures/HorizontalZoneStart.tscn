@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://c1cmag7t47sqa" path="res://game/scenes/CameraDragFeatures/HorizontalZoneStartController.gd" id="1_hzs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hzs"]
+size = Vector2(300, 300)
+
+[node name="HorizontalZoneStart" type="Area2D" groups=["horizontal_zone_start"]]
+z_index = 15
+collision_layer = 0
+script = ExtResource("1_hzs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_hzs")

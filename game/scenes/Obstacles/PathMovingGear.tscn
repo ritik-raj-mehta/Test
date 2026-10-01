@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://c3q0w6ny7xv41"]
+
+[ext_resource type="Script" uid="uid://dwafmn5yik1gw" path="res://game/scenes/Obstacles/PathMovingGearController.gd" id="1_controller"]
+[ext_resource type="Texture2D" uid="uid://kdag31e4fj6o" path="res://game/assets/sprites/obstacles/Gear1.png" id="2_gear_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gear"]
+radius = 44.14748
+
+[node name="PathMovingGear" type="Node2D" unique_id=98124501]
+script = ExtResource("1_controller")
+
+[node name="GearBody" type="StaticBody2D" parent="." unique_id=98124502 groups=["obstacle"]]
+z_index = 2
+position = Vector2(0, -150)
+
+[node name="Sprite2D" type="Sprite2D" parent="GearBody" unique_id=98124503]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_gear_tex")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GearBody" unique_id=98124504]
+shape = SubResource("CircleShape2D_gear")

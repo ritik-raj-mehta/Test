@@ -1,0 +1,102 @@
+[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://c1037cimoicvv"]
+
+[ext_resource type="Script" uid="uid://cyu66d57u6u66" path="res://game/scripts/data/ObjectData.gd" id="1_au4h5"]
+[ext_resource type="Script" uid="uid://rvbsp8ahmcnm" path="res://game/scripts/data/LevelData.gd" id="2_xpkqf"]
+
+[sub_resource type="Resource" id="Resource_au4h5"]
+script = ExtResource("1_au4h5")
+object_id = "wall"
+position = Vector2(892, 1600)
+
+[sub_resource type="Resource" id="Resource_xpkqf"]
+script = ExtResource("1_au4h5")
+object_id = "wall"
+position = Vector2(892, 800)
+
+[sub_resource type="Resource" id="Resource_jjaj0"]
+script = ExtResource("1_au4h5")
+object_id = "wall"
+position = Vector2(892, -32)
+
+[sub_resource type="Resource" id="Resource_aevn5"]
+script = ExtResource("1_au4h5")
+object_id = "wall"
+position = Vector2(892, -864)
+
+[sub_resource type="Resource" id="Resource_w5g84"]
+script = ExtResource("1_au4h5")
+object_id = "wall"
+position = Vector2(892, -1696)
+
+[sub_resource type="Resource" id="Resource_snw51"]
+script = ExtResource("1_au4h5")
+object_id = "wall"
+position = Vector2(2108, 1600)
+
+[sub_resource type="Resource" id="Resource_ut75v"]
+script = ExtResource("1_au4h5")
+object_id = "wall"
+position = Vector2(2108, 800)
+
+[sub_resource type="Resource" id="Resource_e42yh"]
+script = ExtResource("1_au4h5")
+object_id = "wall"
+position = Vector2(2108, -32)
+
+[sub_resource type="Resource" id="Resource_rith7"]
+script = ExtResource("1_au4h5")
+object_id = "wall"
+position = Vector2(2108, -864)
+
+[sub_resource type="Resource" id="Resource_aoiu3"]
+script = ExtResource("1_au4h5")
+object_id = "wall"
+position = Vector2(2108, -1696)
+
+[sub_resource type="Resource" id="Resource_l0h4y"]
+script = ExtResource("1_au4h5")
+object_id = "win_area"
+position = Vector2(1484.5217, -2075.3042)
+
+[sub_resource type="Resource" id="Resource_ynna0"]
+script = ExtResource("1_au4h5")
+object_id = "trigger_area"
+position = Vector2(1460, -140)
+scale = Vector2(5, 1)
+properties = {
+"area_height": 150.0,
+"area_width": 200.0,
+"trigger_tag": "trap_1"
+}
+
+[sub_resource type="Resource" id="Resource_d7wfu"]
+script = ExtResource("1_au4h5")
+object_id = "falling_stone"
+position = Vector2(1300, -1404)
+properties = {
+"fall_speed": 600.0,
+"knockback_force": 600.0,
+"rotation_speed": 4.0,
+"trigger_tag": "trap_1"
+}
+
+[sub_resource type="Resource" id="Resource_mjtk0"]
+script = ExtResource("1_au4h5")
+object_id = "falling_stone_spike"
+position = Vector2(1612, -1384)
+properties = {
+"fall_speed": 600.0,
+"rotation_speed": 4.0,
+"trigger_tag": "trap_1"
+}
+
+[resource]
+script = ExtResource("2_xpkqf")
+level_id = "level_002"
+level_name = "Level 2"
+player_start = Vector2(1500, 1276)
+level_size = Vector2(3000, 3000)
+camera_drag_left_margin = 0.9
+camera_drag_right_margin = 0.9
+objects = Array[ExtResource("1_au4h5")]([SubResource("Resource_au4h5"), SubResource("Resource_xpkqf"), SubResource("Resource_jjaj0"), SubResource("Resource_aevn5"), SubResource("Resource_w5g84"), SubResource("Resource_snw51"), SubResource("Resource_ut75v"), SubResource("Resource_e42yh"), SubResource("Resource_rith7"), SubResource("Resource_aoiu3"), SubResource("Resource_l0h4y"), SubResource("Resource_ynna0"), SubResource("Resource_d7wfu"), SubResource("Resource_mjtk0")])
+packed_tiles = PackedInt32Array(21, 37, 2, 7, 22, 37, 1, 7, 23, 37, 0, 4, 24, 37, 0, 4, 25, 37, 2, 7, 26, 37, 2, 7, 27, 37, 2, 7, 28, 37, 2, 7, 29, 37, 2, 7, 30, 37, 0, 4, 31, 37, 0, 4, 32, 37, 1, 7, 33, 37, 2, 7, 34, 37, 2, 7, 35, 37, 2, 7, 36, 37, 2, 7, 37, 37, 2, 7, 38, 37, 1, 7, 38, 38, 1, 7, 39, 38, 1, 7, 39, 37, 1, 7, 40, 37, 1, 7, 40, 41, 1, 7, 39, 41, 0, 7, 38, 41, 1, 7, 36, 41, 2, 7, 35, 41, 2, 7, 34, 41, 2, 7, 33, 41, 2, 7, 32, 41, 1, 7, 31, 41, 0, 4, 31, 40, 1, 7, 30, 40, 1, 7, 29, 40, 1, 7, 28, 40, 2, 7, 27, 40, 1, 7, 26, 40, 2, 7, 25, 40, 1, 7, 24, 40, 0, 4, 23, 40, 0, 4, 22, 40, 2, 7, 21, 40, 0, 4, 21, 41, 2, 7, 22, 41, 0, 4, 23, 41, 0, 4, 24, 41, 0, 4, 25, 41, 2, 7, 26, 41, 1, 7, 27, 41, 2, 7, 28, 41, 1, 7, 29, 41, 2, 7, 30, 41, 1, 7, 37, 41, 1, 7, 39, 40, 1, 7, 40, 40, 0, 7, 40, 39, 0, 7, 40, 38, 1, 7, 39, 39, 1, 7, 38, 39, 1, 7, 37, 39, 0, 7, 37, 40, 0, 7, 36, 40, 2, 7, 35, 40, 2, 7, 34, 40, 2, 7, 35, 39, 2, 7, 36, 39, 2, 7, 34, 39, 0, 4, 33, 40, 2, 7, 38, 40, 2, 7, 37, 38, 2, 7, 36, 38, 0, 4, 35, 38, 0, 4, 34, 38, 2, 7, 33, 38, 0, 4, 21, 38, 1, 7, 22, 38, 0, 4, 23, 38, 1, 7, 24, 38, 2, 7, 25, 38, 0, 4, 26, 38, 1, 7, 27, 38, 2, 7, 28, 38, 2, 7, 29, 38, 2, 7, 30, 38, 2, 7, 31, 38, 1, 7, 32, 38, 2, 7, 33, 39, 2, 7, 32, 39, 2, 7, 31, 39, 2, 7, 30, 39, 1, 7, 29, 39, 1, 7, 28, 39, 2, 7, 27, 39, 1, 7, 26, 39, 1, 7, 25, 39, 1, 7, 24, 39, 1, 7, 23, 39, 2, 7, 22, 39, 0, 4, 21, 39, 0, 4, 32, 40, 2, 7, 21, 36, 1, 7, 22, 36, 0, 4, 23, 36, 1, 7, 24, 36, 1, 7, 25, 36, 1, 7, 26, 36, 2, 7, 30, 36, 2, 7, 29, 36, 2, 7, 28, 36, 2, 7, 27, 36, 2, 7, 31, 36, 1, 7, 32, 36, 0, 4, 36, 36, 0, 4, 35, 36, 0, 4, 34, 36, 0, 4, 33, 36, 0, 4, 37, 36, 2, 7, 38, 36, 0, 4, 39, 36, 2, 7, 40, 36, 1, 7, 33, 21, 5, 7, 33, 22, 1, 7, 34, 21, 3, 7, 35, 21, 4, 7, 37, 21, 3, 7, 36, 21, 5, 7, 38, 21, 4, 7, 39, 21, 3, 7, 40, 21, 4, 7, 34, 22, 2, 7, 35, 22, 0, 7, 36, 22, 1, 7, 37, 22, 2, 7, 38, 22, 0, 7, 39, 22, 1, 7, 40, 22, 2, 7, 21, 13, 3, 7, 22, 13, 3, 2, 23, 13, 5, 7, 24, 13, 3, 2, 25, 13, 5, 7, 26, 13, 3, 2, 27, 13, 5, 7, 28, 13, 3, 7, 21, 14, 2, 7, 22, 14, 0, 4, 23, 14, 1, 7, 24, 14, 2, 7, 25, 14, 0, 4, 26, 14, 1, 7, 27, 14, 0, 4, 28, 14, 1, 7, 32, 21, 5, 7, 29, 13, 4, 7, 30, 13, 1, 0, 29, 14, 2, 7, 30, 14, 4, 4, 31, 21, 0, 0, 31, 22, 3, 4, 32, 22, 0, 7, 31, 6, 3, 4, 32, 6, 2, 7, 33, 6, 0, 7, 34, 6, 1, 7, 35, 6, 2, 7, 36, 6, 1, 7, 37, 6, 2, 7, 38, 6, 1, 7, 39, 6, 2, 7, 40, 6, 1, 7, 32, 5, 3, 7, 33, 5, 4, 7, 34, 5, 5, 7, 35, 5, 3, 7, 36, 5, 5, 7, 37, 5, 4, 7, 38, 5, 5, 7, 39, 5, 4, 7, 40, 5, 5, 7, 31, 5, 0, 0, 27, 34, 0, 0, 34, 34, 1, 0, 28, 34, 4, 7, 29, 34, 3, 7, 30, 34, 5, 7, 31, 34, 3, 7, 32, 34, 4, 7, 33, 34, 5, 7, 21, 35, 1, 7, 22, 35, 2, 7, 23, 35, 2, 7, 24, 35, 2, 7, 25, 35, 2, 7, 26, 35, 1, 7, 35, 35, 2, 7, 36, 35, 0, 4, 37, 35, 0, 4, 38, 35, 0, 4, 39, 35, 0, 4, 40, 35, 2, 7, 27, 35, 2, 7, 28, 35, 2, 7, 29, 35, 1, 7, 30, 35, 1, 7, 31, 35, 0, 4, 32, 35, 2, 7, 33, 35, 0, 4, 34, 35, 2, 7)

@@ -1,0 +1,198 @@
+[gd_scene format=3 uid="uid://uyxlhlrc7jgq"]
+
+[ext_resource type="Script" uid="uid://ce647qro5r771" path="res://game/scenes/gameplay/GamePlay.gd" id="1_gp"]
+[ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="3_mnhq6"]
+[ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="5_mnhq6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mnhq6"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(1347, 160, 208, 207)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w2wk2"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(1347, 160, 208, 207)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v3pij"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(2784, 742, 487, 146)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rr6cd"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(1352, 719, 198, 198)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ec1bk"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(1352, 719, 198, 198)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3a8pv"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(1347, 437, 208, 212)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gbh2i"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(1347, 437, 208, 212)
+
+[node name="GamePlay" type="Control" unique_id=134252221 node_paths=PackedStringArray("_level_root", "_background", "_home_layer", "_level_pill", "_level_label", "_tap_label", "_tap_area", "_settings_button", "_levels_button", "_skins_button")]
+process_mode = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gp")
+_level_root = NodePath("LevelRoot")
+_background = NodePath("BackgroundLayer/TextureRect")
+_home_layer = NodePath("HomeLayer")
+_level_pill = NodePath("HomeLayer/Margin/Column/TopBar/LevelPill")
+_level_label = NodePath("HomeLayer/Margin/Column/TopBar/LevelPill/LevelLabel")
+_tap_label = NodePath("HomeLayer/Margin/Column/Middle/TapLabel")
+_tap_area = NodePath("HomeLayer/TapArea")
+_settings_button = NodePath("HomeLayer/Margin/Column/TopBar/RightSlot/SettingsButton")
+_levels_button = NodePath("HomeLayer/Margin/Column/TopBar/LeftSlot/LevelsButton")
+_skins_button = NodePath("HomeLayer/Margin/Column/MiddleBar/LeftSlot/SkinButton")
+
+[node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=277800120]
+layer = -10
+
+[node name="TextureRect" type="TextureRect" parent="BackgroundLayer" unique_id=1153565442]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="LevelRoot" type="Node2D" parent="." unique_id=987654321]
+
+[node name="HomeLayer" type="CanvasLayer" parent="." unique_id=1528234899]
+process_mode = 3
+
+[node name="TapArea" type="Control" parent="HomeLayer" unique_id=1361909801]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 318.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="HomeLayer" unique_id=164081924]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 56
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 80
+
+[node name="Column" type="VBoxContainer" parent="HomeLayer/Margin" unique_id=1033741167]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+
+[node name="TopBar" type="HBoxContainer" parent="HomeLayer/Margin/Column" unique_id=410455774]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="LeftSlot" type="HBoxContainer" parent="HomeLayer/Margin/Column/TopBar" unique_id=965356969]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="LevelsButton" type="TextureButton" parent="HomeLayer/Margin/Column/TopBar/LeftSlot" unique_id=2013332559]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_mnhq6")
+texture_pressed = SubResource("AtlasTexture_w2wk2")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="LevelPill" type="TextureRect" parent="HomeLayer/Margin/Column/TopBar" unique_id=1301480174]
+custom_minimum_size = Vector2(300, 110)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_v3pij")
+expand_mode = 2
+
+[node name="LevelLabel" type="Label" parent="HomeLayer/Margin/Column/TopBar/LevelPill" unique_id=44706522]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -63.5
+offset_top = -26.5
+offset_right = 63.5
+offset_bottom = 26.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 38
+text = "Level 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RightSlot" type="HBoxContainer" parent="HomeLayer/Margin/Column/TopBar" unique_id=1586155996]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 2
+
+[node name="SettingsButton" type="TextureButton" parent="HomeLayer/Margin/Column/TopBar/RightSlot" unique_id=1724002568]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_rr6cd")
+texture_pressed = SubResource("AtlasTexture_ec1bk")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="MiddleBar" type="HBoxContainer" parent="HomeLayer/Margin/Column" unique_id=747070022]
+layout_mode = 2
+
+[node name="LeftSlot" type="HBoxContainer" parent="HomeLayer/Margin/Column/MiddleBar" unique_id=656170042]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="SkinButton" type="TextureButton" parent="HomeLayer/Margin/Column/MiddleBar/LeftSlot" unique_id=387624835]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_3a8pv")
+texture_pressed = SubResource("AtlasTexture_gbh2i")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Middle" type="CenterContainer" parent="HomeLayer/Margin/Column" unique_id=1958220787]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="TapLabel" type="Label" parent="HomeLayer/Margin/Column/Middle" unique_id=1453794451]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
+theme_override_colors/font_outline_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("5_mnhq6")
+theme_override_font_sizes/font_size = 76
+text = "Tap to Play"
+horizontal_alignment = 1
+vertical_alignment = 1

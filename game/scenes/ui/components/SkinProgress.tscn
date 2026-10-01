@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://dlgg04c5t1o3"]
+
+[ext_resource type="Script" uid="uid://c0fkpdtvtmeb3" path="res://game/scenes/ui/components/SkinProgress.gd" id="1_scr"]
+[ext_resource type="Texture2D" uid="uid://dopw8ueoeniti" path="res://game/assets/sprites/single/ui/progressEmpty.png" id="3_6s2do"]
+[ext_resource type="Texture2D" uid="uid://bk8i4bn843w7d" path="res://game/assets/sprites/single/ui/Group 56.png" id="4_6s2do"]
+[ext_resource type="Texture2D" uid="uid://b3otbya5awtay" path="res://game/assets/sprites/single/ui/progressFill.png" id="4_pxhtt"]
+
+[node name="SkinProgress" type="Control" unique_id=1424533513 node_paths=PackedStringArray("_bar")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_scr")
+_bar = NodePath("Bar")
+
+[node name="Bar" type="TextureProgressBar" parent="." unique_id=1115669483]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(725, 90)
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 90.0
+offset_top = -45.0
+offset_right = -161.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_filter = 2
+max_value = 1.0
+step = 0.001
+nine_patch_stretch = true
+stretch_margin_left = 22
+stretch_margin_top = 22
+stretch_margin_right = 22
+stretch_margin_bottom = 22
+texture_under = ExtResource("3_6s2do")
+texture_progress = ExtResource("4_pxhtt")
+
+[node name="Badge" type="TextureRect" parent="Bar" unique_id=912169435]
+z_index = 2
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 623.0
+offset_top = -89.0
+offset_right = 823.0
+offset_bottom = 111.0
+mouse_filter = 2
+texture = ExtResource("4_6s2do")
+expand_mode = 1
+stretch_mode = 5

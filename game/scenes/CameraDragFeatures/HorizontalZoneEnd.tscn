@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://c4qh3svugqjgj"]
+
+[ext_resource type="Script" uid="uid://g5l7wc6xfbs6" path="res://game/scenes/CameraDragFeatures/HorizontalZoneEndController.gd" id="1_hze"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f4nw3"]
+size = Vector2(300, 300)
+
+[node name="HorizontalZoneEnd" type="Area2D" unique_id=462944299 groups=["horizontal_zone_end"]]
+z_index = 15
+collision_layer = 0
+collision_mask = 3
+script = ExtResource("1_hze")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=664119326]
+shape = SubResource("RectangleShape2D_f4nw3")

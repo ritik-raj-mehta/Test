@@ -1,0 +1,161 @@
+[gd_scene format=3 uid="uid://blyi7mmhbnejx"]
+
+[ext_resource type="Texture2D" uid="uid://c3hbw0hgr2tue" path="res://game/assets/sprites/single/ui/Reff/Win_Reff.png" id="2_akpj5"]
+[ext_resource type="Texture2D" uid="uid://plk0ckihr7wt" path="res://game/assets/sprites/single/ui/level_completed.png" id="3_p4usr"]
+[ext_resource type="Script" uid="uid://d3irsxkw4od8w" path="res://game/scenes/ui/hfw/LevelCompletedPopup.gd" id="3_scr"]
+[ext_resource type="PackedScene" uid="uid://8tb47baum5hu" path="res://game/scenes/ui/components/CharacterView.tscn" id="4_pac"]
+[ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="5_p4usr"]
+[ext_resource type="PackedScene" uid="uid://dlgg04c5t1o3" path="res://game/scenes/ui/components/SkinProgress.tscn" id="14_pac"]
+
+[sub_resource type="Gradient" id="1_grad"]
+colors = PackedColorArray(0.91, 0.365, 0.29, 1, 0.976, 0.773, 0.416, 1)
+
+[sub_resource type="GradientTexture2D" id="2_grad"]
+gradient = SubResource("1_grad")
+fill_to = Vector2(0, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6s2do"]
+atlas = ExtResource("5_p4usr")
+region = Rect2(234, 747, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xokgu"]
+atlas = ExtResource("5_p4usr")
+region = Rect2(191, 127, 311, 310)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pxhtt"]
+atlas = ExtResource("5_p4usr")
+region = Rect2(239, 486, 212, 211)
+
+[node name="LevelCompletedPopup" type="Control" unique_id=2110015542 node_paths=PackedStringArray("_content", "_character", "_progress_bar", "_home_button", "_next_button", "_retry_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_scr")
+_content = NodePath("Margin")
+_character = NodePath("Margin/Column/Middle/Character")
+_progress_bar = NodePath("Margin/Column/Progress")
+_home_button = NodePath("Margin/Column/Buttons/HomeButton")
+_next_button = NodePath("Margin/Column/Buttons/NextButton")
+_retry_button = NodePath("Margin/Column/Buttons/RetryButton")
+
+[node name="Background" type="TextureRect" parent="." unique_id=491243612]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("2_grad")
+expand_mode = 1
+
+[node name="Background2" type="TextureRect" parent="." unique_id=573718518]
+visible = false
+self_modulate = Color(1, 1, 1, 0.61960787)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_akpj5")
+expand_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=360197406]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 200
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 200
+
+[node name="Column" type="VBoxContainer" parent="Margin" unique_id=2070341099]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 50
+
+[node name="Title" type="TextureRect" parent="Margin/Column" unique_id=1057017593]
+custom_minimum_size = Vector2(800, 200)
+layout_mode = 2
+texture = ExtResource("3_p4usr")
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="Margin/Column" unique_id=1330120869]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.106, 0.208, 0.341, 1)
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 96
+text = "Level Completed"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Middle" type="CenterContainer" parent="Margin/Column" unique_id=1103412253]
+custom_minimum_size = Vector2(0, 600)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Character" parent="Margin/Column/Middle" unique_id=1895024861 instance=ExtResource("4_pac")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="spacer2" type="Control" parent="Margin/Column" unique_id=1535835030]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="Progress" parent="Margin/Column" unique_id=118525381 instance=ExtResource("14_pac")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="spacer" type="Control" parent="Margin/Column" unique_id=536793691]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Margin/Column" unique_id=1040733127]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="HomeButton" type="TextureButton" parent="Margin/Column/Buttons" unique_id=2051271357]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_6s2do")
+texture_pressed = SubResource("AtlasTexture_6s2do")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="NextButton" type="TextureButton" parent="Margin/Column/Buttons" unique_id=1783942886]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_xokgu")
+texture_pressed = SubResource("AtlasTexture_xokgu")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="RetryButton" type="TextureButton" parent="Margin/Column/Buttons" unique_id=1606809066]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_pxhtt")
+texture_pressed = SubResource("AtlasTexture_pxhtt")
+ignore_texture_size = true
+stretch_mode = 5

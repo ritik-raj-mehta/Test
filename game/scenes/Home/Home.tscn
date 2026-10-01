@@ -1,0 +1,216 @@
+[gd_scene format=3 uid="uid://yx400vungere"]
+
+[ext_resource type="Script" uid="uid://cttr7gy0j8mf2" path="res://game/scenes/Home/Home.gd" id="1_scr"]
+[ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="3_mnhq6"]
+[ext_resource type="PackedScene" path="res://game/scenes/ui/components/Clouds.tscn" id="4_pac"]
+[ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="5_mnhq6"]
+
+[sub_resource type="Gradient" id="2_grad"]
+colors = PackedColorArray(0.184, 0.608, 1, 1, 0.769, 0.918, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="3_grad"]
+gradient = SubResource("2_grad")
+fill_to = Vector2(0, 1)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_n85gx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mnhq6"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(1347, 160, 208, 207)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w2wk2"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(1347, 160, 208, 207)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v3pij"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(2784, 742, 487, 146)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rr6cd"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(1352, 719, 198, 198)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ec1bk"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(1352, 719, 198, 198)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3a8pv"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(1347, 437, 208, 212)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gbh2i"]
+atlas = ExtResource("3_mnhq6")
+region = Rect2(1347, 437, 208, 212)
+
+[node name="Home" type="Control" unique_id=794000186 node_paths=PackedStringArray("_level_label", "_tap_label", "_tap_area", "_settings_button", "_levels_button", "_skins_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_scr")
+_level_label = NodePath("Margin/Column/TopBar/LevelPill/LevelLabel")
+_tap_label = NodePath("Margin/Column/Middle/TapLabel")
+_tap_area = NodePath("TapArea")
+_settings_button = NodePath("Margin/Column/TopBar/RightSlot/SettingsButton")
+_levels_button = NodePath("Margin/Column/TopBar/LeftSlot/LevelsButton")
+_skins_button = NodePath("Margin/Column/MiddleBar/LeftSlot/SkinButton")
+
+[node name="Background" type="TextureRect" parent="." unique_id=279157169]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("3_grad")
+expand_mode = 1
+
+[node name="BG" type="TextureRect" parent="." unique_id=1633765404]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("CanvasTexture_n85gx")
+expand_mode = 1
+
+[node name="Clouds" parent="." unique_id=1411939743 instance=ExtResource("4_pac")]
+visible = false
+layout_mode = 1
+
+[node name="TapArea" type="Control" parent="." unique_id=2122504040]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=76942829]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 56
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 80
+
+[node name="Column" type="VBoxContainer" parent="Margin" unique_id=87168083]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+
+[node name="TopBar" type="HBoxContainer" parent="Margin/Column" unique_id=541154416]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="LeftSlot" type="HBoxContainer" parent="Margin/Column/TopBar" unique_id=966280061]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="LevelsButton" type="TextureButton" parent="Margin/Column/TopBar/LeftSlot" unique_id=200534991]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_mnhq6")
+texture_pressed = SubResource("AtlasTexture_w2wk2")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="LevelPill" type="TextureRect" parent="Margin/Column/TopBar" unique_id=1516308647]
+custom_minimum_size = Vector2(300, 110)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_v3pij")
+expand_mode = 2
+
+[node name="LevelLabel" type="Label" parent="Margin/Column/TopBar/LevelPill" unique_id=165879624]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -63.5
+offset_top = -26.5
+offset_right = 63.5
+offset_bottom = 26.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 38
+text = "Level 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RightSlot" type="HBoxContainer" parent="Margin/Column/TopBar" unique_id=1557099931]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 2
+
+[node name="SettingsButton" type="TextureButton" parent="Margin/Column/TopBar/RightSlot" unique_id=1537728439]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_rr6cd")
+texture_pressed = SubResource("AtlasTexture_ec1bk")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="MiddleBar" type="HBoxContainer" parent="Margin/Column" unique_id=1247299760]
+layout_mode = 2
+
+[node name="LeftSlot" type="HBoxContainer" parent="Margin/Column/MiddleBar" unique_id=1392848584]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="SkinButton" type="TextureButton" parent="Margin/Column/MiddleBar/LeftSlot" unique_id=1795175223]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_3a8pv")
+texture_pressed = SubResource("AtlasTexture_gbh2i")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Middle" type="CenterContainer" parent="Margin/Column" unique_id=1172342289]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="TapLabel" type="Label" parent="Margin/Column/Middle" unique_id=198527051]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
+theme_override_colors/font_outline_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("5_mnhq6")
+theme_override_font_sizes/font_size = 76
+text = "Tap to Play"
+horizontal_alignment = 1
+vertical_alignment = 1

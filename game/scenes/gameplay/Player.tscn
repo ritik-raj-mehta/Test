@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://b5jwaurrnmkce"]
+
+[ext_resource type="Script" uid="uid://bua50daqrujd6" path="res://game/scenes/gameplay/Player.gd" id="1_ij6vw"]
+[ext_resource type="Texture2D" uid="uid://brmqrkbhwdfgj" path="res://game/assets/sprites/single/Player.png" id="2_0orer"]
+[ext_resource type="Script" uid="uid://ubdgieamywxd" path="res://game/scripts/controllers/CameraController.gd" id="2_5mcib"]
+[ext_resource type="PackedScene" uid="uid://dw1tbdikujs75" path="res://game/TrailandAnimations/Trail.tscn" id="5_qbbid"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_44cfe"]
+size = Vector2(69, 73)
+
+[node name="Player" type="CharacterBody2D" unique_id=927742863]
+z_index = 10
+collision_layer = 2
+collision_mask = 23
+script = ExtResource("1_ij6vw")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=486011747]
+drag_vertical_enabled = true
+editor_draw_drag_margin = true
+script = ExtResource("2_5mcib")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=138880409]
+position = Vector2(0, 13)
+shape = SubResource("RectangleShape2D_44cfe")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=158956230]
+z_index = 10
+scale = Vector2(0.07, 0.07)
+texture = ExtResource("2_0orer")
+
+[node name="Trail" parent="." unique_id=1853944517 instance=ExtResource("5_qbbid")]

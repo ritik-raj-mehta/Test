@@ -1,0 +1,207 @@
+[gd_scene format=3 uid="uid://cbp1iudqmyyi1"]
+
+[ext_resource type="Texture2D" uid="uid://dtmlnlxbq0ey0" path="res://game/assets/sprites/single/ui/Reff/skin_Reff.png" id="2_qyhv8"]
+[ext_resource type="Texture2D" uid="uid://dtll8bitldi3m" path="res://game/assets/sprites/single/ui/back.png" id="3_ocs36"]
+[ext_resource type="Script" uid="uid://uaouktyhodwl" path="res://game/scenes/Skins/Skins.gd" id="3_scr"]
+[ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="4_c7mn2"]
+[ext_resource type="PackedScene" uid="uid://bifh6tn11towv" path="res://game/scenes/ui/components/CharacterSkin(1).tscn" id="6_hs8q2"]
+[ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="6_hywlw"]
+[ext_resource type="PackedScene" uid="uid://dm40ba5fbtwmj" path="res://game/scenes/ui/components/CharacterSkin(2).tscn" id="7_fs46r"]
+[ext_resource type="Script" uid="uid://bsnyfhunua8de" path="res://game/scenes/Skins/SkinCarousel.gd" id="8_car"]
+[ext_resource type="PackedScene" uid="uid://rpn37gt2ukl3" path="res://game/scenes/ui/components/CharacterSkin(3).tscn" id="8_vls40"]
+[ext_resource type="PackedScene" uid="uid://cedncu07phqsj" path="res://game/scenes/ui/components/CharacterSkin(4).tscn" id="9_diwqi"]
+[ext_resource type="PackedScene" uid="uid://d2v7qbu1wb74s" path="res://game/scenes/ui/components/CharacterSkin(5).tscn" id="10_fkiww"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_hufkq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rtnyd"]
+atlas = ExtResource("6_hywlw")
+region = Rect2(2375, 445, 176, 181)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aaj77"]
+atlas = ExtResource("6_hywlw")
+region = Rect2(2375, 445, 176, 181)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uvm4r"]
+atlas = ExtResource("6_hywlw")
+region = Rect2(653, 784, 496, 142)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3f7wr"]
+atlas = ExtResource("6_hywlw")
+region = Rect2(653, 784, 496, 142)
+
+[node name="Skins" type="Control" unique_id=890826363 node_paths=PackedStringArray("_carousel", "_select_button", "_prev_button", "_next_button", "_back_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_scr")
+_carousel = NodePath("Margin/Column/Middle/Stage/Row/Carousel")
+_select_button = NodePath("Margin/Column/Middle/Stage/SelectButton")
+_prev_button = NodePath("Margin/Column/Middle/Stage/Row/PrevButton")
+_next_button = NodePath("Margin/Column/Middle/Stage/Row/NextButton")
+_back_button = NodePath("Margin/Column/HBoxContainer/BackButton")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1920039283]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_qyhv8")
+expand_mode = 1
+
+[node name="Background2" type="TextureRect" parent="." unique_id=19641647]
+self_modulate = Color(0, 0, 0, 0.5882353)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("CanvasTexture_hufkq")
+expand_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1973799855]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 100
+
+[node name="Column" type="VBoxContainer" parent="Margin" unique_id=1998847682]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/Column" unique_id=343764961]
+layout_mode = 2
+
+[node name="BackButton" type="TextureButton" parent="Margin/Column/HBoxContainer" unique_id=1545208163]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+focus_mode = 0
+texture_normal = ExtResource("3_ocs36")
+texture_pressed = ExtResource("3_ocs36")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Space" type="Control" parent="Margin/Column" unique_id=1666925446]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Margin/Column" unique_id=690296478]
+layout_mode = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(15.705, -11.635)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
+theme_override_colors/font_outline_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
+theme_override_constants/shadow_offset_x = -1
+theme_override_constants/shadow_offset_y = 9
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("4_c7mn2")
+theme_override_font_sizes/font_size = 130
+text = "Skins"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Middle" type="CenterContainer" parent="Margin/Column" unique_id=1187385199]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Stage" type="VBoxContainer" parent="Margin/Column/Middle" unique_id=763046058]
+custom_minimum_size = Vector2(0, 850)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 40
+
+[node name="Row" type="HBoxContainer" parent="Margin/Column/Middle/Stage" unique_id=1333781607]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="PrevButton" type="TextureButton" parent="Margin/Column/Middle/Stage/Row" unique_id=1724063498]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Icon" type="TextureRect" parent="Margin/Column/Middle/Stage/Row/PrevButton" unique_id=895826025]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_rtnyd")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Carousel" type="Control" parent="Margin/Column/Middle/Stage/Row" unique_id=1948549621]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(700, 520)
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+script = ExtResource("8_car")
+prefabs = Array[PackedScene]([ExtResource("6_hs8q2"), ExtResource("7_fs46r"), ExtResource("8_vls40"), ExtResource("9_diwqi"), ExtResource("10_fkiww")])
+spacing = 350.0
+
+[node name="NextButton" type="TextureButton" parent="Margin/Column/Middle/Stage/Row" unique_id=723955327]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Icon" type="TextureRect" parent="Margin/Column/Middle/Stage/Row/NextButton" unique_id=236961057]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_aaj77")
+expand_mode = 1
+stretch_mode = 5
+flip_h = true
+
+[node name="Space" type="Control" parent="Margin/Column/Middle/Stage" unique_id=2120427652]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SelectButton" type="TextureButton" parent="Margin/Column/Middle/Stage" unique_id=1882817149]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = SubResource("AtlasTexture_uvm4r")
+texture_pressed = SubResource("AtlasTexture_3f7wr")
+stretch_mode = 5

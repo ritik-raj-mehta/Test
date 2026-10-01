@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://h0y0h6owdl37"]
+
+[ext_resource type="Script" uid="uid://ukvwkll4agq6" path="res://game/scenes/Obstacles/Goal.gd" id="1_sk4dj"]
+[ext_resource type="Texture2D" uid="uid://65pnnmdu54nw" path="res://game/assets/sprites/obstacles/GoalLight.png" id="2_i4fth"]
+[ext_resource type="Texture2D" uid="uid://t1865ha0l83k" path="res://game/assets/sprites/obstacles/Fruit1.png" id="2_sk4dj"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sk4dj"]
+radius = 63.007935
+
+[node name="Goal" type="Area2D" unique_id=518839195]
+collision_mask = 3
+script = ExtResource("1_sk4dj")
+
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=943633413]
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("2_i4fth")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2081654907]
+shape = SubResource("CircleShape2D_sk4dj")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=50132943]
+scale = Vector2(0.5590062, 0.5590062)
+texture = ExtResource("2_sk4dj")
+
+[node name="AttractionPoint" type="Marker2D" parent="." unique_id=1621679752]

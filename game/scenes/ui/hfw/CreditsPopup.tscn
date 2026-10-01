@@ -1,0 +1,153 @@
+[gd_scene format=3 uid="uid://ds2htc0i3a8dm"]
+
+[ext_resource type="Script" uid="uid://bw56hn8xcx1ub" path="res://game/scenes/ui/hfw/CreditsPopup.gd" id="3_scr"]
+[ext_resource type="Texture2D" uid="uid://c6tojp8wakcrg" path="res://game/assets/sprites/single/ui/popup.png" id="3_v4qb5"]
+[ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="4_ftqqp"]
+[ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="4_v6kyx"]
+[ext_resource type="Texture2D" uid="uid://c84wdarimhfrq" path="res://game/assets/sprites/single/ui/Reff/credit_reff.png" id="5_v4qb5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uvm4r"]
+atlas = ExtResource("4_v6kyx")
+region = Rect2(2375, 187, 170, 173)
+
+[node name="CreditsPopup" type="Control" unique_id=1513163033 node_paths=PackedStringArray("_content", "_back_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_scr")
+_content = NodePath("Holder/Window")
+_back_button = NodePath("Holder/Window/BackButton")
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=2109479275]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5882353)
+
+[node name="Holder" type="Control" parent="." unique_id=1570605328]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Window" type="MarginContainer" parent="Holder" unique_id=295000572]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 100
+
+[node name="TextureRect" type="TextureRect" parent="Holder/Window" unique_id=708517249]
+custom_minimum_size = Vector2(0, 700)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("3_v4qb5")
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="Holder/Window/TextureRect" unique_id=1475051613]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -245.5
+offset_right = 240.5
+offset_bottom = 175.0
+grow_horizontal = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(-0.82, 1.61)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/shadow_offset_x = -1
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_outline_size = 8
+theme_override_fonts/font = ExtResource("4_ftqqp")
+theme_override_font_sizes/font_size = 81
+text = "Credits"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="ParaLabel" type="Label" parent="Holder/Window/TextureRect" unique_id=164556113]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -384.0
+offset_top = -281.5
+offset_right = 382.0
+offset_bottom = 400.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_ftqqp")
+theme_override_font_sizes/font_size = 17
+text = "This game uses Godot Engine, available under the following license:
+
+Copyright (c) 2014-present Godot Engine contributors.
+Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \"Software\"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BackButton" type="TextureButton" parent="Holder/Window" unique_id=878216380]
+z_index = 1
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_uvm4r")
+texture_pressed = SubResource("AtlasTexture_uvm4r")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=999334523]
+visible = false
+self_modulate = Color(1, 1, 1, 0.4627451)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_v4qb5")
+expand_mode = 1

@@ -1,0 +1,329 @@
+[gd_scene format=3 uid="uid://dglvkmj5qqh8j"]
+
+[ext_resource type="Script" uid="uid://btx5qit75ev61" path="res://game/scenes/ui/hfw/SettingsPopup.gd" id="1_scr"]
+[ext_resource type="Texture2D" uid="uid://c6tojp8wakcrg" path="res://game/assets/sprites/single/ui/popup.png" id="3_qq01r"]
+[ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_yf848"]
+[ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="4_k0rgi"]
+[ext_resource type="Texture2D" uid="uid://bl81gi5h5jaie" path="res://game/assets/sprites/single/ui/Reff/Settings_Reff.png" id="7_8y0vm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uvm4r"]
+atlas = ExtResource("4_k0rgi")
+region = Rect2(1686, 180, 214, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3f7wr"]
+atlas = ExtResource("4_k0rgi")
+region = Rect2(1686, 421, 214, 193)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qq01r"]
+atlas = ExtResource("4_k0rgi")
+region = Rect2(1686, 905, 214, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k0rgi"]
+atlas = ExtResource("4_k0rgi")
+region = Rect2(1686, 663, 214, 193)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fi6yo"]
+atlas = ExtResource("4_k0rgi")
+region = Rect2(618, 180, 567, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8y0vm"]
+atlas = ExtResource("4_k0rgi")
+region = Rect2(618, 180, 567, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q3dfr"]
+atlas = ExtResource("4_k0rgi")
+region = Rect2(618, 483, 567, 132)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5hkiq"]
+atlas = ExtResource("4_k0rgi")
+region = Rect2(2375, 187, 170, 173)
+
+[node name="SettingsPopup" type="Control" unique_id=1955475646 node_paths=PackedStringArray("_window", "_sfx_toggle", "_music_toggle", "_terms_button", "_credits_button", "_privacy_button", "_back_button")]
+z_index = 10
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_scr")
+_window = NodePath("Holder/Window")
+_sfx_toggle = NodePath("Holder/Window/Frame/Content/Toggles/SfxToggle")
+_music_toggle = NodePath("Holder/Window/Frame/Content/Toggles/MusicToggle")
+_terms_button = NodePath("Holder/Window/Frame/Content/TermsButton")
+_credits_button = NodePath("Holder/Window/Frame/Content/CreditsButton")
+_privacy_button = NodePath("Holder/Window/Frame/Content/PrivacyButton")
+_back_button = NodePath("Holder/Window/BackButton")
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1552767691]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5882353)
+
+[node name="Holder" type="Control" parent="." unique_id=1232784387]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Window" type="MarginContainer" parent="Holder" unique_id=319264505]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 100
+
+[node name="Frame" type="TextureRect" parent="Holder/Window" unique_id=182380042]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("3_qq01r")
+
+[node name="TitleLabel" type="Label" parent="Holder/Window/Frame" unique_id=1472791989]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -245.5
+offset_right = 240.5
+offset_bottom = 175.0
+grow_horizontal = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(-0.82, 1.61)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/shadow_offset_x = -1
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_outline_size = 8
+theme_override_fonts/font = ExtResource("3_yf848")
+theme_override_font_sizes/font_size = 81
+text = "Settings"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="Content" type="Control" parent="Holder/Window/Frame" unique_id=1329008389]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -282.5
+offset_right = 290.0
+offset_bottom = 406.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Toggles" type="HBoxContainer" parent="Holder/Window/Frame/Content" unique_id=618109595]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -289.5
+offset_top = -292.5
+offset_right = 290.5
+offset_bottom = -112.5
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+mouse_filter = 2
+theme_override_constants/separation = 120
+alignment = 1
+
+[node name="SfxToggle" type="TextureButton" parent="Holder/Window/Frame/Content/Toggles" unique_id=492475922]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="IconOn" type="TextureRect" parent="Holder/Window/Frame/Content/Toggles/SfxToggle" unique_id=761884186]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 36.0
+offset_top = 36.0
+offset_right = -36.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_uvm4r")
+stretch_mode = 5
+
+[node name="IconOff" type="TextureRect" parent="Holder/Window/Frame/Content/Toggles/SfxToggle" unique_id=795104396]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 36.0
+offset_top = 36.0
+offset_right = -36.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_3f7wr")
+stretch_mode = 5
+
+[node name="MusicToggle" type="TextureButton" parent="Holder/Window/Frame/Content/Toggles" unique_id=1246918489]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="IconOn" type="TextureRect" parent="Holder/Window/Frame/Content/Toggles/MusicToggle" unique_id=737895675]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 36.0
+offset_top = 36.0
+offset_right = -36.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_qq01r")
+stretch_mode = 5
+
+[node name="IconOff" type="TextureRect" parent="Holder/Window/Frame/Content/Toggles/MusicToggle" unique_id=1590733022]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 36.0
+offset_top = 36.0
+offset_right = -36.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_k0rgi")
+stretch_mode = 5
+
+[node name="TermsButton" type="TextureButton" parent="Holder/Window/Frame/Content" unique_id=1265701574]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(580, 110)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -55.0
+offset_right = 290.0
+offset_bottom = 55.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+offset_transform_position = Vector2(0, 23.055)
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_fi6yo")
+texture_pressed = SubResource("AtlasTexture_8y0vm")
+ignore_texture_size = true
+
+[node name="CreditsButton" type="TextureButton" parent="Holder/Window/Frame/Content" unique_id=901083905]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 110)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -249.5
+offset_top = 114.5
+offset_right = 250.5
+offset_bottom = 224.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+offset_transform_enabled = true
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_q3dfr")
+texture_pressed = SubResource("AtlasTexture_q3dfr")
+ignore_texture_size = true
+stretch_mode = 3
+
+[node name="PrivacyButton" type="LinkButton" parent="Holder/Window/Frame/Content" unique_id=1211716039]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -127.5
+offset_top = 269.5
+offset_right = 127.5
+offset_bottom = 318.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+focus_mode = 0
+theme_override_colors/font_color = Color(0.231, 0.29, 0.4, 1)
+theme_override_colors/font_pressed_color = Color(0.231, 0.29, 0.4, 1)
+theme_override_colors/font_hover_color = Color(0.231, 0.29, 0.4, 1)
+theme_override_fonts/font = ExtResource("3_yf848")
+theme_override_font_sizes/font_size = 40
+text = "Privacy Policy"
+uri = "https://thegamewise.com/privacy-policy"
+
+[node name="BackButton" type="TextureButton" parent="Holder/Window" unique_id=2038751375]
+unique_name_in_owner = true
+z_index = 1
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+offset_transform_position = Vector2(2.06, 0)
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_5hkiq")
+texture_pressed = SubResource("AtlasTexture_5hkiq")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=598375230]
+visible = false
+self_modulate = Color(1, 1, 1, 0.5019608)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_8y0vm")
+expand_mode = 1

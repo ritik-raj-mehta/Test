@@ -1,0 +1,127 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://game/scenes/test/UIShowcase.gd" id="3_scr"]
+
+[sub_resource type="Gradient" id="1_grad"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.184, 0.608, 1.000, 1.0, 0.769, 0.918, 1.000, 1.0)
+
+[sub_resource type="GradientTexture2D" id="2_grad"]
+gradient = SubResource("1_grad")
+fill_from = Vector2(0, 0)
+fill_to = Vector2(0, 1)
+
+[node name="UIShowcase" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_scr")
+mouse_filter = 0
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 0
+texture = SubResource("2_grad")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 80
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 80
+theme_override_constants/margin_bottom = 100
+
+[node name="Column" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 24
+
+[node name="TitleLabel" type="Label" parent="Margin/Column"]
+layout_mode = 2
+mouse_filter = 2
+text = "UI Showcase"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_colors/font_color = Color(1.000, 1.000, 1.000, 1.0)
+theme_override_font_sizes/font_size = 64
+theme_override_colors/font_outline_color = Color(0.106, 0.208, 0.341, 1.0)
+theme_override_constants/outline_size = 10
+
+[node name="LoadingButton" type="Button" parent="Margin/Column"]
+layout_mode = 2
+unique_name_in_owner = true
+focus_mode = 0
+custom_minimum_size = Vector2(0, 110)
+text = "Loading"
+theme_override_font_sizes/font_size = 44
+
+[node name="HomeButton" type="Button" parent="Margin/Column"]
+layout_mode = 2
+unique_name_in_owner = true
+focus_mode = 0
+custom_minimum_size = Vector2(0, 110)
+text = "Home"
+theme_override_font_sizes/font_size = 44
+
+[node name="SkinsButton" type="Button" parent="Margin/Column"]
+layout_mode = 2
+unique_name_in_owner = true
+focus_mode = 0
+custom_minimum_size = Vector2(0, 110)
+text = "Skins"
+theme_override_font_sizes/font_size = 44
+
+[node name="WorldsButton" type="Button" parent="Margin/Column"]
+layout_mode = 2
+unique_name_in_owner = true
+focus_mode = 0
+custom_minimum_size = Vector2(0, 110)
+text = "Worlds"
+theme_override_font_sizes/font_size = 44
+
+[node name="SettingsButton" type="Button" parent="Margin/Column"]
+layout_mode = 2
+unique_name_in_owner = true
+focus_mode = 0
+custom_minimum_size = Vector2(0, 110)
+text = "Settings popup"
+theme_override_font_sizes/font_size = 44
+
+[node name="CreditsButton" type="Button" parent="Margin/Column"]
+layout_mode = 2
+unique_name_in_owner = true
+focus_mode = 0
+custom_minimum_size = Vector2(0, 110)
+text = "Credits popup"
+theme_override_font_sizes/font_size = 44
+
+[node name="TapTapButton" type="Button" parent="Margin/Column"]
+layout_mode = 2
+unique_name_in_owner = true
+focus_mode = 0
+custom_minimum_size = Vector2(0, 110)
+text = "Tap Tap popup"
+theme_override_font_sizes/font_size = 44
+
+[node name="LevelCompletedButton" type="Button" parent="Margin/Column"]
+layout_mode = 2
+unique_name_in_owner = true
+focus_mode = 0
+custom_minimum_size = Vector2(0, 110)
+text = "Level Completed"
+theme_override_font_sizes/font_size = 44

@@ -1,0 +1,238 @@
+[gd_scene format=3 uid="uid://b5fucrf0lx748"]
+
+[ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_3b831"]
+[ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="3_lfd2g"]
+[ext_resource type="Script" uid="uid://b1rvynueyodc0" path="res://game/scenes/Worlds/Worlds.gd" id="3_scr"]
+[ext_resource type="Texture2D" uid="uid://db8jly2hmwrgj" path="res://game/assets/sprites/single/ui/leftArrow.png" id="3_uua01"]
+[ext_resource type="PackedScene" uid="uid://d2b3n20q8x6ym" path="res://game/scenes/Worlds/LevelTile.tscn" id="4_pac"]
+[ext_resource type="Texture2D" uid="uid://buv2tvm4go7h6" path="res://game/assets/sprites/single/ui/numberTray.png" id="5_naaav"]
+[ext_resource type="PackedScene" uid="uid://c782i88d10f30" path="res://game/scenes/Worlds/WorldCard.tscn" id="6_lfd2g"]
+[ext_resource type="Texture2D" uid="uid://u4yhlumej873" path="res://game/assets/sprites/single/ui/Reff/worlds_Reff.png" id="7_lfd2g"]
+[ext_resource type="Script" uid="uid://cls7ovfqx7oc8" path="res://game/scenes/Worlds/WorldCarousel.gd" id="8_wc"]
+[ext_resource type="Script" uid="uid://b71bs0e3x413o" path="res://game/scenes/Worlds/LevelGrid.gd" id="9_lg"]
+
+[sub_resource type="Gradient" id="1_grad"]
+colors = PackedColorArray(0.91, 0.365, 0.29, 1, 0.976, 0.773, 0.416, 1)
+
+[sub_resource type="GradientTexture2D" id="2_grad"]
+gradient = SubResource("1_grad")
+fill_to = Vector2(0, 1)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_v4qb5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wbu85"]
+atlas = ExtResource("3_lfd2g")
+region = Rect2(2375, 445, 176, 181)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lfd2g"]
+atlas = ExtResource("3_lfd2g")
+region = Rect2(2375, 187, 170, 173)
+
+[node name="Worlds" type="Control" unique_id=183030971 node_paths=PackedStringArray("_carousel", "_grid", "_prev_button", "_next_button", "_back_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_scr")
+tile_scene = ExtResource("4_pac")
+_carousel = NodePath("Margin/Column/WorldRow/WorldCarousel")
+_grid = NodePath("Margin/Column/Middle/LevelGrid")
+_prev_button = NodePath("Margin/Column/WorldRow/PrevButton")
+_next_button = NodePath("Margin/Column/WorldRow/NextButton")
+_back_button = NodePath("Margin/Column/BackButton")
+
+[node name="Background" type="TextureRect" parent="." unique_id=2032902289]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("2_grad")
+expand_mode = 1
+
+[node name="Background2" type="TextureRect" parent="." unique_id=373953723]
+visible = false
+self_modulate = Color(0, 0, 0, 0.5882353)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("CanvasTexture_v4qb5")
+expand_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=106989999]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 200
+
+[node name="Column" type="Control" parent="Margin" unique_id=717924892]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TitleLabel" type="Label" parent="Margin/Column" unique_id=1983289762]
+layout_mode = 0
+offset_top = 101.0
+offset_right = 984.0
+offset_bottom = 216.0
+offset_transform_enabled = true
+offset_transform_position = Vector2(7.425, -14.265)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
+theme_override_colors/font_outline_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
+theme_override_constants/shadow_offset_x = -2
+theme_override_constants/shadow_offset_y = 6
+theme_override_constants/outline_size = 10
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("3_3b831")
+theme_override_font_sizes/font_size = 130
+text = "Worlds"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WorldRow" type="HBoxContainer" parent="Margin/Column" unique_id=163156376]
+layout_mode = 0
+offset_left = -29.0
+offset_top = 291.0
+offset_right = 1003.0
+offset_bottom = 778.0
+mouse_filter = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="PrevButton" type="TextureButton" parent="Margin/Column/WorldRow" unique_id=824976593]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 150)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_wbu85")
+texture_pressed = SubResource("AtlasTexture_wbu85")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Icon" type="TextureRect" parent="Margin/Column/WorldRow/PrevButton" unique_id=928478738]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_uua01")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WorldCarousel" type="Control" parent="Margin/Column/WorldRow" unique_id=626527528]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(600, 450)
+custom_maximum_size = Vector2(700, -1)
+layout_mode = 2
+size_flags_horizontal = 3
+offset_transform_enabled = true
+offset_transform_position = Vector2(-9, 0)
+mouse_filter = 1
+script = ExtResource("8_wc")
+card_scene = ExtResource("6_lfd2g")
+card_size = Vector2(630, 440)
+
+[node name="NextButton" type="TextureButton" parent="Margin/Column/WorldRow" unique_id=1939088698]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 150)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_wbu85")
+texture_pressed = SubResource("AtlasTexture_wbu85")
+ignore_texture_size = true
+stretch_mode = 5
+flip_h = true
+
+[node name="Icon" type="TextureRect" parent="Margin/Column/WorldRow/NextButton" unique_id=950476256]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_uua01")
+expand_mode = 1
+stretch_mode = 5
+flip_h = true
+
+[node name="Middle" type="TextureRect" parent="Margin/Column" unique_id=945932745]
+layout_mode = 0
+offset_left = 58.0
+offset_top = 833.0
+offset_right = 923.0
+offset_bottom = 1561.0
+size_flags_vertical = 3
+mouse_filter = 2
+texture = ExtResource("5_naaav")
+stretch_mode = 5
+
+[node name="LevelGrid" type="Control" parent="Margin/Column/Middle" unique_id=1857938593]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 100.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("9_lg")
+tile_scene = ExtResource("4_pac")
+
+[node name="BackButton" type="TextureButton" parent="Margin/Column" unique_id=1363263649]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = -21.0
+offset_top = -14.0
+offset_right = 108.0
+offset_bottom = 130.0
+size_flags_horizontal = 4
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_lfd2g")
+texture_pressed = SubResource("AtlasTexture_lfd2g")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=2003241596]
+visible = false
+self_modulate = Color(1, 1, 1, 0.5372549)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_lfd2g")
+expand_mode = 1

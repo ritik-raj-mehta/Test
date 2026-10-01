@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://b8k12yav4c7a1"]
+
+[ext_resource type="Script" uid="uid://c54hxltn5pt0c" path="res://game/scenes/CameraDragFeatures/HorizontalZoneTriggerController.gd" id="1_hz"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_start"]
+size = Vector2(300, 300)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_end"]
+size = Vector2(300, 300)
+
+[node name="HorizontalZoneTrigger" type="Node2D" unique_id=987214052 groups=["horizontal_zone_trigger"]]
+z_index = 15
+script = ExtResource("1_hz")
+
+[node name="StartArea" type="Area2D" parent="." unique_id=987214053]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StartArea" unique_id=482019372]
+shape = SubResource("RectangleShape2D_start")
+
+[node name="EndArea" type="Area2D" parent="." unique_id=987214054]
+position = Vector2(800, 0)
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EndArea" unique_id=482019373]
+shape = SubResource("RectangleShape2D_end")

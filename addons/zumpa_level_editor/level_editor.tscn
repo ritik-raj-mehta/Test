@@ -1,0 +1,1137 @@
+[gd_scene format=3 uid="uid://ct3d10hctosr7"]
+
+[ext_resource type="Script" uid="uid://dccu8u74rggu4" path="res://addons/zumpa_level_editor/level_editor.gd" id="1_ed"]
+[ext_resource type="Script" uid="uid://dyjituoi57nhl" path="res://addons/zumpa_level_editor/level_canvas.gd" id="2_cv"]
+[ext_resource type="Script" uid="uid://cg2g0w41okk2a" path="res://addons/zumpa_level_editor/atlas_palette_picker.gd" id="4_ap"]
+[ext_resource type="Texture2D" uid="uid://cw24ethkpyv6o" path="res://game/assets/sprites/atlases/tiles/Tile3.png" id="4_vy7eb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vy7eb"]
+atlas = ExtResource("4_vy7eb")
+region = Rect2(352, 32, 32, 32)
+
+[node name="TilePreviewRect" type="Control" unique_id=1578408495]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_ed")
+
+[node name="MainVBox" type="VBoxContainer" parent="." unique_id=56333071]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBarPanel" type="PanelContainer" parent="MainVBox" unique_id=81378314]
+layout_mode = 2
+
+[node name="TopBar" type="HFlowContainer" parent="MainVBox/TopBarPanel" unique_id=2100257227]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 6
+
+[node name="Label" type="Label" parent="MainVBox/TopBarPanel/TopBar" unique_id=465307556]
+layout_mode = 2
+text = " ZUMPA LEVEL EDITOR "
+
+[node name="VSeparator" type="VSeparator" parent="MainVBox/TopBarPanel/TopBar" unique_id=1141180962]
+layout_mode = 2
+
+[node name="ToggleLeftBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11115]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = " ◀ Items "
+
+[node name="ToggleRightBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11116]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = " Inspector ▶ "
+
+[node name="VSeparator0" type="VSeparator" parent="MainVBox/TopBarPanel/TopBar" unique_id=98721034]
+layout_mode = 2
+
+[node name="NewBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11101]
+unique_name_in_owner = true
+layout_mode = 2
+text = " New "
+
+[node name="SaveBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11102]
+unique_name_in_owner = true
+layout_mode = 2
+text = " Save "
+
+[node name="LoadBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11103]
+unique_name_in_owner = true
+layout_mode = 2
+text = " Load "
+
+[node name="ExportResBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11117]
+unique_name_in_owner = true
+layout_mode = 2
+text = " 📦 Export .RES "
+
+[node name="ExportTscnBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11118]
+unique_name_in_owner = true
+layout_mode = 2
+text = " 🎬 Export .TSCN "
+
+[node name="LevelSelectOpt" type="OptionButton" parent="MainVBox/TopBarPanel/TopBar" unique_id=11110]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 5
+popup/item_0/text = "level_001.tres"
+popup/item_0/id = 0
+popup/item_1/text = "level_002.tres"
+popup/item_1/id = 1
+popup/item_2/text = "level_003.tres"
+popup/item_2/id = 2
+popup/item_3/text = "level_004.tres"
+popup/item_3/id = 3
+popup/item_4/text = "level_005.tres"
+popup/item_4/id = 4
+
+[node name="PlayBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11104]
+unique_name_in_owner = true
+layout_mode = 2
+text = " ▶ Play / Preview "
+
+[node name="VSeparator2" type="VSeparator" parent="MainVBox/TopBarPanel/TopBar" unique_id=43335771]
+layout_mode = 2
+
+[node name="CenterViewBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11109]
+unique_name_in_owner = true
+layout_mode = 2
+text = " 🎯 Center View "
+
+[node name="DeleteBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11105]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = " Delete "
+
+[node name="DuplicateBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11106]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = " Duplicate "
+
+[node name="VSeparator3" type="VSeparator" parent="MainVBox/TopBarPanel/TopBar" unique_id=1087576134]
+layout_mode = 2
+
+[node name="SnapCheck" type="CheckBox" parent="MainVBox/TopBarPanel/TopBar" unique_id=11107]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Snap Grid"
+
+[node name="GridSizeOpt" type="OptionButton" parent="MainVBox/TopBarPanel/TopBar" unique_id=11108]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "16 px"
+popup/item_0/id = 16
+popup/item_1/text = "32 px"
+popup/item_1/id = 32
+popup/item_2/text = "64 px"
+popup/item_2/id = 64
+popup/item_3/text = "128 px"
+popup/item_3/id = 128
+
+[node name="VSeparator4" type="VSeparator" parent="MainVBox/TopBarPanel/TopBar" unique_id=238910481]
+layout_mode = 2
+
+[node name="CanvasZoomOutBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11111]
+unique_name_in_owner = true
+layout_mode = 2
+text = " ➖ "
+
+[node name="CanvasZoomLabel" type="Label" parent="MainVBox/TopBarPanel/TopBar" unique_id=11112]
+unique_name_in_owner = true
+layout_mode = 2
+text = " 100% "
+
+[node name="CanvasZoomInBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11113]
+unique_name_in_owner = true
+layout_mode = 2
+text = " ➕ "
+
+[node name="CanvasZoomResetBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11114]
+unique_name_in_owner = true
+layout_mode = 2
+text = " 🔍 1:1 "
+
+[node name="ContentHBox" type="HBoxContainer" parent="MainVBox" unique_id=271009707]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LeftPanel" type="PanelContainer" parent="MainVBox/ContentHBox" unique_id=2134968110]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(165, 0)
+layout_mode = 2
+
+[node name="Scroll" type="ScrollContainer" parent="MainVBox/ContentHBox/LeftPanel" unique_id=985894983]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="MainVBox/ContentHBox/LeftPanel/Scroll" unique_id=679354272]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MainVBox/ContentHBox/LeftPanel/Scroll/VBox" unique_id=1104411735]
+layout_mode = 2
+text = "OBSTACLES & ITEMS"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MainVBox/ContentHBox/LeftPanel/Scroll/VBox" unique_id=373106943]
+layout_mode = 2
+
+[node name="PaletteContainer" type="VBoxContainer" parent="MainVBox/ContentHBox/LeftPanel/Scroll/VBox" unique_id=11201]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainVBox/ContentHBox" unique_id=11301]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+scroll_horizontal = 281
+scroll_vertical = 2084
+
+[node name="Canvas" type="Control" parent="MainVBox/ContentHBox/ScrollContainer" unique_id=11302]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(1280, 4000)
+clip_contents = true
+layout_mode = 2
+script = ExtResource("2_cv")
+
+[node name="InspectorPanel" type="PanelContainer" parent="MainVBox/ContentHBox" unique_id=11401]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+
+[node name="InspectorScroll" type="ScrollContainer" parent="MainVBox/ContentHBox/InspectorPanel" unique_id=1084193992]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll" unique_id=39558721]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Header" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1993687637]
+layout_mode = 2
+text = "SELECTED OBJECT"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1690495357]
+layout_mode = 2
+
+[node name="TypeRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1102346277]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/TypeRow" unique_id=904529403]
+layout_mode = 2
+text = "Type: "
+
+[node name="TypeLabel" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/TypeRow" unique_id=11402]
+unique_name_in_owner = true
+layout_mode = 2
+text = "None Selected"
+
+[node name="PosXRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1291381863]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PosXRow" unique_id=691728351]
+layout_mode = 2
+text = "Pos X: "
+
+[node name="PosXSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PosXRow" unique_id=11403]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -5000.0
+max_value = 5000.0
+editable = false
+
+[node name="PosYRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1451166185]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PosYRow" unique_id=323326096]
+layout_mode = 2
+text = "Pos Y: "
+
+[node name="PosYSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PosYRow" unique_id=11404]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -20000.0
+max_value = 20000.0
+editable = false
+
+[node name="RotRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=2079737215]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/RotRow" unique_id=1002046986]
+layout_mode = 2
+text = "Rotation: "
+
+[node name="RotSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/RotRow" unique_id=11405]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -360.0
+max_value = 360.0
+editable = false
+
+[node name="ScaleXRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=899745424]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/ScaleXRow" unique_id=899041425]
+layout_mode = 2
+text = "Scale X: "
+
+[node name="ScaleXSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/ScaleXRow" unique_id=11406]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+step = 0.1
+value = 1.0
+editable = false
+
+[node name="ScaleYRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=300293661]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/ScaleYRow" unique_id=1911204454]
+layout_mode = 2
+text = "Scale Y: "
+
+[node name="ScaleYSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/ScaleYRow" unique_id=11407]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+step = 0.1
+value = 1.0
+editable = false
+
+[node name="PropSpeedRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11408]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropSpeedRow" unique_id=1426953077]
+layout_mode = 2
+text = "Rot Speed: "
+
+[node name="RotSpeedSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropSpeedRow" unique_id=11409]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+step = 0.1
+value = 2.0
+
+[node name="PropLengthRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114081]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropLengthRow" unique_id=1384628883]
+layout_mode = 2
+text = "Length: "
+
+[node name="LengthSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropLengthRow" unique_id=114091]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 10.0
+max_value = 10000.0
+step = 10.0
+value = 200.0
+
+[node name="PropBreadthRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114082]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropBreadthRow" unique_id=1384628884]
+layout_mode = 2
+text = "Breadth: "
+
+[node name="BreadthSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropBreadthRow" unique_id=114092]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 1000.0
+step = 1.0
+value = 8.0
+
+[node name="PropMoveSpeedRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11411]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropMoveSpeedRow" unique_id=1426953078]
+layout_mode = 2
+text = "Move Speed: "
+
+[node name="MoveSpeedSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropMoveSpeedRow" unique_id=11412]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 2000.0
+value = 100.0
+
+[node name="PropMoveAngleRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11413]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropMoveAngleRow" unique_id=1426953079]
+layout_mode = 2
+text = "Move Angle: "
+
+[node name="MoveAngleSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropMoveAngleRow" unique_id=11414]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -360.0
+max_value = 360.0
+step = 5.0
+suffix = "°"
+
+[node name="PropMoveDistPosRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114131]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropMoveDistPosRow" unique_id=1384628903]
+layout_mode = 2
+text = "+ Dist (Fwd): "
+
+[node name="MoveDistPosSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropMoveDistPosRow" unique_id=114141]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 5000.0
+step = 5.0
+value = 200.0
+
+[node name="PropMoveDistNegRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114132]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropMoveDistNegRow" unique_id=1384628904]
+layout_mode = 2
+text = "- Dist (Back): "
+
+[node name="MoveDistNegSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropMoveDistNegRow" unique_id=114142]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 5000.0
+step = 5.0
+value = 200.0
+
+[node name="PropMoveDirRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11415]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropMoveDirRow" unique_id=1426953080]
+layout_mode = 2
+text = "Preset Dir: "
+
+[node name="MoveDirOpt" type="OptionButton" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropMoveDirRow" unique_id=11416]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 1
+item_count = 9
+popup/item_0/text = "Custom Angle"
+popup/item_0/id = 0
+popup/item_1/text = "+X & -X (Horiz 0°)"
+popup/item_1/id = 1
+popup/item_2/text = "+X Only (Right)"
+popup/item_2/id = 2
+popup/item_3/text = "-X Only (Left)"
+popup/item_3/id = 3
+popup/item_4/text = "+Y & -Y (Vert 90°)"
+popup/item_4/id = 4
+popup/item_5/text = "+Y Only (Down)"
+popup/item_5/id = 5
+popup/item_6/text = "-Y Only (Up)"
+popup/item_6/id = 6
+popup/item_7/text = "Diagonal (45°)"
+popup/item_7/id = 7
+popup/item_8/text = "Diagonal (-45°)"
+popup/item_8/id = 8
+
+[node name="PropLoopResetRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114161]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropLoopResetRow" unique_id=1384628905]
+layout_mode = 2
+text = "Loop from Origin: "
+
+[node name="LoopResetCheck" type="CheckBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropLoopResetRow" unique_id=114162]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Yes (Wrap to Start)"
+
+[node name="PropGearCountRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114163]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropGearCountRow" unique_id=1384628906]
+layout_mode = 2
+text = "Gear Count: "
+
+[node name="GearCountSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropGearCountRow" unique_id=114164]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 20.0
+step = 1.0
+value = 1.0
+
+[node name="PropGearSpacingRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114165]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropGearSpacingRow" unique_id=1384628907]
+layout_mode = 2
+text = "Gear Spacing: "
+
+[node name="GearSpacingSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropGearSpacingRow" unique_id=114166]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 5000.0
+step = 1.0
+value = 100.0
+
+[node name="PropMoveDelayRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114167]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropMoveDelayRow" unique_id=1384628908]
+layout_mode = 2
+text = "End Delay (s): "
+
+[node name="MoveDelaySpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropMoveDelayRow" unique_id=114168]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 60.0
+step = 0.1
+value = 0.0
+
+[node name="PropPathShapeRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114169]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropPathShapeRow" unique_id=1384628909]
+layout_mode = 2
+text = "Path Shape: "
+
+[node name="PathShapeOpt" type="OptionButton" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropPathShapeRow" unique_id=114170]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 4
+item_count = 5
+popup/item_0/text = "Circle"
+popup/item_0/id = 0
+popup/item_1/text = "Rectangle"
+popup/item_1/id = 1
+popup/item_2/text = "Square"
+popup/item_2/id = 2
+popup/item_3/text = "Triangle"
+popup/item_3/id = 3
+popup/item_4/text = "Diamond"
+popup/item_4/id = 4
+
+[node name="PropPathWidthRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114171]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropPathWidthRow" unique_id=1384628910]
+layout_mode = 2
+text = "Path Width: "
+
+[node name="PathWidthSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropPathWidthRow" unique_id=114172]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 10.0
+max_value = 5000.0
+step = 1.0
+value = 300.0
+
+[node name="PropPathHeightRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114173]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropPathHeightRow" unique_id=1384628911]
+layout_mode = 2
+text = "Path Height: "
+
+[node name="PathHeightSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropPathHeightRow" unique_id=114174]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 10.0
+max_value = 5000.0
+step = 1.0
+value = 300.0
+
+[node name="PropPathRotRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114175]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropPathRotRow" unique_id=1384628912]
+layout_mode = 2
+text = "Path Angle: "
+
+[node name="PathRotSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropPathRotRow" unique_id=114176]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -360.0
+max_value = 360.0
+step = 1.0
+value = 0.0
+
+[node name="PropPathDirRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114177]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropPathDirRow" unique_id=1384628913]
+layout_mode = 2
+text = "Path Dir: "
+
+[node name="PathDirOpt" type="OptionButton" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropPathDirRow" unique_id=114178]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 3
+popup/item_0/text = "Clockwise"
+popup/item_0/id = 0
+popup/item_1/text = "Counter-Clockwise"
+popup/item_1/id = 1
+popup/item_2/text = "Alternating"
+popup/item_2/id = 2
+
+[node name="PropCornerDelayRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=114179]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCornerDelayRow" unique_id=1384628914]
+layout_mode = 2
+text = "Corner Delay (s): "
+
+[node name="CornerDelaySpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCornerDelayRow" unique_id=114180]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 60.0
+step = 0.1
+value = 0.0
+
+[node name="PropTriggerTagRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11417]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropTriggerTagRow" unique_id=1426953081]
+layout_mode = 2
+text = "Trigger Tag: "
+
+[node name="TriggerTagEdit" type="LineEdit" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropTriggerTagRow" unique_id=11418]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "trap_1"
+
+[node name="PropFallSpeedRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11419]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropFallSpeedRow" unique_id=1426953082]
+layout_mode = 2
+text = "Fall Speed: "
+
+[node name="FallSpeedSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropFallSpeedRow" unique_id=11420]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 5000.0
+step = 25.0
+value = 600.0
+
+[node name="PropAreaWidthRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11421]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropAreaWidthRow" unique_id=1426953083]
+layout_mode = 2
+text = "Area Width: "
+
+[node name="AreaWidthSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropAreaWidthRow" unique_id=11422]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 2000.0
+step = 10.0
+value = 200.0
+
+[node name="PropAreaHeightRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11423]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropAreaHeightRow" unique_id=1426953084]
+layout_mode = 2
+text = "Area Height: "
+
+[node name="AreaHeightSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropAreaHeightRow" unique_id=11424]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 2000.0
+step = 10.0
+value = 150.0
+
+[node name="PropTriggerDistRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11425]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropTriggerDistRow" unique_id=1426953085]
+layout_mode = 2
+text = "Trig Dist Y: "
+
+[node name="TriggerDistSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropTriggerDistRow" unique_id=11426]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 5000.0
+step = 10.0
+value = 300.0
+
+[node name="HSeparatorCam" type="HSeparator" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1690495359]
+visible = false
+layout_mode = 2
+
+[node name="CamHeader" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1993687641]
+visible = false
+layout_mode = 2
+text = "PLAYER CAMERA DRAG"
+horizontal_alignment = 1
+
+[node name="PropCamDragHRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11427]
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamDragHRow" unique_id=1426953086]
+layout_mode = 2
+text = "H Drag Enabled: "
+
+[node name="CamDragHCheck" type="CheckBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamDragHRow" unique_id=11428]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+
+[node name="PropCamDragVRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11429]
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamDragVRow" unique_id=1426953087]
+layout_mode = 2
+text = "V Drag Enabled: "
+
+[node name="CamDragVCheck" type="CheckBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamDragVRow" unique_id=11430]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+
+[node name="PropCamLeftMarginRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11431]
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamLeftMarginRow" unique_id=1426953088]
+layout_mode = 2
+text = "Left Margin: "
+
+[node name="CamLeftMarginSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamLeftMarginRow" unique_id=11432]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.9
+
+[node name="PropCamTopMarginRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11433]
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamTopMarginRow" unique_id=1426953089]
+layout_mode = 2
+text = "Top Margin: "
+
+[node name="CamTopMarginSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamTopMarginRow" unique_id=11434]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="PropCamRightMarginRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11437]
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamRightMarginRow" unique_id=1426953090]
+layout_mode = 2
+text = "Right Margin: "
+
+[node name="CamRightMarginSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamRightMarginRow" unique_id=11438]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.9
+
+[node name="PropCamBotMarginRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11439]
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamBotMarginRow" unique_id=1426953091]
+layout_mode = 2
+text = "Bottom Margin: "
+
+[node name="CamBotMarginSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamBotMarginRow" unique_id=11440]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.2
+
+[node name="PropCamHOffsetRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11441]
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamHOffsetRow" unique_id=1426953092]
+layout_mode = 2
+text = "H Offset: "
+
+[node name="CamHOffsetSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamHOffsetRow" unique_id=11442]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -1.0
+max_value = 1.0
+step = 0.05
+
+[node name="PropCamVOffsetRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11443]
+visible = false
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamVOffsetRow" unique_id=1426953093]
+layout_mode = 2
+text = "V Offset: "
+
+[node name="CamVOffsetSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PropCamVOffsetRow" unique_id=11444]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -1.0
+max_value = 1.0
+step = 0.05
+
+[node name="HSeparator2" type="HSeparator" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1690495358]
+layout_mode = 2
+
+[node name="ApplyBtn" type="Button" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=11410]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "Apply Changes"
+
+[node name="TileHeader" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1993687638]
+layout_mode = 2
+text = "TILE PALETTE"
+horizontal_alignment = 1
+
+[node name="AtlasXRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1291381864]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/AtlasXRow" unique_id=691728352]
+layout_mode = 2
+text = "Atlas X: "
+
+[node name="AtlasXSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/AtlasXRow" unique_id=1563761043]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 30.0
+value = 11.0
+
+[node name="AtlasYRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1451166186]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/AtlasYRow" unique_id=323326097]
+layout_mode = 2
+text = "Atlas Y: "
+
+[node name="AtlasYSpin" type="SpinBox" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/AtlasYRow" unique_id=1987810872]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 30.0
+value = 1.0
+
+[node name="TileSizeRow" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1451166187]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/TileSizeRow" unique_id=323326098]
+layout_mode = 2
+text = "Tile Size: "
+
+[node name="TileSizeOpt" type="OptionButton" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/TileSizeRow" unique_id=2074175356]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 1
+item_count = 4
+popup/item_0/text = "16 x 16 px"
+popup/item_0/id = 16
+popup/item_1/text = "32 x 32 px"
+popup/item_1/id = 32
+popup/item_2/text = "64 x 64 px"
+popup/item_2/id = 64
+popup/item_3/text = "128 x 128 px"
+popup/item_3/id = 128
+
+[node name="AtlasPickerLabel" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1993687640]
+layout_mode = 2
+text = "Select Tile from Atlas Sheet:"
+
+[node name="ZoomBar" type="HBoxContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=691997991]
+layout_mode = 2
+
+[node name="ZoomOutBtn" type="Button" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/ZoomBar" unique_id=11436]
+unique_name_in_owner = true
+layout_mode = 2
+text = " ➖ "
+
+[node name="ZoomLabel" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/ZoomBar" unique_id=1783767915]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "2.0x"
+horizontal_alignment = 1
+
+[node name="ZoomInBtn" type="Button" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/ZoomBar" unique_id=953258274]
+unique_name_in_owner = true
+layout_mode = 2
+text = " ➕ "
+
+[node name="ZoomFitBtn" type="Button" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/ZoomBar" unique_id=573518287]
+unique_name_in_owner = true
+layout_mode = 2
+text = " Fit "
+
+[node name="AtlasScrollContainer" type="ScrollContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=429372432]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 2
+scroll_horizontal = 210
+
+[node name="AtlasPicker" type="Control" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/AtlasScrollContainer" unique_id=11435]
+unique_name_in_owner = true
+texture_filter = 1
+custom_minimum_size = Vector2(448, 576)
+clip_contents = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+script = ExtResource("4_ap")
+tile_size = Vector2i(32, 32)
+
+[node name="PreviewCenter" type="CenterContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1676295627]
+layout_mode = 2
+
+[node name="TilePreviewRect" type="TextureRect" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PreviewCenter" unique_id=1035852815]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = SubResource("AtlasTexture_vy7eb")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PresetsLabel" type="Label" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=1993687639]
+layout_mode = 2
+text = "Quick Presets:"
+
+[node name="PresetGrid" type="GridContainer" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox" unique_id=413534143]
+layout_mode = 2
+columns = 2
+
+[node name="BtnGrassTop" type="Button" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PresetGrid" unique_id=565965475]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🟩 Grass Top"
+
+[node name="BtnGrassLeft" type="Button" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PresetGrid" unique_id=728682079]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "↖️ Grass Left"
+
+[node name="BtnGrassRight" type="Button" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PresetGrid" unique_id=1709589475]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "↗️ Grass Right"
+
+[node name="BtnDirt" type="Button" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PresetGrid" unique_id=454765453]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🟫 Dirt"
+
+[node name="BtnSand" type="Button" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PresetGrid" unique_id=1306682865]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🏜️ Sand"
+
+[node name="BtnStone" type="Button" parent="MainVBox/ContentHBox/InspectorPanel/InspectorScroll/VBox/PresetGrid" unique_id=1703152572]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🪨 Stone"
+
+[node name="BottomBarPanel" type="PanelContainer" parent="MainVBox" unique_id=1376739543]
+layout_mode = 2
+
+[node name="BottomBar" type="HFlowContainer" parent="MainVBox/BottomBarPanel" unique_id=1724860751]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 6
+
+[node name="IDLbl" type="Label" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=1982985013]
+layout_mode = 2
+text = "Level ID:"
+
+[node name="LevelIDEdit" type="LineEdit" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=11501]
+unique_name_in_owner = true
+layout_mode = 2
+text = "level_001"
+
+[node name="NameLbl" type="Label" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=1085531705]
+layout_mode = 2
+text = "Name:"
+
+[node name="LevelNameEdit" type="LineEdit" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=11502]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Level 1"
+
+[node name="ThemeLbl" type="Label" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=1085531706]
+layout_mode = 2
+text = "World Theme:"
+
+[node name="WorldThemeOpt" type="OptionButton" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=11507]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 2
+item_count = 5
+popup/item_0/text = "World 1 - Forest Hills"
+popup/item_0/id = 0
+popup/item_1/text = "World 2 - Desert Sunset"
+popup/item_1/id = 1
+popup/item_2/text = "World 3 - Cyber Night"
+popup/item_2/id = 2
+popup/item_3/text = "World 4 - Mystic Caves"
+popup/item_3/id = 3
+popup/item_4/text = "World 5 - Magma Core"
+popup/item_4/id = 4
+
+[node name="WidthLbl" type="Label" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=562263494]
+layout_mode = 2
+text = "Width:"
+
+[node name="WidthSpin" type="SpinBox" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=11503]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 500.0
+max_value = 5000.0
+value = 1080.0
+
+[node name="HeightLbl" type="Label" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=563048284]
+layout_mode = 2
+text = "Height:"
+
+[node name="HeightSpin" type="SpinBox" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=11504]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1000.0
+max_value = 50000.0
+value = 1000.0
+
+[node name="StartXLbl" type="Label" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=844287538]
+layout_mode = 2
+text = "Start X:"
+
+[node name="PlayerXSpin" type="SpinBox" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=11505]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -5000.0
+max_value = 5000.0
+value = 512.0
+
+[node name="StartYLbl" type="Label" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=669520698]
+layout_mode = 2
+text = "Start Y:"
+
+[node name="PlayerYSpin" type="SpinBox" parent="MainVBox/BottomBarPanel/BottomBar" unique_id=11506]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -20000.0
+max_value = 20000.0
+value = 1540.0
+

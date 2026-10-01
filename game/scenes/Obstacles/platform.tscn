@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://c6platform888"]
+
+[ext_resource type="Texture2D" path="res://game/assets/sprites/ENV/Group 215.png" id="1_ay6q6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_top"]
+size = Vector2(266, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bot"]
+size = Vector2(1078, 85)
+
+[node name="Platform" type="StaticBody2D" unique_id=2138486804]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2063410924]
+scale = Vector2(0.2697698, 0.5703704)
+texture = ExtResource("1_ay6q6")
+
+[node name="CollisionShape2D_Top" type="CollisionShape2D" parent="." unique_id=459429846]
+position = Vector2(-17, -42)
+shape = SubResource("RectangleShape2D_top")
+
+[node name="CollisionShape2D_Bot" type="CollisionShape2D" parent="." unique_id=1513494858]
+position = Vector2(-1, 32.5)
+shape = SubResource("RectangleShape2D_bot")

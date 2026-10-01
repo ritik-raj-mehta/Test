@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dngbv3afyckws"]
+
+[ext_resource type="Script" uid="uid://lel5w5epmf0a" path="res://game/scenes/boot/BootScene.gd" id="1_boot"]
+[ext_resource type="Script" uid="uid://dfqvnfy7dnn8l" path="res://game/autoloads/GameService.gd" id="2_services"]
+
+[node name="Boot" type="Node" unique_id=394416768]
+script = ExtResource("1_boot")
+
+[node name="GameService" type="Node" parent="." unique_id=187324297]
+script = ExtResource("2_services")

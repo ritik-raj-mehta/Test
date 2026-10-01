@@ -1,0 +1,2 @@
+extends ObstacleController
+class_name SpikeController

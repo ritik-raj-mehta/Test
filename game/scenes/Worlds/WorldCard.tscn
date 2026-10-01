@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://c782i88d10f30"]
+
+[ext_resource type="Script" uid="uid://cvpp3nn02cxp7" path="res://game/scenes/Worlds/WorldCard.gd" id="1_wcs"]
+[ext_resource type="Texture2D" uid="uid://m7ha37km2etj" path="res://game/assets/sprites/single/ui/World Card/World (1).png" id="2_ujxq0"]
+
+[node name="WorldCard" type="Control" unique_id=264362281 node_paths=PackedStringArray("_preview", "_number", "_name")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 28.0
+offset_bottom = 20.0
+mouse_filter = 2
+script = ExtResource("1_wcs")
+_preview = NodePath("WorldPreview")
+_number = NodePath("CardColumn/WorldNumberLabel")
+_name = NodePath("CardColumn/WorldNameLabel")
+
+[node name="WorldPreview" type="TextureRect" parent="." unique_id=1045952618]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -15.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_ujxq0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CardColumn" type="VBoxContainer" parent="." unique_id=2070312280]
+visible = false
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 467.0
+offset_bottom = 172.0
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="WorldNumberLabel" type="Label" parent="CardColumn" unique_id=1267032282]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.784, 0.239, 1)
+theme_override_colors/font_outline_color = Color(0.106, 0.208, 0.341, 1)
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/font_size = 44
+text = "World 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WorldNameLabel" type="Label" parent="CardColumn" unique_id=637242684]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.106, 0.208, 0.341, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 60
+text = "Spring Meadow"
+horizontal_alignment = 1
+vertical_alignment = 1

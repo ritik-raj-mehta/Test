@@ -1,0 +1,158 @@
+[gd_scene format=3 uid="uid://c30iqyrvo6p3q"]
+
+[ext_resource type="Script" uid="uid://joqh8k1jsxtl" path="res://game/scenes/ui/hfw/PrivacyPopup.gd" id="1_mo2kr"]
+[ext_resource type="Texture2D" uid="uid://c6tojp8wakcrg" path="res://game/assets/sprites/single/ui/popup.png" id="2_i44rj"]
+[ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_uy18b"]
+[ext_resource type="Texture2D" uid="uid://dqfpjs37l872m" path="res://game/assets/sprites/single/ui/blueBtn.png" id="4_sh8e5"]
+[ext_resource type="Texture2D" uid="uid://dqaa6yow5xem8" path="res://game/assets/sprites/single/ui/Reff/Policy_reff.png" id="6_ah5a8"]
+
+[node name="PolicyPopup" type="Control" unique_id=1513163033 node_paths=PackedStringArray("accept_button", "_window")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mo2kr")
+accept_button = NodePath("Holder/Window/TextureRect/AcceptButton")
+_window = NodePath("Holder")
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=2109479275]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5882353)
+
+[node name="Holder" type="Control" parent="." unique_id=1570605328]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Window" type="MarginContainer" parent="Holder" unique_id=295000572]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 100
+
+[node name="TextureRect" type="TextureRect" parent="Holder/Window" unique_id=708517249]
+custom_minimum_size = Vector2(780, 700)
+custom_maximum_size = Vector2(800, 800)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_i44rj")
+expand_mode = 1
+
+[node name="TitleLabel" type="Label" parent="Holder/Window/TextureRect" unique_id=1475051613]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -245.5
+offset_right = 240.5
+offset_bottom = 121.0
+grow_horizontal = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(-0.82, 1.61)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/shadow_offset_x = -1
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_outline_size = 8
+theme_override_fonts/font = ExtResource("3_uy18b")
+theme_override_font_sizes/font_size = 81
+text = "Policy"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="TermsButton" type="LinkButton" parent="Holder/Window/TextureRect" unique_id=642428016]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -288.0
+offset_top = -74.0
+offset_right = 291.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+focus_mode = 0
+theme_override_colors/font_color = Color(0.231, 0.29, 0.4, 1)
+theme_override_colors/font_pressed_color = Color(0.231, 0.29, 0.4, 1)
+theme_override_colors/font_hover_color = Color(0.231, 0.29, 0.4, 1)
+theme_override_fonts/font = ExtResource("3_uy18b")
+theme_override_font_sizes/font_size = 70
+text = "Terms & Condition"
+uri = "https://thegamewise.com/terms-and-conditions"
+
+[node name="AcceptButton" type="TextureButton" parent="Holder/Window/TextureRect" unique_id=906353277]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -242.0
+offset_top = 95.0
+offset_right = 243.0
+offset_bottom = 229.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("4_sh8e5")
+texture_pressed = ExtResource("4_sh8e5")
+
+[node name="Label" type="Label" parent="Holder/Window/TextureRect/AcceptButton" unique_id=33335139]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -115.5
+offset_top = -51.0
+offset_right = 116.5
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_uy18b")
+theme_override_font_sizes/font_size = 70
+text = "Accept"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=999334523]
+visible = false
+self_modulate = Color(1, 1, 1, 0.4627451)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_ah5a8")
+expand_mode = 1

@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cam81k2w7a4db"]
+
+[ext_resource type="Script" uid="uid://nanohepebj1c" path="res://game/scenes/Obstacles/FallingStoneTrapController.gd" id="1_n70ub"]
+[ext_resource type="PackedScene" uid="uid://c6f24laf8w1ab" path="res://game/scenes/Obstacles/FallingStoneSpike.tscn" id="2_6u1sf"]
+[ext_resource type="PackedScene" uid="uid://d3m78k2q1a5fc" path="res://game/scenes/Obstacles/TriggerArea.tscn" id="3_gk33o"]
+
+[node name="FallingStoneTrap" type="Node2D" unique_id=748291034]
+script = ExtResource("1_n70ub")
+
+[node name="FallingStone" parent="." unique_id=684844731 instance=ExtResource("2_6u1sf")]
+unique_name_in_owner = true
+fall_speed = 600.0
+
+[node name="TriggerArea" parent="." unique_id=1917065430 instance=ExtResource("3_gk33o")]
+unique_name_in_owner = true
+position = Vector2(0, 300)
+area_height = 100.0
