@@ -116,15 +116,15 @@ static var _registry: Dictionary = {
 		"name": "Falling Stone",
 		"scene_path": "res://game/scenes/Obstacles/FallingStone.tscn",
 		"category": "Obstacles",
-		"default_properties": {"trigger_tag": "trap_1", "fall_speed": 600.0, "rotation_speed": 4.0, "knockback_force": 600.0},
+		"default_properties": {"is_lethal": false, "trigger_tag": "trap_1", "fall_speed": 600.0, "rotation_speed": 4.0, "knockback_force": 600.0},
 		"default_scale": Vector2(1, 1)
 	},
 	"falling_stone_spike": {
 		"id": "falling_stone_spike",
 		"name": "Falling Stone Spike",
-		"scene_path": "res://game/scenes/Obstacles/FallingStoneSpike.tscn",
+		"scene_path": "res://game/scenes/Obstacles/FallingStone.tscn",
 		"category": "Obstacles",
-		"default_properties": {"trigger_tag": "trap_1", "fall_speed": 600.0, "rotation_speed": 4.0},
+		"default_properties": {"is_lethal": true, "trigger_tag": "trap_1", "fall_speed": 600.0, "rotation_speed": 4.0},
 		"default_scale": Vector2(1, 1)
 	},
 	"trigger_area": {
@@ -133,14 +133,6 @@ static var _registry: Dictionary = {
 		"scene_path": "res://game/scenes/Obstacles/TriggerArea.tscn",
 		"category": "Triggers",
 		"default_properties": {"trigger_tag": "trap_1", "area_width": 200.0, "area_height": 150.0},
-		"default_scale": Vector2(1, 1)
-	},
-	"falling_stone_trap": {
-		"id": "falling_stone_trap",
-		"name": "Falling Stone Trap",
-		"scene_path": "res://game/scenes/Obstacles/FallingStoneTrap.tscn",
-		"category": "Obstacles",
-		"default_properties": {"trigger_distance_y": 300.0, "fall_speed": 600.0, "trigger_width": 200.0},
 		"default_scale": Vector2(1, 1)
 	},
 	"horizontal_zone_start": {
@@ -223,19 +215,52 @@ static func unregister_object(id: String) -> void:
 static func get_all_entries() -> Dictionary:
 	return _registry
 
+static var _fallback_objects: Dictionary = {
+	"wall": {
+		"id": "wall",
+		"name": "Wall",
+		"scene_path": "res://game/scenes/Obstacles/Wall.tscn",
+		"category": "Walls",
+		"default_properties": {},
+		"default_scale": Vector2(1, 1)
+	},
+	"platform": {
+		"id": "platform",
+		"name": "Ground Platform",
+		"scene_path": "res://game/scenes/Obstacles/platform.tscn",
+		"category": "Platforms",
+		"default_properties": {},
+		"default_scale": Vector2(1, 1)
+	},
+	"falling_stone_trap": {
+		"id": "falling_stone",
+		"name": "Falling Stone",
+		"scene_path": "res://game/scenes/Obstacles/FallingStone.tscn",
+		"category": "Obstacles",
+		"default_properties": {"is_lethal": false, "trigger_tag": "trap_1", "fall_speed": 600.0},
+		"default_scale": Vector2(1, 1)
+	}
+}
+
 static func get_entry(id: String) -> Dictionary:
 	if id == "gear_rode" and not _registry.has("gear_rode"):
 		id = "gear_rod"
-	return _registry.get(id, {})
+	if _registry.has(id):
+		return _registry[id]
+	if _fallback_objects.has(id):
+		return _fallback_objects[id]
+	return {}
 
 static func has_object(id: String) -> bool:
-	if id == "gear_rode" and _registry.has("gear_rod"):
+	if id == "gear_rode" and (_registry.has("gear_rod") or _fallback_objects.has("gear_rod")):
 		return true
-	return _registry.has(id)
+	return _registry.has(id) or _fallback_objects.has(id)
 
 static func resolve_scene_path(path: String) -> String:
 	if path.ends_with("GearRod.tscn") or path.ends_with("GearRode.tscn") or path.ends_with("MovingGearWithRod.tscn") or path.ends_with("RotatingGear.tscn"):
 		return "res://game/scenes/Obstacles/MovingGear.tscn"
+	if path.ends_with("FallingStoneSpike.tscn") or path.ends_with("FallingStoneTrap.tscn"):
+		return "res://game/scenes/Obstacles/FallingStone.tscn"
 	if ResourceLoader.exists(path):
 		return path
 	var goal_fix = path.replace("win_area_node.tscn", "Goal.tscn").replace("win_area.tscn", "Goal.tscn")
@@ -282,6 +307,10 @@ static func instantiate_object(id: String) -> Node2D:
 			if "move_dist_neg" in node: node.set("move_dist_neg", 0.0)
 			if "move_distance" in node: node.set("move_distance", 0.0)
 			if "gear_count" in node: node.set("gear_count", 1)
+		elif id == "falling_stone":
+			if "is_lethal" in node: node.set("is_lethal", false)
+		elif id == "falling_stone_spike":
+			if "is_lethal" in node: node.set("is_lethal", true)
 		var entry = get_entry(id)
 		if entry.has("default_properties"):
 			for p in entry["default_properties"]:

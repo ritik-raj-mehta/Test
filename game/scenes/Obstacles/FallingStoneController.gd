@@ -35,7 +35,10 @@ class_name FallingStoneController
 
 var is_falling: bool = false
 var has_fallen: bool = false
-var has_impacted: bool = false
+var has_hit_player: bool = false
+var has_landed: bool = false
+var _rest_timer: float = 0.0
+var _hit_cooldown: float = 0.0
 var start_pos: Vector2 = Vector2.ZERO
 var initial_rotation: float = 0.0
 
@@ -48,8 +51,10 @@ func _ready() -> void:
 
 
 func _on_ready() -> void:
-	add_to_group("falling_stone")
-	add_to_group("triggerable")
+	if not is_in_group("falling_stone"):
+		add_to_group("falling_stone")
+	if not is_in_group("triggerable"):
+		add_to_group("triggerable")
 
 	if sprite == null and has_node("Sprite2D"):
 		sprite = get_node("Sprite2D") as Sprite2D
@@ -66,6 +71,19 @@ func _on_ready() -> void:
 
 	_update_type_and_visuals()
 
+	# In gameplay, hide stone until player triggers the trigger area
+	if not is_in_editor():
+		visible = false
+		is_falling = false
+		if col_shape:
+			col_shape.set_deferred("disabled", true)
+		set_physics_process(false)
+	else:
+		visible = true
+		if col_shape:
+			col_shape.disabled = false
+		set_physics_process(false)
+
 
 func update_components() -> void:
 	start_pos = global_position
@@ -80,24 +98,38 @@ func _update_type_and_visuals() -> void:
 	if col_shape == null and has_node("CollisionShape2D"):
 		col_shape = get_node("CollisionShape2D") as CollisionShape2D
 
-	if is_inside_tree():
-		if is_lethal:
-			if not is_in_group("obstacle"):
-				add_to_group("obstacle")
-		else:
-			if is_in_group("obstacle"):
-				remove_from_group("obstacle")
+	if is_lethal:
+		if not is_in_group("obstacle"):
+			add_to_group("obstacle")
+	else:
+		if is_in_group("obstacle"):
+			remove_from_group("obstacle")
 
 	set_meta("is_lethal", is_lethal)
 
+	_apply_theme()
+
+	# Match collision shape and radius exactly to the sprite image dimensions
 	if col_shape:
+		col_shape.position = Vector2.ZERO
 		if not col_shape.shape or not col_shape.shape is CircleShape2D:
 			col_shape.shape = CircleShape2D.new()
 		elif not col_shape.shape.resource_local_to_scene:
 			col_shape.shape = col_shape.shape.duplicate()
-		(col_shape.shape as CircleShape2D).radius = 50.0 if is_lethal else 45.0
 
-	_apply_theme()
+		var target_radius: float = 25.0
+		if sprite and sprite.texture:
+			sprite.position = Vector2.ZERO
+			sprite.offset = Vector2.ZERO
+			var t_size: Vector2 = sprite.texture.get_size()
+			var s_scale: Vector2 = sprite.scale
+			var r: float = minf(t_size.x * absf(s_scale.x), t_size.y * absf(s_scale.y)) * 0.5
+			if r > 5.0:
+				target_radius = r
+		elif is_lethal:
+			target_radius = 35.0
+
+		(col_shape.shape as CircleShape2D).radius = target_radius
 
 	if Engine.is_editor_hint():
 		queue_redraw()
@@ -107,55 +139,91 @@ func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
 
-	# Stone remains suspended until triggered by TriggerArea
 	if not is_falling:
 		return
 
-	# Apply falling velocity and gravity
-	velocity.y = max(fall_speed, velocity.y + gravity * delta)
-	velocity.x = 0.0
+	# Apply falling velocity and gravity until stone lands on floor
+	if not has_landed and not is_on_floor():
+		velocity.y = minf(1600.0, velocity.y + gravity * delta)
+		if absf(velocity.x) > 0.0:
+			velocity.x = move_toward(velocity.x, 0.0, 120.0 * delta)
+	else:
+		velocity.y = 0.0
+		if absf(velocity.x) > 0.0:
+			velocity.x = move_toward(velocity.x, 0.0, 700.0 * delta)
+		rotation_speed = move_toward(rotation_speed, 0.0, 10.0 * delta)
 
 	if sprite:
 		sprite.rotation += rotation_speed * delta
 
-	move_and_slide()
+	# Cooldown for player re-hit after rebound
+	if _hit_cooldown > 0.0:
+		_hit_cooldown = maxf(_hit_cooldown - delta, 0.0)
+		if _hit_cooldown <= 0.0 and velocity.y > 60.0:
+			has_hit_player = false
 
-	# Process collisions with Terrain and Player
-	for i in range(get_slide_collision_count()):
-		var col := get_slide_collision(i)
-		var collider := col.get_collider()
-		if not collider:
-			continue
+	if is_inside_tree():
+		move_and_slide()
 
-		var is_player = (collider is CharacterBody2D and collider.name.begins_with("Player")) \
-			or collider.is_in_group("player") \
-			or collider.has_method("apply_knockback") \
-			or (collider.has_method("die") and not (collider is FallingStoneController))
+		# Process collisions with Terrain and Player
+		for i in range(get_slide_collision_count()):
+			var col := get_slide_collision(i)
+			var collider := col.get_collider()
+			if not collider:
+				continue
 
-		if is_player:
-			_handle_player_collision(collider)
-			break
-		elif is_on_floor() or collider is StaticBody2D or collider is TileMapLayer:
-			# Hit ground/terrain -> stop falling
-			is_falling = false
-			velocity = Vector2.ZERO
-			has_impacted = true
-			break
+			var is_player = (collider is CharacterBody2D and collider.name.begins_with("Player")) \
+				or collider.is_in_group("player") \
+				or collider.has_method("apply_knockback") \
+				or (collider.has_method("die") and not (collider is FallingStoneController))
+
+			if is_player:
+				if not has_hit_player:
+					_handle_player_collision(collider, col)
+					return
+			else:
+				var col_norm := col.get_normal()
+				if is_on_floor() or col_norm.y < -0.6:
+					# Landed on ground / floor
+					if velocity.y > 160.0:
+						velocity.y = -velocity.y * 0.25
+						velocity.x *= 0.6
+					else:
+						has_landed = true
+						velocity.y = 0.0
+						velocity.x = move_toward(velocity.x, 0.0, 700.0 * delta)
+						rotation_speed = move_toward(rotation_speed, 0.0, 10.0 * delta)
+					break
+				elif absf(col_norm.x) > 0.6 and col_norm.y > -0.6:
+					# Wall collision: bounce off wall in opposite direction and keep falling
+					velocity.x = -velocity.x * 0.6
+					rotation_speed = -rotation_speed * 0.7
+					global_position += col_norm * 2.0
+				elif col_norm.y > 0.6:
+					# Ceiling collision: bounce down
+					velocity.y = absf(velocity.y) * 0.5
+
+	# Check if stone has landed on ground or stopped moving
+	if (has_landed or is_on_floor()) and velocity.length_squared() < 250.0:
+		_rest_timer += delta
+		if _rest_timer >= 2.0:
+			_deactivate_stone()
+			return
+	else:
+		_rest_timer = 0.0
 
 	# Stop falling when reaching maximum fall distance
 	if start_pos != Vector2.ZERO and global_position.y > start_pos.y + fall_distance:
-		is_falling = false
-		visible = false
-		velocity = Vector2.ZERO
+		_deactivate_stone()
 
 
-func _handle_player_collision(player_node: Node2D) -> void:
-	if has_impacted:
+func _handle_player_collision(player_node: Node2D, collision: KinematicCollision2D = null) -> void:
+	if has_hit_player:
 		return
 
 	if is_lethal:
-		# LETHAL (FallingStoneSpike): Triggers existing player death system
-		has_impacted = true
+		# LETHAL (Spike Stone): Kills player on contact, then destroys/hides spike stone
+		has_hit_player = true
 		is_falling = false
 		velocity = Vector2.ZERO
 
@@ -163,30 +231,53 @@ func _handle_player_collision(player_node: Node2D) -> void:
 			player_node.die()
 		elif player_node.has_method("game_over"):
 			player_node.game_over()
+
+		# Destroy/hide spike stone immediately upon player kill
+		_deactivate_stone()
 	else:
-		# NON-LETHAL (FallingStone): Player survives and receives physical knockback
-		has_impacted = true
-		is_falling = false
-		velocity = Vector2.ZERO
+		# NON-LETHAL (Normal Falling Stone):
+		# Real-life elastic impulse collision: normal force pushes player, reaction force pushes stone in exact opposite direction
+		has_hit_player = true
+		_hit_cooldown = 0.55
 
 		var p_pos := player_node.global_position
-		var push_dir := (p_pos - global_position).normalized()
+		var contact_normal := (p_pos - global_position).normalized()
+		if contact_normal == Vector2.ZERO or absf(contact_normal.x) < 0.12:
+			var side = 1.0 if (p_pos.x >= global_position.x) else -1.0
+			contact_normal = Vector2(side * 0.75, 0.65).normalized()
 
-		# If direct downward hit or centered, push diagonally away from stone center
-		if push_dir == Vector2.ZERO or abs(push_dir.x) < 0.15:
-			var side = 1.0 if p_pos.x >= global_position.x else -1.0
-			push_dir = Vector2(side * 0.85, 0.52).normalized()
+		# Player is propelled along collision contact normal (away from stone)
+		var player_push_dir := contact_normal
+		var p_impulse: Vector2 = player_push_dir * knockback_force
 
-		var impulse := push_dir * knockback_force
-
-		# Apply knockback to player using player physics
 		if player_node.has_method("apply_knockback"):
-			player_node.apply_knockback(impulse)
+			player_node.apply_knockback(p_impulse)
 		elif "velocity" in player_node:
-			player_node.velocity = impulse
+			player_node.velocity = p_impulse
 
-		# Separate player slightly to prevent getting stuck
-		player_node.global_position += push_dir * 16.0
+		if "_input_lock" in player_node:
+			player_node.set("_input_lock", 0.35)
+
+		player_node.global_position += player_push_dir * 14.0
+
+		# Newton's 3rd Law: Reaction force acts on stone in the EXACT OPPOSITE direction (-player_push_dir)
+		# Bounces stone in opposite direction with upward and outward rebound, then falls back down under gravity
+		var stone_rebound_dir := -player_push_dir
+		var impact_speed: float = maxf(velocity.length(), fall_speed)
+		var rebound_speed: float = clampf(impact_speed * 0.8, 500.0, 850.0)
+		velocity = stone_rebound_dir * rebound_speed
+		rotation_speed = -signf(player_push_dir.x) * randf_range(10.0, 16.0)
+		has_landed = false
+		_rest_timer = 0.0
+
+
+func _deactivate_stone() -> void:
+	is_falling = false
+	visible = false
+	velocity = Vector2.ZERO
+	if col_shape:
+		col_shape.set_deferred("disabled", true)
+	set_physics_process(false)
 
 
 ## Called by TriggerArea when player touches the trigger zone
@@ -196,22 +287,42 @@ func trigger() -> void:
 
 	is_falling = true
 	has_fallen = true
-	has_impacted = false
+	has_hit_player = false
+	has_landed = false
+	_rest_timer = 0.0
+	_hit_cooldown = 0.0
 	visible = true
-	velocity = Vector2(0, fall_speed)
+	if col_shape:
+		col_shape.set_deferred("disabled", false)
+	set_physics_process(true)
+	velocity = Vector2(0.0, fall_speed)
 
 
 ## Reset stone state when player dies/respawns or level restarts
 func reset() -> void:
 	is_falling = false
 	has_fallen = false
-	has_impacted = false
-	visible = true
+	has_hit_player = false
+	has_landed = false
+	_rest_timer = 0.0
+	_hit_cooldown = 0.0
 	velocity = Vector2.ZERO
 	if start_pos != Vector2.ZERO:
 		global_position = start_pos
 	if sprite:
 		sprite.rotation = initial_rotation
+
+	# In gameplay, hide until triggered again
+	if not is_in_editor():
+		visible = false
+		if col_shape:
+			col_shape.set_deferred("disabled", true)
+		set_physics_process(false)
+	else:
+		visible = true
+		if col_shape:
+			col_shape.disabled = false
+		set_physics_process(false)
 
 
 func apply_theme(theme_id: String) -> void:
@@ -264,4 +375,3 @@ func _draw() -> void:
 		var type_str = "Spike Stone" if is_lethal else "Falling Stone"
 		var label_str = "%s [%s]" % [type_str, trigger_tag]
 		draw_string(font, Vector2(12, -4), label_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1, 0.95))
-

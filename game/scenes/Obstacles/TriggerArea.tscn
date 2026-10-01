@@ -2,13 +2,14 @@
 
 [ext_resource type="Script" uid="uid://dh35s4x0jdq58" path="res://game/scenes/Obstacles/TriggerAreaController.gd" id="1_7f7b7"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_pwxxt"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qg70d"]
 size = Vector2(200, 150)
 
 [node name="TriggerArea" type="Area2D" unique_id=987214051 groups=["trigger_area"]]
 z_index = 15
 collision_layer = 0
+collision_mask = 3
 script = ExtResource("1_7f7b7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=482019371]
-shape = SubResource("RectangleShape2D_pwxxt")
+shape = SubResource("RectangleShape2D_qg70d")

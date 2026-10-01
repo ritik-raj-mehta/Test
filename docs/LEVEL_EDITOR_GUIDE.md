@@ -167,21 +167,20 @@ A solid metallic obstacle rod that blocks player jumps and acts as terrain or st
 
 ---
 
-### 6. `falling_stone`, `falling_stone_trap`, `falling_stone_spike`
-A set of dynamic falling boulder hazards triggered by proximity or custom trigger tags.
+### 6. `falling_stone` & `falling_stone_spike`
+Dynamic falling boulder hazards triggered by proximity or custom trigger tags from a `TriggerArea`. Unified within `FallingStone.tscn` with `is_lethal` configuration.
 
-* **Scenes**:
-  - Non-lethal boulder: `res://game/scenes/Obstacles/FallingStone.tscn` (applies physics knockback).
-  - Lethal spike boulder: `res://game/scenes/Obstacles/FallingStoneSpike.tscn` (kills player on contact).
-  - Compound trap: `res://game/scenes/Obstacles/FallingStoneTrap.tscn` (contains boulder + trigger zone).
+* **Scene**: `res://game/scenes/Obstacles/FallingStone.tscn`
+* **Controller**: `FallingStoneController.gd`
 * **Key Properties**:
+  - `is_lethal`: Whether contact is fatal (`true` for Spike Stone) or delivers physical knockback (`false` for Falling Stone).
   - `trigger_tag`: Matching tag linking `TriggerArea` to `FallingStone` (e.g. `"trap_1"`).
   - `fall_speed`: Initial downward velocity (e.g. `600.0`).
   - `gravity`: Downward acceleration (`1200.0`).
   - `rotation_speed`: Angular spinning while falling.
   - `knockback_force`: Impulse applied to player on non-lethal hit (`600.0`).
   - `fall_distance`: Maximum fall travel before deactivating.
-  - `trigger_distance_y`: Vertical trigger zone offset in compound trap.
+  - `world_theme`: Auto-applied stone texture skin.
 
 ---
 

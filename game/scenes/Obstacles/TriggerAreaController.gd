@@ -51,25 +51,26 @@ func _on_body_entered(body: Node2D) -> void:
 	if triggered:
 		return
 
-	if body is CharacterBody2D or body.name.begins_with("Player") or body.is_in_group("player") or body.has_method("die") or body.has_method("game_over"):
+	var is_player = body is Player \
+		or body.is_in_group("player") \
+		or body.name.begins_with("Player") \
+		or (body is CharacterBody2D and not (body is FallingStoneController) and body.has_method("die"))
+
+	if is_player:
 		triggered = true
 		activate_triggers()
 
 func activate_triggers() -> void:
-	# 1. Trigger sibling nodes inside parent container if any
-	var p = get_parent()
-	if p:
-		for child in p.get_children():
-			if child != self and child.has_method("trigger"):
-				child.trigger()
-
-	# 2. Trigger global nodes in "triggerable" group
+	# Trigger all nodes in "triggerable" group with matching trigger_tag
 	var nodes = get_tree().get_nodes_in_group("triggerable")
 	for node in nodes:
-		if "trigger_tag" in node:
-			if node.trigger_tag == trigger_tag or trigger_tag == "" or node.trigger_tag == "":
-				if node.has_method("trigger"):
-					node.trigger()
+		if node == self:
+			continue
+		var tag_match := true
+		if "trigger_tag" in node and trigger_tag != "":
+			tag_match = (node.trigger_tag == trigger_tag or node.trigger_tag == "")
+		if tag_match and node.has_method("trigger"):
+			node.trigger()
 
 func is_in_editor() -> bool:
 	if Engine.is_editor_hint():
