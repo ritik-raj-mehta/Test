@@ -9,7 +9,7 @@ static var _registry: Dictionary = {
 	"gear_r": {
 		"id": "gear_r",
 		"name": "Rotating Gear",
-		"scene_path": "res://game/scenes/Obstacles/RotatingGear.tscn",
+		"scene_path": "res://game/scenes/Obstacles/MovingGear.tscn",
 		"category": "Obstacles",
 		"default_properties": {"rotation_speed": 2.0},
 		"default_scale": Vector2(1, 1)
@@ -20,6 +20,8 @@ static var _registry: Dictionary = {
 		"scene_path": "res://game/scenes/Obstacles/MovingGear.tscn",
 		"category": "Obstacles",
 		"default_properties": {
+			"has_rod": false,
+			"has_gear": true,
 			"rotation_speed": 2.0,
 			"move_speed": 100.0,
 			"move_angle": 0.0,
@@ -37,17 +39,28 @@ static var _registry: Dictionary = {
 	"gear_rod": {
 		"id": "gear_rod",
 		"name": "Gear Rod",
-		"scene_path": "res://game/scenes/Obstacles/GearRod.tscn",
+		"scene_path": "res://game/scenes/Obstacles/MovingGear.tscn",
 		"category": "Obstacles",
-		"default_properties": {"length": 200.0, "breadth": 8.0},
+		"default_properties": {
+			"has_rod": true,
+			"has_gear": false,
+			"length": 200.0,
+			"breadth": 8.0,
+			"rod_has_collision": true,
+			"gear_count": 0,
+			"move_speed": 0.0,
+			"rotation_speed": 0.0
+		},
 		"default_scale": Vector2(1, 1)
 	},
 	"gear_with_rod": {
 		"id": "gear_with_rod",
 		"name": "Moving Gear with Rod",
-		"scene_path": "res://game/scenes/Obstacles/MovingGearWithRod.tscn",
+		"scene_path": "res://game/scenes/Obstacles/MovingGear.tscn",
 		"category": "Obstacles",
 		"default_properties": {
+			"has_rod": true,
+			"has_gear": true,
 			"rotation_speed": 2.0,
 			"move_speed": 150.0,
 			"move_distance": 300.0,
@@ -55,6 +68,7 @@ static var _registry: Dictionary = {
 			"move_direction": "+X",
 			"loop_reset": true,
 			"rod_breadth": 8.0,
+			"rod_has_collision": false,
 			"gear_count": 1,
 			"gear_spacing": 100.0
 		},
@@ -88,35 +102,12 @@ static var _registry: Dictionary = {
 		"default_properties": {"rotation_speed": 0.0},
 		"default_scale": Vector2(1, 1)
 	},
-	"platform": {
-		"id": "platform",
-		"name": "Ground Platform",
-		"scene_path": "res://game/scenes/Obstacles/platform.tscn",
-		"category": "Platforms",
-		"default_properties": {},
-		"default_scale": Vector2(1, 1)
-	},
+
 	"goal": {
 		"id": "goal",
 		"name": "Goal",
 		"scene_path": "res://game/scenes/Obstacles/Goal.tscn",
 		"category": "Triggers",
-		"default_properties": {},
-		"default_scale": Vector2(1, 1)
-	},
-	#"win_area": {
-		#"id": "win_area",
-		#"name": "Win Area / Goal",
-		#"scene_path": "res://game/scenes/Obstacles/Goal.tscn",
-		#"category": "Triggers",
-		#"default_properties": {},
-		#"default_scale": Vector2(1, 1)
-	#},
-	"wall": {
-		"id": "wall",
-		"name": "Wall",
-		"scene_path": "res://game/scenes/Obstacles/Wall.tscn",
-		"category": "Walls",
 		"default_properties": {},
 		"default_scale": Vector2(1, 1)
 	},
@@ -243,14 +234,13 @@ static func has_object(id: String) -> bool:
 	return _registry.has(id)
 
 static func resolve_scene_path(path: String) -> String:
+	if path.ends_with("GearRod.tscn") or path.ends_with("GearRode.tscn") or path.ends_with("MovingGearWithRod.tscn") or path.ends_with("RotatingGear.tscn"):
+		return "res://game/scenes/Obstacles/MovingGear.tscn"
 	if ResourceLoader.exists(path):
 		return path
 	var goal_fix = path.replace("win_area_node.tscn", "Goal.tscn").replace("win_area.tscn", "Goal.tscn")
 	if ResourceLoader.exists(goal_fix):
 		return goal_fix
-	var rod_fix = path.replace("GearRode.tscn", "GearRod.tscn")
-	if ResourceLoader.exists(rod_fix):
-		return rod_fix
 	# Fallback checks for migrated folders
 	var legacy_to_game = path.replace("res://Obstacle/", "res://game/scenes/Obstacles/").replace("res://Scenes/", "res://game/scenes/Obstacles/").replace("res://Walls/", "res://game/scenes/Obstacles/")
 	if ResourceLoader.exists(legacy_to_game):
@@ -283,7 +273,21 @@ static func get_packed_scene(id: String) -> PackedScene:
 static func instantiate_object(id: String) -> Node2D:
 	var packed := get_packed_scene(id)
 	if packed:
-		return packed.instantiate() as Node2D
+		var node = packed.instantiate() as Node2D
+		if id == "gear_r":
+			if "has_rod" in node: node.set("has_rod", false)
+			if "has_gear" in node: node.set("has_gear", true)
+			if "move_speed" in node: node.set("move_speed", 0.0)
+			if "move_dist_pos" in node: node.set("move_dist_pos", 0.0)
+			if "move_dist_neg" in node: node.set("move_dist_neg", 0.0)
+			if "move_distance" in node: node.set("move_distance", 0.0)
+			if "gear_count" in node: node.set("gear_count", 1)
+		var entry = get_entry(id)
+		if entry.has("default_properties"):
+			for p in entry["default_properties"]:
+				if p in node:
+					node.set(p, entry["default_properties"][p])
+		return node
 	return null
 
 static func clear_cache() -> void:

@@ -2,12 +2,31 @@
 extends CharacterBody2D
 class_name FallingStoneController
 
-@export var is_lethal: bool = false
-@export var trigger_tag: String = "trap_1"
-@export var fall_speed: float = 600.0
+@export var is_lethal: bool = false:
+	set(v):
+		is_lethal = v
+		_update_type_and_visuals()
+
+@export var trigger_tag: String = "trap_1":
+	set(v):
+		trigger_tag = v
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var fall_speed: float = 600.0:
+	set(v):
+		fall_speed = max(0.0, v)
+		if Engine.is_editor_hint():
+			queue_redraw()
+
 @export var gravity: float = 1200.0
 @export var rotation_speed: float = 4.0
-@export var fall_distance: float = 3000.0
+@export var fall_distance: float = 3000.0:
+	set(v):
+		fall_distance = max(0.0, v)
+		if Engine.is_editor_hint():
+			queue_redraw()
+
 @export var knockback_force: float = 600.0
 @export var world_theme: String = "":
 	set(v):
@@ -31,8 +50,6 @@ func _ready() -> void:
 func _on_ready() -> void:
 	add_to_group("falling_stone")
 	add_to_group("triggerable")
-	if is_lethal:
-		add_to_group("obstacle")
 
 	if sprite == null and has_node("Sprite2D"):
 		sprite = get_node("Sprite2D") as Sprite2D
@@ -47,14 +64,43 @@ func _on_ready() -> void:
 	collision_layer = 2
 	collision_mask = 3
 
-	_apply_theme()
+	_update_type_and_visuals()
 
 
 func update_components() -> void:
 	start_pos = global_position
 	if sprite:
 		initial_rotation = sprite.rotation
+	_update_type_and_visuals()
+
+
+func _update_type_and_visuals() -> void:
+	if sprite == null and has_node("Sprite2D"):
+		sprite = get_node("Sprite2D") as Sprite2D
+	if col_shape == null and has_node("CollisionShape2D"):
+		col_shape = get_node("CollisionShape2D") as CollisionShape2D
+
+	if is_inside_tree():
+		if is_lethal:
+			if not is_in_group("obstacle"):
+				add_to_group("obstacle")
+		else:
+			if is_in_group("obstacle"):
+				remove_from_group("obstacle")
+
+	set_meta("is_lethal", is_lethal)
+
+	if col_shape:
+		if not col_shape.shape or not col_shape.shape is CircleShape2D:
+			col_shape.shape = CircleShape2D.new()
+		elif not col_shape.shape.resource_local_to_scene:
+			col_shape.shape = col_shape.shape.duplicate()
+		(col_shape.shape as CircleShape2D).radius = 50.0 if is_lethal else 45.0
+
 	_apply_theme()
+
+	if Engine.is_editor_hint():
+		queue_redraw()
 
 
 func _physics_process(delta: float) -> void:
@@ -191,3 +237,31 @@ func _apply_theme() -> void:
 
 	if tex:
 		sprite.texture = tex
+
+
+func is_in_editor() -> bool:
+	if Engine.is_editor_hint():
+		return true
+	var n: Node = self
+	while n:
+		if n.name == "LevelEditor" or n.name == "LevelCanvas" or n.has_method("new_level") or n.is_in_group("level_editor"):
+			return true
+		n = n.get_parent()
+	return false
+
+
+func _draw() -> void:
+	if not is_in_editor():
+		return
+
+	var line_len = min(fall_distance, 350.0)
+	var col = Color(1.0, 0.3, 0.3, 0.8) if is_lethal else Color(1.0, 0.75, 0.2, 0.8)
+	draw_line(Vector2.ZERO, Vector2(0, line_len), col, 2.0)
+	draw_circle(Vector2(0, line_len), 4.0, col)
+
+	var font = ThemeDB.fallback_font
+	if font:
+		var type_str = "Spike Stone" if is_lethal else "Falling Stone"
+		var label_str = "%s [%s]" % [type_str, trigger_tag]
+		draw_string(font, Vector2(12, -4), label_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1, 0.95))
+

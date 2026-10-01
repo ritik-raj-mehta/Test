@@ -126,10 +126,10 @@ A linear moving gear with independent positive and negative travel distances, cu
 ---
 
 ### 3. `gear_with_rod` (Moving Gear with Fixed Rod)
-A mechanical track obstacle featuring a stationary background rod with gears traveling along its length.
+A mechanical track obstacle featuring a stationary background rod with gears traveling along its length. Unified within `MovingGear.tscn` (`has_rod = true, has_gear = true`).
 
-* **Scene**: `res://game/scenes/Obstacles/MovingGearWithRod.tscn`
-* **Controller**: `MovingGearWithRodController.gd`
+* **Scene**: `res://game/scenes/Obstacles/MovingGear.tscn`
+* **Controller**: `MovingGearController.gd`
 * **Key Properties**:
   - `move_distance`: Total length of the track rod in pixels.
   - `move_angle` & `move_direction`: Orientation angle (`0` = Right, `90` = Down, `180` = Left, `-90` = Up, or Custom).
@@ -144,10 +144,10 @@ A mechanical track obstacle featuring a stationary background rod with gears tra
 ---
 
 ### 4. `gear_r` (Rotating Gear)
-A stationary hazard that continuously rotates in place to block pathways.
+A stationary hazard that continuously rotates in place to block pathways. Unified within `MovingGear.tscn` (`has_rod = false, has_gear = true, move_speed = 0.0`).
 
-* **Scene**: `res://game/scenes/Obstacles/RotatingGear.tscn`
-* **Controller**: `RotatingGearController.gd`
+* **Scene**: `res://game/scenes/Obstacles/MovingGear.tscn`
+* **Controller**: `MovingGearController.gd`
 * **Key Properties**:
   - `rotation_speed`: Angular rotation speed in radians per second (positive for clockwise, negative for counter-clockwise).
   - `world_theme`: Auto-applied gear texture skin.
@@ -155,13 +155,14 @@ A stationary hazard that continuously rotates in place to block pathways.
 ---
 
 ### 5. `gear_rod` (Static Gear Rod Barrier)
-A solid metallic obstacle rod that blocks player jumps and acts as terrain or structure.
+A solid metallic obstacle rod that blocks player jumps and acts as terrain or structure. Unified within `MovingGear.tscn` (`has_rod = true, has_gear = false, rod_has_collision = true`).
 
-* **Scene**: `res://game/scenes/Obstacles/GearRod.tscn`
-* **Controller**: `GearRodController.gd`
+* **Scene**: `res://game/scenes/Obstacles/MovingGear.tscn`
+* **Controller**: `MovingGearController.gd`
 * **Key Properties**:
   - `length`: Length of the rod in pixels.
   - `breadth`: Width/thickness of the rod in pixels.
+  - `rod_has_collision`: Whether the rod has physical barrier collision (`true`).
   - `world_theme`: Auto-applied rod texture.
 
 ---

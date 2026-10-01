@@ -56,13 +56,9 @@ func _on_body_entered(body: Node2D) -> void:
 		activate_triggers()
 
 func activate_triggers() -> void:
-	# 1. Trigger sibling nodes inside parent container (e.g. FallingStoneTrap)
+	# 1. Trigger sibling nodes inside parent container if any
 	var p = get_parent()
 	if p:
-		if p.has_node("FallingStone"):
-			var st = p.get_node("FallingStone")
-			if st.has_method("trigger"):
-				st.trigger()
 		for child in p.get_children():
 			if child != self and child.has_method("trigger"):
 				child.trigger()

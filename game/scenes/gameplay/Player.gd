@@ -291,7 +291,7 @@ func _check_obstacle_collision() -> bool:
 		var collider := collision.get_collider()
 
 		if collider is ObstacleController or collider.is_in_group("obstacle"):
-			if collider.get("is_lethal") == false:
+			if collider.get("is_lethal") == false or (collider.has_meta("is_lethal") and not collider.get_meta("is_lethal")):
 				continue
 			die()
 			return true
