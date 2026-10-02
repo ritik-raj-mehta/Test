@@ -73,7 +73,7 @@ static func get_all_level_paths() -> Array[String]:
 				while file_name != "":
 					if not dir.current_is_dir():
 						var clean_name = file_name.trim_suffix(".remap").trim_suffix(".import")
-						if clean_name.ends_with(".tres"):
+						if clean_name.ends_with(".tres") and not clean_name.to_lower().contains("template"):
 							if not paths_map.has(clean_name):
 								paths_map[clean_name] = dir_path + "/" + clean_name
 					file_name = dir.get_next()
@@ -152,12 +152,12 @@ static func bake_level_to_tscn(lvl_data: LevelData, save_path: String) -> Error:
 		err = ResourceSaver.save(packed_scene, save_path)
 		if err == OK:
 			print("LevelManager: Successfully baked scene to '%s'" % save_path)
-			if Engine.is_editor_hint():
-				if ClassDB.class_exists("EditorInterface") and EditorInterface != null:
-					if EditorInterface.has_method("get_open_scenes") and EditorInterface.has_method("reload_scene_from_path"):
-						var open_scenes = EditorInterface.get_open_scenes()
-						if save_path in open_scenes:
-							EditorInterface.reload_scene_from_path(save_path)
+			if Engine.is_editor_hint() and Engine.has_singleton("EditorInterface"):
+				var editor_iface = Engine.get_singleton("EditorInterface")
+				if editor_iface and editor_iface.has_method("get_open_scenes") and editor_iface.has_method("reload_scene_from_path"):
+					var open_scenes = editor_iface.get_open_scenes()
+					if save_path in open_scenes:
+						editor_iface.reload_scene_from_path(save_path)
 	else:
 		push_error("LevelManager: Failed to pack level scene: %d" % err)
 
@@ -168,6 +168,8 @@ static func set_node_owner_recursive(node: Node, root_node: Node) -> void:
 	for child in node.get_children():
 		if child.owner == null:
 			child.owner = root_node
+		# Only recurse into procedural container children, never into instantiated sub-scenes
+		if child.scene_file_path == "":
 			set_node_owner_recursive(child, root_node)
 
 

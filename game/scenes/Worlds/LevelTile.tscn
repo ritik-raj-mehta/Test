@@ -1,9 +1,8 @@
 [gd_scene format=3 uid="uid://d2b3n20q8x6ym"]
 
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="1_82hq8"]
-[ext_resource type="Script" uid="uid://b8gofmwc0425" path="res://game/scenes/Worlds/LevelTile.gd" id="2_scr"]
+[ext_resource type="Script" uid="uid://dn53oj644qdeg" path="res://game/scenes/Worlds/LevelTile.gd" id="2_scr"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_1m5cb"]
-[ext_resource type="Texture2D" uid="uid://tdufvch8bohi" path="res://game/assets/sprites/single/ui/DailyMissionLockIcon.png" id="4_on160"]
 [ext_resource type="Texture2D" uid="uid://4x1sfc5by0yq" path="res://icon.svg" id="6_tex"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_open"]
@@ -74,7 +73,6 @@ offset_bottom = -50.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("4_on160")
 expand_mode = 1
 stretch_mode = 5
 
@@ -98,6 +96,7 @@ theme_override_constants/separation = 2
 alignment = 1
 
 [node name="Star1" type="TextureRect" parent="Stars" unique_id=986000744]
+visible = false
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 mouse_filter = 2
@@ -106,6 +105,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Star2" type="TextureRect" parent="Stars" unique_id=1149272944]
+visible = false
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 mouse_filter = 2
@@ -114,6 +114,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Star3" type="TextureRect" parent="Stars" unique_id=799149507]
+visible = false
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 mouse_filter = 2

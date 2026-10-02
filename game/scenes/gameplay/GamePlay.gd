@@ -54,6 +54,11 @@ func _on_tap_tap_completed(
 	print("GamePlay: TapTap completed.")
 	print("Before: ", progress_before)
 	print("After: ", progress_after)
+	
+	var current_lvl := _selected_level()
+	if _save:
+		_save.complete_level(current_lvl)
+		_save.save_game()
 
 	var tap_popup := _ui_manager.current() as TapTapPopup
 
@@ -74,7 +79,7 @@ func _on_tap_tap_completed(
 		return
 
 	level_popup.show_result(
-		0,
+		current_lvl,
 		progress_before,
 		progress_after
 	)

@@ -221,14 +221,6 @@ static func get_all_entries() -> Dictionary:
 	return _registry
 
 static var _fallback_objects: Dictionary = {
-	"platform": {
-		"id": "platform",
-		"name": "Ground Platform",
-		"scene_path": "res://game/scenes/Obstacles/platform.tscn",
-		"category": "Platforms",
-		"default_properties": {},
-		"default_scale": Vector2(1, 1)
-	},
 	"falling_stone_trap": {
 		"id": "falling_stone",
 		"name": "Falling Stone",
@@ -240,8 +232,15 @@ static var _fallback_objects: Dictionary = {
 }
 
 static func get_entry(id: String) -> Dictionary:
-	if id == "gear_rode" and not _registry.has("gear_rode"):
-		id = "gear_rod"
+	match id:
+		"obs_1":
+			id = "gear_r"
+		"obs_2":
+			id = "gear_m"
+		"win_area", "win_area_node":
+			id = "goal"
+		"gear_rode":
+			id = "gear_rod"
 	if _registry.has(id):
 		return _registry[id]
 	if _fallback_objects.has(id):
@@ -249,8 +248,9 @@ static func get_entry(id: String) -> Dictionary:
 	return {}
 
 static func has_object(id: String) -> bool:
-	if id == "gear_rode" and (_registry.has("gear_rod") or _fallback_objects.has("gear_rod")):
-		return true
+	match id:
+		"obs_1", "obs_2", "win_area", "win_area_node", "gear_rode":
+			return true
 	return _registry.has(id) or _fallback_objects.has(id)
 
 static func resolve_scene_path(path: String) -> String:

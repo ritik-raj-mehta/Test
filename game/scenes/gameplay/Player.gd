@@ -10,19 +10,28 @@ const TAP_KICK := 160.0
 const HOP_VELOCITY := -760.0
 const HOP_VELOCITY_WALL := -380.0
 const GRAVITY := 1500.0
-
+const STEER_LERP := 12.0
+const DECELERATION := 900.0
 const TILT_SPEED := 14.0
 const TILT_LIMIT :=0.3 
 const TILT_FLIP_SPEED := 8.0 
 
+var _normal_tex: Texture2D
+var _normal_scale: Vector2 = Vector2.ONE
+var _normal_flip := false
 
+@export var goal_sprite_scale: float = 2.0
+@export var goal_scale_duration: float = 0.25
+
+@export var goal_tilt_angle: float = 12.0
+@export var goal_tilt_duration: float = 0.15
 # ============================================================
 # GOAL
 # ============================================================
 
 @export_category("Goal Attraction")
 @export var goal_attraction_speed: float = 120.0
-
+	
 @onready var visual: Node2D = $Sprite2D   
 @onready var trail: Node2D = $Trail	
 # ============================================================
@@ -38,7 +47,8 @@ var is_respawning:bool =false
 var is_invulnerable: bool = false
 var move_dir: float = 0.0
 var _input_lock: float = 0.0
-const STEER_LERP := 12.0
+
+@export var goal_stop_distance: float = 35.0  
 # ============================================================
 # SIGNALS
 # ============================================================
@@ -55,7 +65,14 @@ func setup(bus: GameBus) -> void:
 
 #func _ready() -> void:
 	#update_background_transform()
+func _ready() -> void:
+	if visual:
+		_normal_scale = visual.scale
 
+		var spr := visual as Sprite2D
+		if spr:
+			_normal_tex = spr.texture
+			_normal_flip = spr.flip_h
 
 # ============================================================
 # PHYSICS
@@ -70,6 +87,7 @@ func _floor_bounce_velocity() -> float:
 func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
+		
 	_input_lock = maxf(_input_lock - delta, 0.0)
 
 	# --------------------------------------------------------
@@ -82,29 +100,27 @@ func _physics_process(delta: float) -> void:
 			return
 
 		var target_position: Vector2 = goal_target.get_goal_position()
+		var remaining: float = global_position.distance_to(target_position) - goal_stop_distance
 
-		var distance: float = global_position.distance_to(target_position)
-
-		var speed: float = goal_attraction_speed
-
-		if distance < 100.0:
-			speed *= 0.5
-
-		if distance < 40.0:
-			speed *= 0.25
-
-		global_position = global_position.move_toward(
-			target_position,
-			speed * delta
-		)
-
-		if global_position.distance_to(target_position) <= 5.0:
-			global_position = target_position
+		if remaining <= 2.0:
 			velocity = Vector2.ZERO
 			is_goal_zooming = false
 			_finish_goal_sequence()
-		return
+			return
 
+		var speed: float = goal_attraction_speed
+
+		if remaining < 100.0:
+			speed *= 0.5
+
+		if remaining < 25.0:
+			speed *= 0.5
+
+		global_position = global_position.move_toward(
+			target_position,
+			minf(speed * delta, remaining)
+		)
+		return
 
 	# --------------------------------------------------------
 	# NORMAL MOVEMENT
@@ -126,12 +142,28 @@ func _physics_process(delta: float) -> void:
 	# --------------------------------------------------------
 	
 	_handle_keyboard_input()
+	
 	if is_respawning:
 		velocity.x = 0.0
+
 	elif _input_lock > 0.0:
 		pass
+
+	elif move_dir == 0.0:
+	# No input -> start decelerating immediately.
+		velocity.x = move_toward(
+			velocity.x,
+			0.0,
+			DECELERATION * delta
+		)
+
 	else:
-		velocity.x = lerpf(velocity.x, move_dir * SIDE_SPEED, 1.0 - exp(-STEER_LERP * delta))
+	# Input is active -> keep steering toward the selected direction.
+		velocity.x = lerpf(
+			velocity.x,
+			move_dir * SIDE_SPEED,
+			1.0 - exp(-STEER_LERP * delta)
+		)
 
 	# --------------------------------------------------------
 	# MOVE
@@ -219,24 +251,120 @@ func die() -> void:
 	if _bus:
 		_bus.player_died.emit()
 
+
+func _play_eat() -> void:
+	if not is_instance_valid(goal_target):
+		return
+	var dir := global_position.direction_to(goal_target.get_goal_position())
+	var base := visual.scale
+	var t := create_tween()
+	t.tween_property(self, "global_position", global_position + dir * 18.0, 0.1)
+	t.tween_callback(goal_target.on_eaten)
+	for i in 3:
+		t.tween_property(visual, "scale", base * Vector2(1.25, 0.8), 0.07)
+		t.tween_property(visual, "scale", base * Vector2(0.9, 1.1), 0.07)
+	t.tween_property(visual, "scale", base, 0.05)
+	await t.finished
+
+		
+func _current_skin_id() -> String:
+	return SkinCatalog.DEFAULT_ID
 # ============================================================
 # GOAL
 # ============================================================
 
+#func slow_down_at_goal(goal_node: Node2D) -> void:
+	#if is_goal_reached:
+		#return	
+	#is_goal_reached = true
+	#is_goal_zooming = true
+	#goal_target = goal_node
+	#velocity = Vector2.ZERO
 func slow_down_at_goal(goal_node: Node2D) -> void:
 	if is_goal_reached:
-		return	
+		return
 	is_goal_reached = true
 	is_goal_zooming = true
 	goal_target = goal_node
 	velocity = Vector2.ZERO
+	_set_eat_sprite()
 
+	
+func _set_eat_sprite() -> void:
+	var spr: Sprite2D = visual as Sprite2D
+
+	if not spr or not is_instance_valid(goal_target):
+		return
+
+	# Always start from the original scale.
+	spr.scale = _normal_scale
+
+	visual.rotation = 0.0
+
+	var goal_position: Vector2 = goal_target.get_goal_position()
+
+	# ========================================================
+	# EAT SPRITE
+	# ========================================================
+
+	# eat_right visually faces LEFT.
+	var tex: Texture2D = SkinCatalog.get_eat_texture(
+		_current_skin_id(),
+		"right"
+	)
+
+	if tex:
+		spr.texture = tex
+
+	# eat_right faces LEFT.
+	# Goal LEFT  -> normal
+	# Goal RIGHT -> flip horizontally
+	spr.flip_h = goal_position.x > global_position.x
+
+
+		# ========================================================
+	# TILT TOWARDS GOAL (8 directions)
+	# ========================================================
+	rotation = 0.0
+	var offset: Vector2 = goal_position - global_position
+	var snapped: float = roundf(offset.angle() / (PI / 4.0)) * (PI / 4.0)
+
+	var goal_is_right: bool = offset.x >= 0.0
+	spr.flip_h = goal_is_right
+
+	# Sprite faces LEFT unflipped, RIGHT when flipped.
+	var target_rotation: float = snapped if goal_is_right else wrapf(snapped - PI, -PI, PI)
+
+	var rotation_tween: Tween = create_tween()
+	rotation_tween.set_trans(Tween.TRANS_QUAD)
+	rotation_tween.set_ease(Tween.EASE_OUT)
+	rotation_tween.tween_property(visual, "rotation", target_rotation, goal_tilt_duration)
+
+	# ========================================================
+	# GOAL SCALE
+	# ========================================================
+
+	var target_scale: Vector2 = _normal_scale * goal_sprite_scale
+
+	var scale_tween: Tween = create_tween()
+
+	scale_tween.set_trans(Tween.TRANS_QUAD)
+	scale_tween.set_ease(Tween.EASE_OUT)
+
+	scale_tween.tween_property(
+		visual,
+		"scale",
+		target_scale,
+		goal_scale_duration
+	)
 # ============================================================
 # RESPAWN
 # ============================================================
 func reset_after_respawn() -> void:
 	set_physics_process(true)
+
 	_clear_motion_state()
+
 	is_invulnerable = false
 	_input_lock = 0.2
 	is_respawning = true
@@ -244,7 +372,26 @@ func reset_after_respawn() -> void:
 	is_goal_reached = false
 	is_goal_zooming = false
 	goal_target = null
+
+	# --------------------------------------------------------
+	# RESET VISUAL TO ORIGINAL STATE
+	# --------------------------------------------------------
+
+	if visual:
+		# Reset scale to the ORIGINAL scale captured in _ready().
+		visual.scale = _normal_scale
+
+		# Reset rotation.
+		visual.rotation = 0.0
+
+		# Reset texture.
+		var spr := visual as Sprite2D
+		if spr:
+			spr.texture = _normal_tex
+			spr.flip_h = _normal_flip
+
 	show()
+
 	if trail:
 		trail.start_trail()
 	
@@ -260,9 +407,19 @@ func apply_directional_boost(direction: Vector2, force: float, duration: float =
 	if visual:
 		visual.rotation = 0.0
 
+	# Reset horizontal steering state so the player ascends and drops straight down
+	move_dir = 0.0
+	last_move_direction = 0.0
+
+	# Zero out horizontal velocity if launched vertically (or near vertical)
+	if absf(direction.x) < 0.05:
+		direction.x = 0.0
+		direction = direction.normalized()
+
 	velocity = direction * force
 	is_invulnerable = true
-	_input_lock = duration
+	# Only lock input momentarily at the launch base; unlock immediately once in the air
+	_input_lock = 0.08
 
 	await get_tree().create_timer(duration).timeout
 
@@ -276,6 +433,9 @@ func apply_booster(data: Resource) -> void:
 
 	if data and "boost_velocity" in data:
 		print("PLAYER BOOST APPLIED: ", data.boost_velocity)
+		move_dir = 0.0
+		last_move_direction = 0.0
+		velocity.x = 0.0
 		velocity.y = data.boost_velocity
 		is_invulnerable = true
 
@@ -311,6 +471,9 @@ func _finish_goal_sequence() -> void:
 	set_physics_process(false)   # otherwise gravity resumes and it falls away from the goal
 	if trail:
 		trail.stop_trail()
+	await _play_eat()
+	if not is_goal_reached or is_dead:   # respawned during the eat
+		return
 	hide()
 	if _bus:
 		_bus.goal_sequence_finished.emit()

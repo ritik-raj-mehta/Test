@@ -1,6 +1,9 @@
 @tool
 extends Control
 
+const LevelDataScript = preload("res://game/scripts/data/LevelData.gd")
+const ObjectDataScript = preload("res://game/scripts/data/ObjectData.gd")
+
 @onready var canvas: Control = %Canvas
 @onready var scroll_container: ScrollContainer = %ScrollContainer
 @onready var palette_container: VBoxContainer = %PaletteContainer
@@ -151,9 +154,6 @@ var _is_updating_inspector: bool = false
 @onready var height_spin: SpinBox = %HeightSpin
 @onready var player_x_spin: SpinBox = %PlayerXSpin
 @onready var player_y_spin: SpinBox = %PlayerYSpin
-
-const LevelDataScript = preload("res://game/scripts/data/LevelData.gd")
-const ObjectDataScript = preload("res://game/scripts/data/ObjectData.gd")
 
 var current_level = null
 var current_level_path: String = "res://game/assets/levels/level_001.tres"
@@ -514,6 +514,11 @@ func set_active_tool(id: String, active_btn: Button) -> void:
 	for tool_id in tool_buttons:
 		tool_buttons[tool_id].button_pressed = (tool_buttons[tool_id] == active_btn)
 
+	# Deselect persistent area selection when switching away from area selection / scatter tools
+	if id != "area_select" and id != "tile_scatter":
+		if canvas and canvas.has_selected_area:
+			canvas.clear_selected_area()
+
 	if id == "player_start":
 		set_camera_drag_section_visible(true)
 	elif canvas.selected_object == null:
@@ -535,7 +540,25 @@ func set_camera_drag_section_visible(vis: bool) -> void:
 	if cam_v_offset_spin and cam_v_offset_spin.get_parent(): (cam_v_offset_spin.get_parent() as Control).visible = vis
 
 func connect_signals() -> void:
-	new_btn.pressed.connect(new_level)
+	var new_popup = get_node_or_null("NewLevelPopupMenu") as PopupMenu
+	if not new_popup:
+		new_popup = PopupMenu.new()
+		new_popup.name = "NewLevelPopupMenu"
+		new_popup.add_item("📋 New from Template (Level 1 Starter)", 0)
+		new_popup.add_item("📄 New Blank Level", 1)
+		add_child(new_popup)
+		new_popup.id_pressed.connect(func(id: int):
+			if id == 0:
+				new_level_from_template()
+			elif id == 1:
+				new_level_blank()
+		)
+
+	new_btn.pressed.connect(func():
+		var btn_rect = new_btn.get_global_rect()
+		new_popup.position = Vector2i(int(btn_rect.position.x), int(btn_rect.position.y + btn_rect.size.y + 4.0))
+		new_popup.popup()
+	)
 	save_btn.pressed.connect(on_save_pressed)
 	load_btn.pressed.connect(on_load_pressed)
 	if export_res_btn:
@@ -825,7 +848,7 @@ func on_atlas_tile_selected(coords: Vector2i) -> void:
 		canvas.current_tile_atlas = coords
 		if atlas_picker:
 			canvas.current_palette_tiles = atlas_picker.selected_tiles
-		if canvas.has_selected_area:
+		if canvas.has_selected_area and (canvas.active_placement_id == "area_select" or canvas.active_placement_id == "tile_scatter"):
 			push_undo_snapshot()
 			canvas.fill_selected_area()
 			return
@@ -839,7 +862,7 @@ func _apply_preset_tile(ax: int, ay: int) -> void:
 	if canvas:
 		canvas.current_tile_atlas = Vector2i(ax, ay)
 		canvas.current_palette_tiles = [Vector2i(ax, ay)]
-		if canvas.has_selected_area:
+		if canvas.has_selected_area and (canvas.active_placement_id == "area_select" or canvas.active_placement_id == "tile_scatter"):
 			push_undo_snapshot()
 			canvas.fill_selected_area()
 
@@ -900,7 +923,7 @@ func on_level_selected_from_opt(idx: int) -> void:
 		if loaded:
 			load_level(loaded, path)
 
-func new_level() -> void:
+func get_next_level_info() -> Dictionary:
 	var existing = LevelManager.get_all_level_paths()
 	var max_num = 0
 	for path in existing:
@@ -913,6 +936,65 @@ func new_level() -> void:
 					max_num = num
 	var new_num = max_num + 1
 	var new_id = "level_%03d" % new_num
+	var target_path = "res://game/assets/levels/%s.tres" % new_id
+	return {"num": new_num, "id": new_id, "path": target_path}
+
+func new_level_from_template() -> void:
+	var info = get_next_level_info()
+	var new_num: int = info.num
+	var new_id: String = info.id
+	var target_path: String = info.path
+
+	var tpl_path = "res://game/assets/levels/level_Template.tres"
+	var tpl: LevelData = null
+	if ResourceLoader.exists(tpl_path):
+		tpl = ResourceLoader.load(tpl_path, "", ResourceLoader.CACHE_MODE_IGNORE) as LevelData
+	elif ResourceLoader.exists("res://game/assets/levels/level_001.tres"):
+		tpl = ResourceLoader.load("res://game/assets/levels/level_001.tres", "", ResourceLoader.CACHE_MODE_IGNORE) as LevelData
+
+	current_level = LevelDataScript.new()
+	current_level.level_id = new_id
+	current_level.level_name = "Level %d" % new_num
+
+	if tpl:
+		current_level.world_theme = tpl.world_theme
+		current_level.level_size = tpl.level_size
+		current_level.player_start = tpl.player_start
+		current_level.camera_drag_horizontal_enabled = tpl.camera_drag_horizontal_enabled
+		current_level.camera_drag_vertical_enabled = tpl.camera_drag_vertical_enabled
+		current_level.camera_drag_horizontal_offset = tpl.camera_drag_horizontal_offset
+		current_level.camera_drag_vertical_offset = tpl.camera_drag_vertical_offset
+		current_level.camera_drag_left_margin = tpl.camera_drag_left_margin
+		current_level.camera_drag_top_margin = tpl.camera_drag_top_margin
+		current_level.camera_drag_right_margin = tpl.camera_drag_right_margin
+		current_level.camera_drag_bottom_margin = tpl.camera_drag_bottom_margin
+		current_level.packed_tiles = tpl.packed_tiles.duplicate()
+		for obj in tpl.objects:
+			if obj:
+				current_level.add_object(obj.duplicate_data())
+	else:
+		current_level.world_theme = "world_1"
+		current_level.level_size = Vector2(1080, 2500)
+		current_level.player_start = Vector2(540, 1135)
+		current_level.camera_drag_horizontal_enabled = true
+		current_level.camera_drag_vertical_enabled = true
+		current_level.camera_drag_left_margin = 0.8
+		current_level.camera_drag_top_margin = 0.6
+		current_level.camera_drag_right_margin = 0.8
+		current_level.camera_drag_bottom_margin = 0.2
+		var goal_obj = ObjectDataScript.new("goal", Vector2(540, -627))
+		current_level.add_object(goal_obj)
+		var start_tiles: Array[int] = [6, 25, 1, 1, 7, 25, 1, 1, 8, 25, 1, 1, 9, 25, 1, 1, 10, 25, 1, 1, 11, 25, 1, 1, 12, 25, 1, 1, 13, 25, 1, 1, 14, 25, 1, 1, 15, 25, 1, 1, 16, 25, 1, 1]
+		current_level.packed_tiles = PackedInt32Array(start_tiles)
+
+	load_level(current_level, target_path)
+	push_undo_snapshot()
+
+func new_level_blank() -> void:
+	var info = get_next_level_info()
+	var new_num: int = info.num
+	var new_id: String = info.id
+	var target_path: String = info.path
 
 	current_level = LevelDataScript.new()
 	current_level.level_id = new_id
@@ -922,16 +1004,15 @@ func new_level() -> void:
 	var center_x = current_level.level_size.x / 2.0
 	current_level.player_start = Vector2(center_x, 1135)
 
-	# Add default platform at center
-	var plt = ObjectDataScript.new("platform", Vector2(center_x, 1839))
-	current_level.add_object(plt)
-
 	# Add default win area at center
 	var win = ObjectDataScript.new("goal", Vector2(center_x, -627))
 	current_level.add_object(win)
 
-	var target_path = "res://game/assets/levels/%s.tres" % new_id
 	load_level(current_level, target_path)
+	push_undo_snapshot()
+
+func new_level() -> void:
+	new_level_from_template()
 
 func load_level(lvl, path: String) -> void:
 	current_level = lvl
@@ -1639,9 +1720,10 @@ func on_play_pressed() -> void:
 		LevelManager.bake_level_to_tscn(current_level, tscn_p)
 
 	var scene_path: String = ScenePaths.GAMEPLAY if ResourceLoader.exists(ScenePaths.GAMEPLAY) else "res://game/scenes/gameplay/GamePLay.tscn"
-	if Engine.is_editor_hint():
-		if ClassDB.class_exists("EditorInterface") and EditorInterface != null:
-			EditorInterface.play_custom_scene(scene_path)
+	if Engine.is_editor_hint() and Engine.has_singleton("EditorInterface"):
+		var editor_iface = Engine.get_singleton("EditorInterface")
+		if editor_iface and editor_iface.has_method("play_custom_scene"):
+			editor_iface.play_custom_scene(scene_path)
 		else:
 			get_tree().change_scene_to_file(scene_path)
 	else:

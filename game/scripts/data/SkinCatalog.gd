@@ -7,11 +7,11 @@ extends RefCounted
 const DEFAULT_ID: String = "zumpa_green"
 
 const SKINS: Array = [
-	{ "id": "zumpa_green", "name": "Zumpa",  "color": Color("#5ED68A"), "price": 0 },
-	{ "id": "sunny",       "name": "Sunny",  "color": Color("#FFC83D"), "price": 500 },
-	{ "id": "berry",       "name": "Berry",  "color": Color("#FF6F91"), "price": 800 },
-	{ "id": "skyblue",     "name": "Sky",    "color": Color("#4FA9FF"), "price": 1200 },
-	{ "id": "grape",       "name": "Grape",  "color": Color("#9B6BFF"), "price": 1500 },
+	{ "id": "zumpa_green", "name": "Zumpa", "texture": "res://game/assets/sprites/single/ui/Characters/char1.png","eat_right":"res://game/assets/sprites/single/ui/Characters/char1Right.png" },
+	{ "id": "sunny",       "name": "Sunny", "texture": "res://game/assets/sprites/single/ui/Characters/char2.png","eat_right": "res://game/assets/sprites/single/ui/Characters/char2Right..png"},
+	{ "id": "berry",       "name": "Berry", "texture": "res://game/assets/sprites/single/ui/Characters/char3.png","eat_right": "res://game/assets/sprites/single/ui/Characters/char3Right..png" },
+	{ "id": "skyblue",     "name": "Sky", "texture": "res://game/assets/sprites/single/ui/Characters/char4.png" ,"eat_right": "res://game/assets/sprites/single/ui/Characters/char4Right..png"},
+	{ "id": "grape",       "name": "Grape", "texture": "res://game/assets/sprites/single/ui/Characters/char5.png","eat_right": "res://game/assets/sprites/single/ui/Characters/char5Right..png" },
 ]
 
 static func count() -> int:
@@ -31,3 +31,7 @@ static func index_of(id: String) -> int:
 		if SKINS[i]["id"] == id:
 			return i
 	return 0
+	
+static func get_eat_texture(id: String, side: String) -> Texture2D:
+	var path: String = SKINS[index_of(id)].get("eat_" + side, "")
+	return load(path) if path != "" and ResourceLoader.exists(path) else null

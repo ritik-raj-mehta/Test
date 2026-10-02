@@ -14,6 +14,8 @@ extends AppView
 @export var _credits_button: BaseButton #= %CreditsButton
 @export var _privacy_button: BaseButton #= %PrivacyButton
 @export var _back_button: BaseButton #= %BackButton
+@export var background: TextureRect 
+@export var _blur_bg_list: Array[Texture] 
 
 func _on_ready() -> void:
 	var s: GameModels.SettingsData = _save.settings_data if _save else null
@@ -24,6 +26,32 @@ func _on_ready() -> void:
 	_on_press(_privacy_button, func() -> void: OS.shell_open(UIConfig.PRIVACY_URL))
 	_on_press(_back_button, close)
 	UIAnim.pop_in(_window)
+	_Setup_Bg_at_first_world()
+
+func _Setup_Bg_at_first_world() -> void:
+	var world_index = 0
+	var current_level = _save.get_level() 
+	if current_level <= 10:
+		world_index = 0
+	elif current_level <= 20:
+		world_index = 1
+	elif current_level <= 30:
+		world_index = 2	
+	elif current_level <= 40:
+		world_index = 3
+	elif current_level <= 50:
+		world_index = 4
+	else:
+		world_index = 0
+
+	select_bg_for_world(world_index)
+
+func select_bg_for_world(index: int) -> void:
+	if index < _blur_bg_list.size():
+		background.texture = _blur_bg_list[index]
+	else:
+		background.texture = null
+		_logger.warn("WorldsScene: no blur background for world index ", index)
 
 func _setup_toggle(button: BaseButton, enabled: bool, handler: Callable) -> void:
 	button.button_pressed = enabled   # set before connecting → nothing is saved on open

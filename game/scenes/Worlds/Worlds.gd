@@ -21,6 +21,8 @@ const POP_STAGGER := 0.045  ## seconds between each tile's pop-in, row-major
 @export var _prev_button: BaseButton #= %PrevButton
 @export var _next_button: BaseButton #= %NextButton
 @export var _back_button: BaseButton #= %BackButton
+@export var background: TextureRect 
+@export var _blur_bg_list: Array[Texture] 
 
 var _world_index: int = 0
 
@@ -42,6 +44,32 @@ func _on_ready() -> void:
 	_on_press(_back_button, close)
 	_update_arrows()
 	_rebuild_grid(false)  # first world: show immediately, no pop-in
+	_Setup_Bg_at_first_world()
+
+func _Setup_Bg_at_first_world() -> void:
+	var world_index = 0
+	var current_level = _save.get_level() 
+	if current_level <= 10:
+		world_index = 0
+	elif current_level <= 20:
+		world_index = 1
+	elif current_level <= 30:
+		world_index = 2	
+	elif current_level <= 40:
+		world_index = 3
+	elif current_level <= 50:
+		world_index = 4
+	else:
+		world_index = 0
+
+	select_bg_for_world(world_index)
+
+func select_bg_for_world(index: int) -> void:
+	if index < _blur_bg_list.size():
+		background.texture = _blur_bg_list[index]
+	else:
+		background.texture = null
+		_logger.warn("WorldsScene: no blur background for world index ", index)
 
 func _on_world_selected(index: int) -> void:
 	_world_index = index
@@ -49,6 +77,8 @@ func _on_world_selected(index: int) -> void:
 
 func _on_world_settled(_index: int) -> void:
 	_rebuild_grid(true)
+	# background.texture = _blur_bg_list[_world_index] if _world_index < _blur_bg_list.size() else null
+	select_bg_for_world(_world_index)
 
 func _update_arrows() -> void:
 	_prev_button.disabled = _world_index == 0

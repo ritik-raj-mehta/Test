@@ -250,6 +250,15 @@ func initialize_progress() -> void:
 
 	_update_progress_bar()
 
+	if _save:
+		var player_skins := PlayerSkins.new(_save)
+		var next_skin = player_skins.get_next_locked_skin()
+		if not next_skin.is_empty():
+			var idx = SkinCatalog.index_of(next_skin)
+			var skin_data = SkinCatalog.at(idx)
+			if _progress_bar and _progress_bar.has_method("set_badge_skin"):
+				_progress_bar.set_badge_skin(skin_data)
+
 
 	print(
 		"CHARACTER PROGRESS | ",
@@ -357,6 +366,13 @@ func _on_tap() -> void:
 		1.0
 	)
 
+	if progress >= 1.0 and _progress_after < 1.0:
+		if _save:
+			var player_skins := PlayerSkins.new(_save)
+			var next_skin = player_skins.get_next_locked_skin()
+			if not next_skin.is_empty():
+				player_skins.grant(next_skin)
+				print("TapTapPopup: Unlocked next character: ", next_skin)
 
 	_progress_after = progress
 

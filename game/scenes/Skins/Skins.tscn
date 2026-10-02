@@ -1,18 +1,36 @@
 [gd_scene format=3 uid="uid://cbp1iudqmyyi1"]
 
-[ext_resource type="Texture2D" uid="uid://dtmlnlxbq0ey0" path="res://game/assets/sprites/single/ui/Reff/skin_Reff.png" id="2_qyhv8"]
+[ext_resource type="Texture2D" uid="uid://00poh6l5m3ho" path="res://game/assets/sprites/single/ui/BGs/backgrounds.png" id="2_qyhv8"]
 [ext_resource type="Texture2D" uid="uid://dtll8bitldi3m" path="res://game/assets/sprites/single/ui/back.png" id="3_ocs36"]
-[ext_resource type="Script" uid="uid://uaouktyhodwl" path="res://game/scenes/Skins/Skins.gd" id="3_scr"]
+[ext_resource type="Script" uid="uid://tbcmcffak44o" path="res://game/scenes/Skins/Skins.gd" id="3_scr"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="4_c7mn2"]
 [ext_resource type="PackedScene" uid="uid://bifh6tn11towv" path="res://game/scenes/ui/components/CharacterSkin(1).tscn" id="6_hs8q2"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="6_hywlw"]
 [ext_resource type="PackedScene" uid="uid://dm40ba5fbtwmj" path="res://game/scenes/ui/components/CharacterSkin(2).tscn" id="7_fs46r"]
-[ext_resource type="Script" uid="uid://bsnyfhunua8de" path="res://game/scenes/Skins/SkinCarousel.gd" id="8_car"]
+[ext_resource type="Script" uid="uid://q6vw7qml2sq6" path="res://game/scenes/Skins/SkinCarousel.gd" id="8_car"]
 [ext_resource type="PackedScene" uid="uid://rpn37gt2ukl3" path="res://game/scenes/ui/components/CharacterSkin(3).tscn" id="8_vls40"]
 [ext_resource type="PackedScene" uid="uid://cedncu07phqsj" path="res://game/scenes/ui/components/CharacterSkin(4).tscn" id="9_diwqi"]
 [ext_resource type="PackedScene" uid="uid://d2v7qbu1wb74s" path="res://game/scenes/ui/components/CharacterSkin(5).tscn" id="10_fkiww"]
 
-[sub_resource type="CanvasTexture" id="CanvasTexture_hufkq"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_5fjcl"]
+atlas = ExtResource("2_qyhv8")
+region = Rect2(90, 142, 1100, 1940)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yl6ys"]
+atlas = ExtResource("2_qyhv8")
+region = Rect2(2692, 142, 1100, 1940)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_547ig"]
+atlas = ExtResource("2_qyhv8")
+region = Rect2(1391, 142, 1100, 1940)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y1m8c"]
+atlas = ExtResource("2_qyhv8")
+region = Rect2(3993, 142, 1100, 1940)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_en1yf"]
+atlas = ExtResource("2_qyhv8")
+region = Rect2(5294, 142, 1100, 1940)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rtnyd"]
 atlas = ExtResource("6_hywlw")
@@ -30,7 +48,7 @@ region = Rect2(653, 784, 496, 142)
 atlas = ExtResource("6_hywlw")
 region = Rect2(653, 784, 496, 142)
 
-[node name="Skins" type="Control" unique_id=890826363 node_paths=PackedStringArray("_carousel", "_select_button", "_prev_button", "_next_button", "_back_button")]
+[node name="Skins" type="Control" unique_id=890826363 node_paths=PackedStringArray("_carousel", "_select_button", "_prev_button", "_next_button", "_back_button", "background")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -43,9 +61,10 @@ _select_button = NodePath("Margin/Column/Middle/Stage/SelectButton")
 _prev_button = NodePath("Margin/Column/Middle/Stage/Row/PrevButton")
 _next_button = NodePath("Margin/Column/Middle/Stage/Row/NextButton")
 _back_button = NodePath("Margin/Column/HBoxContainer/BackButton")
+background = NodePath("Background")
+_blur_bg_list = Array[Texture]([SubResource("AtlasTexture_5fjcl"), SubResource("AtlasTexture_yl6ys"), SubResource("AtlasTexture_547ig"), SubResource("AtlasTexture_y1m8c"), SubResource("AtlasTexture_en1yf")])
 
 [node name="Background" type="TextureRect" parent="." unique_id=1920039283]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -53,19 +72,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_qyhv8")
-expand_mode = 1
-
-[node name="Background2" type="TextureRect" parent="." unique_id=19641647]
-self_modulate = Color(0, 0, 0, 0.5882353)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = SubResource("CanvasTexture_hufkq")
 expand_mode = 1
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=1973799855]

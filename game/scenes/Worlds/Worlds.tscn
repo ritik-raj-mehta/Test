@@ -1,24 +1,36 @@
 [gd_scene format=3 uid="uid://b5fucrf0lx748"]
 
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_3b831"]
+[ext_resource type="Texture2D" uid="uid://00poh6l5m3ho" path="res://game/assets/sprites/single/ui/BGs/backgrounds.png" id="3_547ig"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="3_lfd2g"]
-[ext_resource type="Script" uid="uid://b1rvynueyodc0" path="res://game/scenes/Worlds/Worlds.gd" id="3_scr"]
-[ext_resource type="Texture2D" uid="uid://db8jly2hmwrgj" path="res://game/assets/sprites/single/ui/leftArrow.png" id="3_uua01"]
+[ext_resource type="Script" uid="uid://uek643mxu3fm" path="res://game/scenes/Worlds/Worlds.gd" id="3_scr"]
+[ext_resource type="Texture2D" uid="uid://db8jly2hmwrgj" path="res://game/assets/sprites/single/ui/Delete/leftArrow.png" id="3_uua01"]
 [ext_resource type="PackedScene" uid="uid://d2b3n20q8x6ym" path="res://game/scenes/Worlds/LevelTile.tscn" id="4_pac"]
-[ext_resource type="Texture2D" uid="uid://buv2tvm4go7h6" path="res://game/assets/sprites/single/ui/numberTray.png" id="5_naaav"]
+[ext_resource type="Texture2D" uid="uid://buv2tvm4go7h6" path="res://game/assets/sprites/single/ui/Popup/numberTray.png" id="5_naaav"]
 [ext_resource type="PackedScene" uid="uid://c782i88d10f30" path="res://game/scenes/Worlds/WorldCard.tscn" id="6_lfd2g"]
 [ext_resource type="Texture2D" uid="uid://u4yhlumej873" path="res://game/assets/sprites/single/ui/Reff/worlds_Reff.png" id="7_lfd2g"]
-[ext_resource type="Script" uid="uid://cls7ovfqx7oc8" path="res://game/scenes/Worlds/WorldCarousel.gd" id="8_wc"]
-[ext_resource type="Script" uid="uid://b71bs0e3x413o" path="res://game/scenes/Worlds/LevelGrid.gd" id="9_lg"]
+[ext_resource type="Script" uid="uid://s5c28rqvei42" path="res://game/scenes/Worlds/WorldCarousel.gd" id="8_wc"]
+[ext_resource type="Script" uid="uid://mlld2mys4wsx" path="res://game/scenes/Worlds/LevelGrid.gd" id="9_lg"]
 
-[sub_resource type="Gradient" id="1_grad"]
-colors = PackedColorArray(0.91, 0.365, 0.29, 1, 0.976, 0.773, 0.416, 1)
+[sub_resource type="AtlasTexture" id="AtlasTexture_5fjcl"]
+atlas = ExtResource("3_547ig")
+region = Rect2(90, 142, 1100, 1940)
 
-[sub_resource type="GradientTexture2D" id="2_grad"]
-gradient = SubResource("1_grad")
-fill_to = Vector2(0, 1)
+[sub_resource type="AtlasTexture" id="AtlasTexture_yl6ys"]
+atlas = ExtResource("3_547ig")
+region = Rect2(2692, 142, 1100, 1940)
 
-[sub_resource type="CanvasTexture" id="CanvasTexture_v4qb5"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_547ig"]
+atlas = ExtResource("3_547ig")
+region = Rect2(1391, 142, 1100, 1940)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y1m8c"]
+atlas = ExtResource("3_547ig")
+region = Rect2(3993, 142, 1100, 1940)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_en1yf"]
+atlas = ExtResource("3_547ig")
+region = Rect2(5294, 142, 1100, 1940)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wbu85"]
 atlas = ExtResource("3_lfd2g")
@@ -28,13 +40,14 @@ region = Rect2(2375, 445, 176, 181)
 atlas = ExtResource("3_lfd2g")
 region = Rect2(2375, 187, 170, 173)
 
-[node name="Worlds" type="Control" unique_id=183030971 node_paths=PackedStringArray("_carousel", "_grid", "_prev_button", "_next_button", "_back_button")]
+[node name="Worlds" type="Control" unique_id=183030971 node_paths=PackedStringArray("_carousel", "_grid", "_prev_button", "_next_button", "_back_button", "background")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("3_scr")
 tile_scene = ExtResource("4_pac")
 _carousel = NodePath("Margin/Column/WorldRow/WorldCarousel")
@@ -42,9 +55,10 @@ _grid = NodePath("Margin/Column/Middle/LevelGrid")
 _prev_button = NodePath("Margin/Column/WorldRow/PrevButton")
 _next_button = NodePath("Margin/Column/WorldRow/NextButton")
 _back_button = NodePath("Margin/Column/BackButton")
+background = NodePath("Background")
+_blur_bg_list = Array[Texture]([SubResource("AtlasTexture_5fjcl"), SubResource("AtlasTexture_yl6ys"), SubResource("AtlasTexture_547ig"), SubResource("AtlasTexture_y1m8c"), SubResource("AtlasTexture_en1yf")])
 
 [node name="Background" type="TextureRect" parent="." unique_id=2032902289]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,20 +66,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("2_grad")
-expand_mode = 1
-
-[node name="Background2" type="TextureRect" parent="." unique_id=373953723]
-visible = false
-self_modulate = Color(0, 0, 0, 0.5882353)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = SubResource("CanvasTexture_v4qb5")
 expand_mode = 1
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=106989999]
@@ -234,5 +234,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 texture = ExtResource("7_lfd2g")
 expand_mode = 1

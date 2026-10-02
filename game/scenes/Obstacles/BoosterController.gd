@@ -101,21 +101,24 @@ func _on_body_entered(body: Node2D) -> void:
 	var force: float = get_boost_force()
 	var boost_rot: float = global_rotation
 
-	# 1. Make the player perpendicular to the booster:
-	# Orient player so they stand perpendicular to the booster pad surface
+	# 1. Snap the player directly into the middle of the booster:
+	# Orient player perpendicular to the booster pad surface
 	body.rotation = boost_rot
 	if "visual" in body and body.visual:
 		body.visual.rotation = 0.0
 
-	# Align player laterally onto the booster's perpendicular centerline
+	# Align player laterally onto the booster's exact middle centerline
 	var tangent: Vector2 = Vector2.RIGHT.rotated(boost_rot)
-	var to_player: Vector2 = body.global_position - global_position
+	var center_point: Vector2 = global_position
+	if has_node("CollisionShape2D"):
+		var col = get_node("CollisionShape2D") as CollisionShape2D
+		center_point = col.global_position
+
+	var to_player: Vector2 = body.global_position - center_point
 	var lateral_offset: float = to_player.dot(tangent)
-	var max_lateral: float = 40.0 * absf(scale.x)
-	lateral_offset = clampf(lateral_offset, -max_lateral, max_lateral)
 	body.global_position -= tangent * lateral_offset
 
-	# Push slightly along launch direction to ensure clean takeoff
+	# Position slightly along launch direction to ensure clean takeoff
 	body.global_position += push_dir * 12.0
 
 	# 2. Throw the player perpendicular up:

@@ -89,9 +89,19 @@ func update_components() -> void:
 		queue_redraw()
 
 
+func _clean_legacy_children() -> void:
+	for child in get_children():
+		if child != base_sprite and child != base_col_shape:
+			if child.name.begins_with("Sprite2D_") or child.name.begins_with("CollisionShape2D_"):
+				child.queue_free()
+				remove_child(child)
+
+
 func _update_visuals() -> void:
 	if not base_sprite:
 		return
+
+	_clean_legacy_children()
 
 	# Base sprite at index 0
 	base_sprite.position = Vector2.ZERO
@@ -99,11 +109,11 @@ func _update_visuals() -> void:
 
 	var needed_extra: int = spike_count - 1
 
-	# Expand pool if needed
+	# Expand internal pool if needed
 	while _sprites_pool.size() < needed_extra:
 		var spr: Sprite2D = base_sprite.duplicate() as Sprite2D
 		spr.name = "Sprite2D_%d" % (_sprites_pool.size() + 2)
-		add_child(spr)
+		add_child(spr, false, Node.INTERNAL_MODE_BACK)
 		_sprites_pool.append(spr)
 
 	# Position active extra sprites and hide unused ones
@@ -155,7 +165,7 @@ func _update_collisions() -> void:
 			var cs := CollisionShape2D.new()
 			cs.name = "CollisionShape2D_%d" % (_col_shapes_pool.size() + 2)
 			cs.shape = _shared_shape
-			add_child(cs)
+			add_child(cs, false, Node.INTERNAL_MODE_BACK)
 			_col_shapes_pool.append(cs)
 
 		for i in range(_col_shapes_pool.size()):

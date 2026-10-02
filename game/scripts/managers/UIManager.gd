@@ -22,6 +22,7 @@ func configure(logger: Node, bus: Node, audio: AudioManager = null, game: GameMa
 
 func _ready() -> void:
 	layer = 100  
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	pass
 
 # ── Push ──────────────────────────────────────────────────────────────────

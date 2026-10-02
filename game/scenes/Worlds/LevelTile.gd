@@ -38,7 +38,7 @@ func setup(p_level: int, p_state: State, earned_stars: int = 0) -> void:
 	level = p_level
 	state = p_state
 	_number.text = str(level)
-	_number.visible = state != State.LOCKED
+	# _number.visible = state != State.LOCKED
 	_lock.visible = state == State.LOCKED
 	match state:
 		State.LOCKED:    texture_normal = locked_texture

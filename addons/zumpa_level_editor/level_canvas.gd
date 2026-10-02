@@ -631,7 +631,7 @@ func _draw() -> void:
 	var center_c_x = world_to_canvas(Vector2(center_w_x, 0)).x
 
 	# Draw Grid Overlay aligned with TileMap & Snap Grid (symmetrically centered around 540)
-	var is_tile_tool = (active_placement_id == "tile_brush" or active_placement_id == "tile_eraser" or active_placement_id == "tile_scatter" or active_placement_id == "area_select" or has_selected_area)
+	var is_tile_tool = (active_placement_id == "tile_brush" or active_placement_id == "tile_eraser" or active_placement_id == "tile_scatter" or active_placement_id == "area_select")
 	if grid_snap or is_tile_tool:
 		var tile_step: float = 48.0 if is_tile_tool else float(grid_size)
 		var g_color := Color(1.0, 1.0, 1.0, 0.22) if is_tile_tool else Color(1.0, 1.0, 1.0, 0.09)

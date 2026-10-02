@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://blyi7mmhbnejx"]
 
-[ext_resource type="Texture2D" uid="uid://c3hbw0hgr2tue" path="res://game/assets/sprites/single/ui/Reff/Win_Reff.png" id="2_akpj5"]
 [ext_resource type="Texture2D" uid="uid://plk0ckihr7wt" path="res://game/assets/sprites/single/ui/level_completed.png" id="3_p4usr"]
 [ext_resource type="Script" uid="uid://d3irsxkw4od8w" path="res://game/scenes/ui/hfw/LevelCompletedPopup.gd" id="3_scr"]
 [ext_resource type="PackedScene" uid="uid://8tb47baum5hu" path="res://game/scenes/ui/components/CharacterView.tscn" id="4_pac"]
@@ -51,19 +50,7 @@ grow_vertical = 2
 mouse_filter = 2
 texture = SubResource("2_grad")
 expand_mode = 1
-
-[node name="Background2" type="TextureRect" parent="." unique_id=573718518]
-visible = false
-self_modulate = Color(1, 1, 1, 0.61960787)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("2_akpj5")
-expand_mode = 1
+stretch_mode = 6
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=360197406]
 unique_name_in_owner = true
@@ -83,6 +70,7 @@ theme_override_constants/margin_bottom = 200
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 50
+alignment = 1
 
 [node name="Title" type="TextureRect" parent="Margin/Column" unique_id=1057017593]
 custom_minimum_size = Vector2(800, 200)

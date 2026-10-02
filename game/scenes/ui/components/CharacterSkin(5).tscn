@@ -1,9 +1,7 @@
 [gd_scene format=3 uid="uid://d2v7qbu1wb74s"]
 
-[ext_resource type="Script" uid="uid://bopa37n3eaiuf" path="res://game/scenes/ui/components/CharacterView.gd" id="1_r0u7u"]
-[ext_resource type="Texture2D" uid="uid://baoc52omuthkq" path="res://game/assets/sprites/single/ui/character.png" id="2_tb3nb"]
-[ext_resource type="Texture2D" uid="uid://cm02bi0r1olax" path="res://game/assets/sprites/single/ui/char1.png" id="3_roarn"]
-[ext_resource type="Texture2D" uid="uid://tdufvch8bohi" path="res://game/assets/sprites/single/ui/DailyMissionLockIcon.png" id="4_uxwqc"]
+[ext_resource type="Script" uid="uid://dj73xq2d5a6ih" path="res://game/scenes/ui/components/CharacterView.gd" id="1_r0u7u"]
+[ext_resource type="Texture2D" uid="uid://cm02bi0r1olax" path="res://game/assets/sprites/single/ui/Characters/char1.png" id="3_roarn"]
 
 [node name="CharacterView" type="Control" unique_id=1190953928 node_paths=PackedStringArray("_body", "_lock")]
 custom_minimum_size = Vector2(520, 520)
@@ -13,20 +11,6 @@ mouse_filter = 2
 script = ExtResource("1_r0u7u")
 _body = NodePath("Body")
 _lock = NodePath("LockIcon")
-
-[node name="Ring" type="TextureRect" parent="." unique_id=854033488]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("2_tb3nb")
-expand_mode = 1
-stretch_mode = 5
 
 [node name="Body" type="TextureRect" parent="." unique_id=693516560]
 unique_name_in_owner = true
@@ -44,35 +28,24 @@ texture = ExtResource("3_roarn")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="NameLabel" type="Label" parent="." unique_id=528305542]
+[node name="LockIcon" type="TextureRect" parent="." unique_id=1068935690]
 unique_name_in_owner = true
 visible = false
+self_modulate = Color(0, 0, 0, 1)
+custom_minimum_size = Vector2(500, 500)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -250.0
+offset_right = 250.0
+offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.231, 0.29, 0.4, 1)
-theme_override_font_sizes/font_size = 46
-text = "Character"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="LockIcon" type="TextureRect" parent="." unique_id=1339811693]
-unique_name_in_owner = true
-visible = false
-self_modulate = Color(0.447, 0.498, 0.573, 1)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.14
-anchor_right = 0.5
-anchor_bottom = 0.14
-offset_left = -50.0
-offset_right = 50.0
-offset_bottom = 100.0
 mouse_filter = 2
-texture = ExtResource("4_uxwqc")
+texture = ExtResource("3_roarn")
 expand_mode = 1
 stretch_mode = 5

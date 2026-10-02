@@ -36,6 +36,7 @@ func _on_body_entered(body: Node2D) -> void:
 
 	if body is CharacterBody2D or body.name.begins_with("Player") or body.is_in_group("player"):
 		triggered = true
+		_set_cry(true)
 		if _bus:
 			_bus.goal_reached.emit(body, self)
 
@@ -48,31 +49,47 @@ func get_goal_position() -> Vector2:
 	return global_position
 
 
-func apply_theme(theme_id: String) -> void:
-	world_theme = theme_id
-	_apply_theme()
-
-
 func _apply_theme() -> void:
 	if sprite == null and has_node("Sprite2D"):
 		sprite = get_node("Sprite2D") as Sprite2D
 	if not sprite:
 		return
+	_set_fruit_tex(WorldThemeRegistry.get_fruit_texture(_theme_id()))
 
-	var theme_id = world_theme
-	if theme_id == "":
-		theme_id = WorldThemeRegistry.get_current_theme()
 
-	var tex = WorldThemeRegistry.get_fruit_texture(theme_id)
-	if tex:
-		sprite.texture = tex
-		# Normalize fruit size smoothly across different resolutions
-		var tex_sz = tex.get_size()
-		if tex_sz.x > 0 and tex_sz.y > 0:
-			var max_dim = max(tex_sz.x, tex_sz.y)
-			var scale_factor = 90.0 / max_dim
-			sprite.scale = Vector2(scale_factor, scale_factor)
+func _theme_id() -> String:
+	return world_theme if world_theme != "" else WorldThemeRegistry.get_current_theme()
+
+
+func _set_cry(on: bool) -> void:
+	if not sprite:
+		return
+	var tex: Texture2D = null
+	if on:
+		tex = WorldThemeRegistry.get_fruit_cry_texture(_theme_id())
+	if tex == null:
+		tex = WorldThemeRegistry.get_fruit_texture(_theme_id())
+	_set_fruit_tex(tex)
+
+
+func _set_fruit_tex(tex: Texture2D) -> void:
+	if not tex:
+		return
+	sprite.texture = tex
+	var sz := tex.get_size()
+	if sz.x > 0 and sz.y > 0:
+		var f := 90.0 / maxf(sz.x, sz.y)
+		sprite.scale = Vector2(f, f)
 
 
 func reset() -> void:
 	triggered = false
+	_set_cry(false)
+
+func on_eaten() -> void:
+	_set_cry(true)
+	if sprite:
+		var base := sprite.scale
+		var t := create_tween()
+		t.tween_property(sprite, "scale", base * 1.15, 0.08)
+		t.tween_property(sprite, "scale", base, 0.12)

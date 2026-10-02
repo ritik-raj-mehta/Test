@@ -39,3 +39,21 @@ func equip(id: String) -> bool:
 	)
 	_save.save_game()
 	return true
+
+func grant(id: String) -> bool:
+	if _save == null or is_owned(id):
+		return false
+	_save.inventory.mutate(func(d: GameModels.InventoryData) -> void:
+		var owned: Array = d.owned.get(CATEGORY, [])
+		if not id in owned:
+			owned.append(id)
+		d.owned[CATEGORY] = owned
+	)
+	_save.save_game()
+	return true
+
+func get_next_locked_skin() -> String:
+	for s in SkinCatalog.SKINS:
+		if not is_owned(s["id"]):
+			return s["id"]
+	return ""

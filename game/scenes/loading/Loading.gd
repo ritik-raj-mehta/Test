@@ -5,7 +5,7 @@ extends AppView
 
 func _on_ready() -> void:
 	SettingsApplier.apply(_save.settings_data if _save else null, _audio, _haptics)
-	if false:#PrivacyConsent.is_accepted():
+	if PrivacyConsent.is_accepted():
 		_run()
 	else:
 		_show_privacy_popup()
