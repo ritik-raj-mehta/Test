@@ -26,12 +26,15 @@ class_name MovingGearController
 	set(v):
 		is_lethal = v
 		gear_is_lethal = v
-		rod_is_lethal = v
 
 @export var gear_is_lethal: bool = true
-@export var rod_is_lethal: bool = true
+@export var rod_is_lethal: bool = false:
+	set(v):
+		rod_is_lethal = v
+		if rod_body:
+			rod_body.set_meta("is_lethal", rod_is_lethal)
 
-@export var rod_has_collision: bool = true:
+@export var rod_has_collision: bool = false:
 	set(v):
 		rod_has_collision = v
 		_update_rod_dimensions()
@@ -472,6 +475,11 @@ func _update_rod_dimensions() -> void:
 	var rod_thick: float = max(breadth, rod_breadth)
 	rod_body.position = rod_center
 	rod_body.rotation = deg_to_rad(move_angle)
+
+	if rod_body:
+		if not rod_has_collision:
+			rod_body.collision_layer = 0
+			rod_body.collision_mask = 0
 
 	if rod_col:
 		rod_col.disabled = not rod_has_collision

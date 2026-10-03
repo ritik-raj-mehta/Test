@@ -46,7 +46,7 @@ static var _registry: Dictionary = {
 			"has_gear": false,
 			"length": 200.0,
 			"breadth": 8.0,
-			"rod_has_collision": true,
+			"rod_has_collision": false,
 			"gear_count": 0,
 			"move_speed": 0.0,
 			"rotation_speed": 0.0
