@@ -142,6 +142,13 @@ class_name MovingGearController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
+@export var gear_scale: float = 1.0:
+	set(v):
+		gear_scale = max(0.1, v)
+		_update_gear_scales()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
 @export_range(0, 20, 1) var gear_count: int = 1:
 	set(v):
 		gear_count = clampi(v, 0, 20)
@@ -305,6 +312,19 @@ func _auto_detect_mode_if_needed() -> void:
 # 4. GEAR REBUILDING & POOLING
 # ==============================================================================
 
+func _update_gear_scales() -> void:
+	var base_scale = Vector2(0.5, 0.5) * gear_scale
+	for body in _gear_bodies:
+		if body:
+			var spr = body.get_node_or_null("Sprite2D") as Sprite2D
+			if spr:
+				spr.scale = base_scale
+			var col = body.get_node_or_null("CollisionShape2D") as CollisionShape2D
+			if col and col.shape and col.shape is CircleShape2D:
+				if not col.shape.resource_local_to_scene:
+					col.shape = col.shape.duplicate()
+				(col.shape as CircleShape2D).radius = 44.15 * gear_scale
+
 func _rebuild_gears() -> void:
 	_resolve_nodes()
 
@@ -355,6 +375,7 @@ func _rebuild_gears() -> void:
 				_gear_sprites.append(spr)
 
 	_apply_theme()
+	_update_gear_scales()
 
 # ==============================================================================
 # 5. MOVEMENT & CACHES
@@ -565,26 +586,24 @@ func _physics_process(delta: float) -> void:
 				var t_pos = pos_d / max(1.0, cur_spd)
 				var t_neg = neg_d / max(1.0, cur_spd)
 				var t_span = (pos_d + neg_d) / max(1.0, cur_spd)
+				var cycle = 2.0 * t_span + 2.0 * t_pause
+				var t = fmod(t_active, cycle)
 
-				if t_pause > 0.0:
-					var cycle = 2.0 * t_span + 2.0 * t_pause
-					var t = fmod(t_active, cycle)
-					if t < t_pos:
-						var s = (1.0 - cos((t / max(0.001, t_pos)) * (PI * 0.5)))
-						offset_scalar = pos_d * s
-					elif t < t_pos + t_pause:
-						offset_scalar = pos_d
-					elif t < t_pos + t_pause + t_span:
-						var s = (1.0 - cos(((t - (t_pos + t_pause)) / max(0.001, t_span)) * PI)) * 0.5
-						offset_scalar = pos_d - (pos_d + neg_d) * s
-					elif t < t_pos + 2.0 * t_pause + t_span:
-						offset_scalar = -neg_d
-					else:
-						var s = (1.0 - cos(((t - (t_pos + 2.0 * t_pause + t_span)) / max(0.001, t_neg)) * (PI * 0.5)))
-						offset_scalar = -neg_d * (1.0 - s)
+				if t < t_pos:
+					var s = sin((t / max(0.001, t_pos)) * (PI * 0.5))
+					offset_scalar = pos_d * s
+				elif t < t_pos + t_pause:
+					offset_scalar = pos_d
+				elif t < t_pos + t_pause + t_span:
+					var u = t - (t_pos + t_pause)
+					var s = (1.0 - cos((u / max(0.001, t_span)) * PI)) * 0.5
+					offset_scalar = pos_d - (pos_d + neg_d) * s
+				elif t < t_pos + 2.0 * t_pause + t_span:
+					offset_scalar = -neg_d
 				else:
-					var phase = t_active * (cur_spd / max(1.0, _amplitude))
-					offset_scalar = _center_offset + _amplitude * sin(phase)
+					var v = t - (t_pos + 2.0 * t_pause + t_span)
+					var s = cos((v / max(0.001, t_neg)) * (PI * 0.5))
+					offset_scalar = -neg_d * s
 
 			_update_gears_positions(offset_scalar)
 
@@ -641,10 +660,11 @@ func _apply_theme() -> void:
 			if spr:
 				spr.texture = g_tex
 
+	_update_gear_scales()
+
 func reset() -> void:
-	_elapsed_time = 0.0
-	_progress = 0.0
-	_update_gears_positions(0.0)
+	# Keep current gear movement phase & position intact on player death/respawn
+	pass
 
 # ==============================================================================
 # 9. EDITOR VISUALS & GIZMOS

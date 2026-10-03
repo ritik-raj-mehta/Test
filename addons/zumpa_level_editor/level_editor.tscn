@@ -43,6 +43,13 @@ text = " ZUMPA LEVEL EDITOR "
 [node name="VSeparator" type="VSeparator" parent="MainVBox/TopBarPanel/TopBar" unique_id=1141180962]
 layout_mode = 2
 
+[node name="SelectMoveTopBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11119]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = " ✋ Select / Move "
+
 [node name="ToggleLeftBtn" type="Button" parent="MainVBox/TopBarPanel/TopBar" unique_id=11115]
 unique_name_in_owner = true
 layout_mode = 2

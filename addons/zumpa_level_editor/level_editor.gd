@@ -32,6 +32,7 @@ const MAX_UNDO_DEPTH: int = 50
 @onready var canvas_zoom_reset_btn: Button = %CanvasZoomResetBtn
 @onready var toggle_left_btn: Button = %ToggleLeftBtn
 @onready var toggle_right_btn: Button = %ToggleRightBtn
+@onready var select_move_top_btn: Button = %SelectMoveTopBtn if has_node("%SelectMoveTopBtn") else null
 @onready var left_panel: PanelContainer = %LeftPanel if has_node("%LeftPanel") else null
 
 # Right Inspector
@@ -334,6 +335,12 @@ func setup_palette() -> void:
 	palette_container.add_child(select_btn)
 	tool_buttons[""] = select_btn
 
+	if select_move_top_btn:
+		select_move_top_btn.toggle_mode = true
+		select_move_top_btn.button_pressed = true
+		if not select_move_top_btn.pressed.is_connected(set_active_tool):
+			select_move_top_btn.pressed.connect(func(): set_active_tool("", select_move_top_btn))
+
 	# Player Start Tool
 	var p_btn := Button.new()
 	p_btn.text = "🚩 Player Start"
@@ -512,7 +519,10 @@ func populate_level_selector() -> void:
 func set_active_tool(id: String, active_btn: Button) -> void:
 	canvas.active_placement_id = id
 	for tool_id in tool_buttons:
-		tool_buttons[tool_id].button_pressed = (tool_buttons[tool_id] == active_btn)
+		tool_buttons[tool_id].button_pressed = (tool_buttons[tool_id] == active_btn or (id == "" and tool_id == ""))
+
+	if select_move_top_btn:
+		select_move_top_btn.button_pressed = (id == "")
 
 	# Deselect persistent area selection when switching away from area selection / scatter tools
 	if id != "area_select" and id != "tile_scatter":

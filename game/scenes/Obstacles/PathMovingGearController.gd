@@ -408,8 +408,8 @@ func _sample_polygon_distance(dist: float) -> Vector2:
 	return _vertices[0]
 
 func reset() -> void:
-	_elapsed_time = 0.0
-	_update_gears_positions(0.0)
+	# Keep current gear movement phase & position intact on player death/respawn
+	pass
 
 func is_in_editor() -> bool:
 	if Engine.is_editor_hint():
