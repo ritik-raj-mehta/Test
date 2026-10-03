@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dqu4v6h40xdfy" path="res://game/assets/sprites/obstacles/Booster.png" id="2_boost_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6q0s8"]
-size = Vector2(108, 26.5)
+size = Vector2(82, 26.5)
 
 [node name="Booster" type="Area2D" unique_id=1349629937 groups=["boosters", "obstacle"]]
 collision_layer = 2
@@ -17,7 +17,7 @@ scale = Vector2(0.2, 0.2)
 texture = ExtResource("2_boost_tex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=572411083]
-position = Vector2(1, 44.25)
+position = Vector2(2, 44.25)
 shape = SubResource("RectangleShape2D_6q0s8")
 
 [node name="Marker2D" type="Marker2D" parent="." unique_id=1617911994]
