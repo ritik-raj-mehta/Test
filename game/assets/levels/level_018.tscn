@@ -153,7 +153,7 @@ tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_1856b")
 
-[node name="LevelRoot" type="Node2D" unique_id=977595410]
+[node name="LevelRoot" type="Node2D" unique_id=980326427]
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=927742863 instance=ExtResource("1_2xw1f")]
 z_index = 10
@@ -162,7 +162,7 @@ collision_layer = 2
 collision_mask = 23
 script = ExtResource("2_m22lw")
 
-[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=380800501]
+[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=1359919444]
 z_index = 150
 position = Vector2(40, 0)
 scale = Vector2(1.5, 1.5)
@@ -184,7 +184,7 @@ script = ExtResource("7_40nrt")
 spike_count = 8
 wall_distance = 45.0
 
-[node name="Spike_2" type="StaticBody2D" parent="." unique_id=1130281366 groups=["obstacle"] instance=ExtResource("6_83aix")]
+[node name="Spike_2" type="StaticBody2D" parent="." unique_id=298819138 groups=["obstacle"] instance=ExtResource("6_83aix")]
 z_index = 100
 position = Vector2(1119.0627, 1814.4403)
 collision_layer = 2
@@ -194,11 +194,12 @@ spike_count = 8
 wall_distance = 45.0
 
 [node name="GearZigzag" type="Node2D" parent="." unique_id=1293548201 groups=["obstacle"] instance=ExtResource("8_celo5")]
-position = Vector2(1068.6454, -715.4585)
+position = Vector2(990, -1423)
 script = ExtResource("9_l4vto")
 has_rod = true
 move_speed = 150.0
 loop_reset = true
-gear_spacing = 0.0
+gear_count = 4
+gear_spacing = 700.0
 is_zigzag = true
 world_theme = "world_1"

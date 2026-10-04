@@ -279,6 +279,13 @@ class_name MovingGearController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
+@export var node_pause_time: float = 0.5: # Pause duration in seconds at each vertex/node of the zigzag track
+	set(v):
+		node_pause_time = max(0.0, v)
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
 @export var show_track_rods: bool = true:
 	set(v):
 		show_track_rods = v
@@ -548,6 +555,63 @@ func _get_position_at_path_distance(dist_val: float) -> Vector2:
 			t = clampf(t, 0.0, 1.0)
 			return _path_points[i].lerp(_path_points[i + 1], t)
 		accum += seg_len
+
+	return _path_points[0]
+
+
+func _get_position_at_path_time(t_val: float) -> Vector2:
+	var count = _path_points.size()
+	if count == 0:
+		return Vector2.ZERO
+	if count == 1 or _total_path_length <= 0.001:
+		return _path_points[0]
+
+	var num_segs = _segment_lengths.size()
+	if num_segs == 0:
+		return _path_points[0]
+
+	var pause_dur = max(node_pause_time, direction_change_delay)
+	if pause_dur <= 0.0:
+		var base_spd = interval_speed if enable_interval_movement else move_speed
+		var dist_val = t_val * base_spd
+		return _get_position_at_path_distance(dist_val)
+
+	var base_spd = max(1.0, interval_speed if enable_interval_movement else move_speed)
+
+	var seg_times: Array[float] = []
+	var total_cycle_time: float = 0.0
+	for seg_len in _segment_lengths:
+		var travel_t = seg_len / base_spd
+		seg_times.append(travel_t)
+		total_cycle_time += travel_t + pause_dur
+
+	var t_cur = t_val
+	if loop_reset:
+		t_cur = fmod(t_cur, total_cycle_time)
+		if t_cur < 0.0:
+			t_cur += total_cycle_time
+	else:
+		var double_cycle = total_cycle_time * 2.0
+		var t_mod = fmod(t_cur, double_cycle)
+		if t_mod < 0.0: t_mod += double_cycle
+		if t_mod > total_cycle_time:
+			t_cur = double_cycle - t_mod
+		else:
+			t_cur = t_mod
+
+	var accum_t = 0.0
+	for i in range(num_segs):
+		var travel_t = seg_times[i]
+		if t_cur < accum_t + travel_t:
+			var ratio = (t_cur - accum_t) / max(0.0001, travel_t)
+			return _path_points[i].lerp(_path_points[i + 1], clampf(ratio, 0.0, 1.0))
+
+		accum_t += travel_t
+
+		if t_cur <= accum_t + pause_dur or i == num_segs - 1:
+			return _path_points[i + 1]
+
+		accum_t += pause_dur
 
 	return _path_points[0]
 
@@ -847,6 +911,23 @@ func _update_gears_positions(offset_scalar: float) -> void:
 	if is_zigzag or not custom_waypoints.is_empty():
 		if _total_path_length <= 0.001:
 			return
+		var pause_dur = max(node_pause_time, direction_change_delay)
+		if pause_dur > 0.0:
+			var base_spd = max(1.0, interval_speed if enable_interval_movement else move_speed)
+			var total_travel_t = _total_path_length / base_spd
+			var num_nodes = float(_path_points.size())
+			var spacing_t = (total_travel_t / max(1.0, num_nodes)) + pause_dur
+			if not is_zero_approx(gear_spacing):
+				spacing_t = gear_spacing / base_spd
+
+			for i in range(count):
+				var body = _gear_bodies[i]
+				if not body:
+					continue
+				var gear_t = _motion_accum_time + float(i) * spacing_t
+				body.position = _get_position_at_path_time(gear_t)
+			return
+
 		var base_spd = interval_speed if enable_interval_movement else move_speed
 		var base_dist = _motion_accum_time * base_spd
 		var effective_spacing = gear_spacing
