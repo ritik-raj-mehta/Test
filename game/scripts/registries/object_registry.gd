@@ -74,6 +74,26 @@ static var _registry: Dictionary = {
 		},
 		"default_scale": Vector2(1, 1)
 	},
+	"gear_zigzag": {
+		"id": "gear_zigzag",
+		"name": "ZigZag Track Moving Gear",
+		"scene_path": "res://game/scenes/Obstacles/MovingGear.tscn",
+		"category": "Obstacles",
+		"default_properties": {
+			"is_zigzag": true,
+			"zigzag_width": 400.0,
+			"zigzag_height": 180.0,
+			"zigzag_count": 4,
+			"has_rod": true,
+			"move_speed": 150.0,
+			"rotation_speed": 2.0,
+			"loop_reset": true,
+			"gear_count": 1,
+			"gear_spacing": 0.0,
+			"show_track_rods": true
+		},
+		"default_scale": Vector2(1, 1)
+	},
 	"gear_path": {
 		"id": "gear_path",
 		"name": "Path / Shape Moving Gear",

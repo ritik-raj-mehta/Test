@@ -236,6 +236,49 @@ class_name MovingGearController
 		speed_pulses_per_interval = max(0.5, v)
 		_update_movement_cache()
 
+@export_group("ZigZag & Waypoint Path")
+@export var is_zigzag: bool = false:
+	set(v):
+		is_zigzag = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var zigzag_width: float = 400.0:
+	set(v):
+		zigzag_width = max(10.0, v)
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var zigzag_height: float = 180.0:
+	set(v):
+		zigzag_height = max(10.0, v)
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export_range(1, 20, 1) var zigzag_count: int = 4:
+	set(v):
+		zigzag_count = clampi(v, 1, 20)
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var custom_waypoints: Array = []:
+	set(v):
+		custom_waypoints = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var show_track_rods: bool = true:
+	set(v):
+		show_track_rods = v
+		_update_rod_dimensions()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
 @export var world_theme: String = "":
 	set(v):
 		world_theme = v
@@ -267,6 +310,10 @@ var _progress: float = 0.0
 
 var _gear_bodies: Array[StaticBody2D] = []
 var _gear_sprites: Array[Sprite2D] = []
+
+var _path_points: Array[Vector2] = []
+var _segment_lengths: Array[float] = []
+var _total_path_length: float = 0.0
 
 # ==============================================================================
 # 3. LIFECYCLE & INITIALIZATION
@@ -433,7 +480,87 @@ func _sync_direction_enum() -> void:
 		"X":
 			move_angle = 0.0
 
+func _rebuild_path_points() -> void:
+	_path_points.clear()
+	_segment_lengths.clear()
+	_total_path_length = 0.0
+
+	if not custom_waypoints.is_empty():
+		for pt in custom_waypoints:
+			_path_points.append(Vector2(pt))
+	elif is_zigzag:
+		var half_w = zigzag_width * 0.5
+		var half_h = zigzag_height * 0.5
+		for i in range(zigzag_count):
+			var level_y = float(i) * zigzag_height
+			if i % 2 == 0:
+				_path_points.append(Vector2(-half_w, level_y))
+				_path_points.append(Vector2(0.0, level_y + half_h))
+				_path_points.append(Vector2(half_w, level_y + zigzag_height))
+			else:
+				_path_points.append(Vector2(half_w, level_y))
+				_path_points.append(Vector2(0.0, level_y + half_h))
+				_path_points.append(Vector2(-half_w, level_y + zigzag_height))
+
+	var count = _path_points.size()
+	if count >= 2:
+		for i in range(count - 1):
+			var seg_len = _path_points[i].distance_to(_path_points[i + 1])
+			_segment_lengths.append(seg_len)
+			_total_path_length += seg_len
+
+		if loop_reset:
+			var closing_len = _path_points[count - 1].distance_to(_path_points[0])
+			_segment_lengths.append(closing_len)
+			_total_path_length += closing_len
+
+
+func _get_position_at_path_distance(dist_val: float) -> Vector2:
+	var count = _path_points.size()
+	if count == 0:
+		return Vector2.ZERO
+	if count == 1 or _total_path_length <= 0.001:
+		return _path_points[0]
+
+	var d = dist_val
+	if loop_reset:
+		d = fposmod(d, _total_path_length)
+	else:
+		var cycle = _total_path_length * 2.0
+		var t_mod = fmod(d, cycle)
+		if t_mod < 0.0:
+			t_mod += cycle
+		if t_mod > _total_path_length:
+			d = cycle - t_mod
+		else:
+			d = t_mod
+
+	var accum = 0.0
+	var num_segs = _segment_lengths.size()
+	for i in range(num_segs):
+		var seg_len = _segment_lengths[i]
+		if d <= accum + seg_len or i == num_segs - 1:
+			var rem = d - accum
+			var t = rem / max(0.001, seg_len)
+			t = clampf(t, 0.0, 1.0)
+			if i < count - 1:
+				return _path_points[i].lerp(_path_points[i + 1], t)
+			else:
+				return _path_points[count - 1].lerp(_path_points[0], t)
+		accum += seg_len
+
+	return _path_points[0]
+
+
 func _update_movement_cache() -> void:
+	_rebuild_path_points()
+
+	if is_zigzag or not custom_waypoints.is_empty():
+		_has_movement = has_gear and (_total_path_length > 0.0) and (move_speed > 0.0)
+		_update_rod_dimensions()
+		_update_gears_positions(0.0)
+		return
+
 	var rad = deg_to_rad(move_angle)
 	_move_dir_vec = Vector2(cos(rad), sin(rad))
 
@@ -463,6 +590,68 @@ func _update_movement_cache() -> void:
 
 func _update_rod_dimensions() -> void:
 	_resolve_nodes()
+
+	# Clear previous zigzag segment rods
+	for child in get_children(true):
+		if child.name.begins_with("ZigZagRod_") or child.is_in_group("zigzag_rod"):
+			child.queue_free()
+			remove_child(child)
+
+	if is_zigzag or not custom_waypoints.is_empty():
+		if rod_body:
+			rod_body.visible = false
+			rod_body.process_mode = Node.PROCESS_MODE_DISABLED
+
+		if not show_track_rods and not has_rod:
+			return
+
+		var num_segs = _segment_lengths.size()
+		var rod_thick = max(breadth, rod_breadth)
+		var theme_id = world_theme if world_theme != "" else WorldThemeRegistry.get_current_theme()
+		var r_tex = WorldThemeRegistry.get_gear_rod_texture(theme_id)
+
+		for i in range(num_segs):
+			var p1 = _path_points[i]
+			var p2 = _path_points[i + 1] if i < _path_points.size() - 1 else _path_points[0]
+			var seg_len = _segment_lengths[i]
+			if seg_len <= 0.001:
+				continue
+
+			var seg_center = (p1 + p2) * 0.5
+			var seg_angle = (p2 - p1).angle()
+
+			var seg_rod := StaticBody2D.new()
+			seg_rod.name = "ZigZagRod_%d" % i
+			seg_rod.position = seg_center
+			seg_rod.rotation = seg_angle
+			seg_rod.add_to_group("obstacle")
+			seg_rod.add_to_group("zigzag_rod")
+			seg_rod.set_meta("is_lethal", rod_is_lethal)
+
+			if not rod_has_collision:
+				seg_rod.collision_layer = 0
+				seg_rod.collision_mask = 0
+
+			var col := CollisionShape2D.new()
+			var shape := RectangleShape2D.new()
+			shape.size = Vector2(seg_len, rod_thick)
+			col.shape = shape
+			col.disabled = not rod_has_collision
+			seg_rod.add_child(col)
+
+			if r_tex:
+				var spr := Sprite2D.new()
+				spr.texture = r_tex
+				spr.rotation = PI * 0.5
+				var tex_h = float(r_tex.get_height())
+				var tex_w = float(r_tex.get_width())
+				if tex_h > 0.0: spr.scale.y = seg_len / tex_h
+				if tex_w > 0.0: spr.scale.x = rod_thick / tex_w
+				seg_rod.add_child(spr)
+
+			add_child(seg_rod, false, Node.INTERNAL_MODE_BACK)
+		return
+
 	if not rod_body:
 		return
 
@@ -569,6 +758,10 @@ func _physics_process(delta: float) -> void:
 
 		_motion_accum_time += spd_factor * delta
 
+		if is_zigzag or not custom_waypoints.is_empty():
+			_update_gears_positions(0.0)
+			return
+
 		if loop_reset:
 			# Continuous wrap-around along the rod track (respawns cleanly at origin in loop)
 			_progress += (base_spd / max(1.0, _total_span)) * spd_factor * delta
@@ -651,6 +844,23 @@ func _update_gears_positions(offset_scalar: float) -> void:
 	if count == 0 or not has_gear:
 		return
 
+	if is_zigzag or not custom_waypoints.is_empty():
+		if _total_path_length <= 0.001:
+			return
+		var base_spd = interval_speed if enable_interval_movement else move_speed
+		var base_dist = _motion_accum_time * base_spd
+		var effective_spacing = gear_spacing
+		if is_zero_approx(effective_spacing):
+			effective_spacing = _total_path_length / float(count)
+
+		for i in range(count):
+			var body = _gear_bodies[i]
+			if not body:
+				continue
+			var gear_dist = base_dist + float(i) * effective_spacing
+			body.position = _get_position_at_path_distance(gear_dist)
+		return
+
 	var effective_spacing = gear_spacing
 	if is_zero_approx(effective_spacing):
 		effective_spacing = _total_span / float(count)
@@ -724,6 +934,30 @@ func _draw() -> void:
 		return
 
 	var font = ThemeDB.fallback_font
+
+	if is_zigzag or not custom_waypoints.is_empty():
+		var count = _path_points.size()
+		if count >= 2:
+			var line_col = Color(0.0, 0.9, 1.0, 0.85)
+			var node_col = Color(1.0, 0.85, 0.2, 0.95)
+			var num_segs = _segment_lengths.size()
+
+			for i in range(num_segs):
+				var p1 = _path_points[i]
+				var p2 = _path_points[i + 1] if i < count - 1 else _path_points[0]
+				_draw_dashed_line(p1, p2, line_col, 2.5, 12.0)
+
+			for i in range(count):
+				draw_circle(_path_points[i], 6.0, node_col)
+
+			if font:
+				var label_str = "ZigZag Path: %.0f px (%d nodes)" % [_total_path_length, count]
+				if loop_reset:
+					label_str += " [Loop Mode]"
+				if gear_count > 1:
+					label_str += " | %d Gears" % gear_count
+				draw_string(font, _path_points[0] + Vector2(12, -10), label_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1, 0.95))
+		return
 
 	# Draw movement guidelines when gear movement is present
 	if has_gear and _has_movement:

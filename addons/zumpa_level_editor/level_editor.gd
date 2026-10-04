@@ -115,6 +115,13 @@ var prop_booster_tier_row: HBoxContainer
 var booster_tier_opt: OptionButton
 var prop_booster_force_row: HBoxContainer
 var booster_custom_force_spin: SpinBox
+
+# ZigZag Track Inspector Additions
+var prop_zigzag_box: VBoxContainer
+var is_zigzag_check: CheckBox
+var zigzag_width_spin: SpinBox
+var zigzag_height_spin: SpinBox
+var zigzag_count_spin: SpinBox
 var _is_updating_inspector: bool = false
 
 
@@ -300,6 +307,55 @@ func setup_dynamic_inspector_fields() -> void:
 	prop_booster_force_row.add_child(booster_custom_force_spin)
 	parent_vbox.add_child(prop_booster_force_row)
 	parent_vbox.move_child(prop_booster_force_row, target_index)
+	target_index += 1
+
+	# ZigZag Track Inspector Box
+	prop_zigzag_box = VBoxContainer.new()
+	prop_zigzag_box.name = "ZigZagControlBox"
+	prop_zigzag_box.visible = false
+
+	var lbl_zz_hdr = Label.new()
+	lbl_zz_hdr.text = "⚡ ZigZag Track Settings"
+	prop_zigzag_box.add_child(lbl_zz_hdr)
+
+	is_zigzag_check = CheckBox.new()
+	is_zigzag_check.text = "Enable ZigZag Path"
+	prop_zigzag_box.add_child(is_zigzag_check)
+
+	var hbox_zz_dim = HBoxContainer.new()
+	zigzag_width_spin = SpinBox.new()
+	zigzag_width_spin.min_value = 50
+	zigzag_width_spin.max_value = 5000
+	zigzag_width_spin.step = 10
+	zigzag_width_spin.prefix = "Width:"
+	zigzag_width_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	zigzag_height_spin = SpinBox.new()
+	zigzag_height_spin.min_value = 20
+	zigzag_height_spin.max_value = 2000
+	zigzag_height_spin.step = 10
+	zigzag_height_spin.prefix = "Height:"
+	zigzag_height_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	hbox_zz_dim.add_child(zigzag_width_spin)
+	hbox_zz_dim.add_child(zigzag_height_spin)
+	prop_zigzag_box.add_child(hbox_zz_dim)
+
+	var hbox_zz_cnt = HBoxContainer.new()
+	var lbl_zz_cnt = Label.new()
+	lbl_zz_cnt.text = "ZigZag Levels:"
+	lbl_zz_cnt.custom_minimum_size = Vector2(90, 0)
+	zigzag_count_spin = SpinBox.new()
+	zigzag_count_spin.min_value = 1
+	zigzag_count_spin.max_value = 30
+	zigzag_count_spin.step = 1
+	zigzag_count_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_zz_cnt.add_child(lbl_zz_cnt)
+	hbox_zz_cnt.add_child(zigzag_count_spin)
+	prop_zigzag_box.add_child(hbox_zz_cnt)
+
+	parent_vbox.add_child(prop_zigzag_box)
+	parent_vbox.move_child(prop_zigzag_box, target_index)
 	target_index += 1
 
 func setup_grid_options() -> void:
@@ -714,6 +770,11 @@ func connect_signals() -> void:
 
 	if booster_tier_opt: booster_tier_opt.item_selected.connect(func(_idx): apply_inspector_changes())
 	if booster_custom_force_spin: booster_custom_force_spin.value_changed.connect(func(_v): apply_inspector_changes())
+
+	if is_zigzag_check: is_zigzag_check.toggled.connect(func(_t): apply_inspector_changes())
+	if zigzag_width_spin: zigzag_width_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if zigzag_height_spin: zigzag_height_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if zigzag_count_spin: zigzag_count_spin.value_changed.connect(func(_v): apply_inspector_changes())
 
 	# Tile Palette signals
 	if atlas_picker:
@@ -1436,6 +1497,16 @@ func update_inspector_values(obj) -> void:
 			prop_booster_tier_row.visible = false
 			prop_booster_force_row.visible = false
 
+	if prop_zigzag_box:
+		if obj.object_id == "gear_zigzag" or obj.properties.has("is_zigzag") or obj.properties.has("zigzag_width"):
+			prop_zigzag_box.visible = true
+			is_zigzag_check.button_pressed = bool(obj.properties.get("is_zigzag", true))
+			zigzag_width_spin.value = float(obj.properties.get("zigzag_width", 400.0))
+			zigzag_height_spin.value = float(obj.properties.get("zigzag_height", 180.0))
+			zigzag_count_spin.value = int(obj.properties.get("zigzag_count", 4))
+		else:
+			prop_zigzag_box.visible = false
+
 	var is_cam_drag_obj = (obj.object_id == "horizontal_zone_start" or obj.object_id == "horizontal_zone_end" or obj.object_id == "horizontal_zone_trigger")
 	var is_player = (canvas and canvas.active_placement_id == "player_start")
 	set_camera_drag_section_visible(is_cam_drag_obj or is_player)
@@ -1549,6 +1620,12 @@ func apply_inspector_changes() -> void:
 		obj.properties["force_tier"] = booster_tier_opt.get_selected_id()
 	if prop_booster_force_row and prop_booster_force_row.visible:
 		obj.properties["custom_force"] = booster_custom_force_spin.value
+
+	if prop_zigzag_box and prop_zigzag_box.visible:
+		obj.properties["is_zigzag"] = is_zigzag_check.button_pressed
+		obj.properties["zigzag_width"] = zigzag_width_spin.value
+		obj.properties["zigzag_height"] = zigzag_height_spin.value
+		obj.properties["zigzag_count"] = int(zigzag_count_spin.value)
 
 	canvas.refresh_canvas()
 
