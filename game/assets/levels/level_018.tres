@@ -33,7 +33,7 @@ properties = {
 [sub_resource type="Resource" id="Resource_6nkoc"]
 script = ExtResource("1_d8sbp")
 object_id = "gear_zigzag"
-position = Vector2(1036.6454, 472.54153)
+position = Vector2(1068.6454, -715.4585)
 properties = {
 "gear_count": 1,
 "gear_spacing": 0.0,

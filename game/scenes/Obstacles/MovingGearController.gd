@@ -517,11 +517,6 @@ func _rebuild_path_points() -> void:
 			_segment_lengths.append(seg_len)
 			_total_path_length += seg_len
 
-		if loop_reset:
-			var closing_len = _path_points[count - 1].distance_to(_path_points[0])
-			_segment_lengths.append(closing_len)
-			_total_path_length += closing_len
-
 
 func _get_position_at_path_distance(dist_val: float) -> Vector2:
 	var count = _path_points.size()
@@ -551,10 +546,7 @@ func _get_position_at_path_distance(dist_val: float) -> Vector2:
 			var rem = d - accum
 			var t = rem / max(0.001, seg_len)
 			t = clampf(t, 0.0, 1.0)
-			if i < count - 1:
-				return _path_points[i].lerp(_path_points[i + 1], t)
-			else:
-				return _path_points[count - 1].lerp(_path_points[0], t)
+			return _path_points[i].lerp(_path_points[i + 1], t)
 		accum += seg_len
 
 	return _path_points[0]
@@ -620,7 +612,7 @@ func _update_rod_dimensions() -> void:
 
 		for i in range(num_segs):
 			var p1 = _path_points[i]
-			var p2 = _path_points[i + 1] if i < _path_points.size() - 1 else _path_points[0]
+			var p2 = _path_points[i + 1]
 			var seg_len = _segment_lengths[i]
 			if seg_len <= 0.001:
 				continue
@@ -952,7 +944,7 @@ func _draw() -> void:
 
 			for i in range(num_segs):
 				var p1 = _path_points[i]
-				var p2 = _path_points[i + 1] if i < count - 1 else _path_points[0]
+				var p2 = _path_points[i + 1]
 				_draw_dashed_line(p1, p2, line_col, 2.5, 12.0)
 
 			for i in range(count):
