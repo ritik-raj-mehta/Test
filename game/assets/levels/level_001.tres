@@ -10,7 +10,7 @@ position = Vector2(1000, 362)
 
 [resource]
 script = ExtResource("2_85dqg")
-player_start = Vector2(1000, 1600)
+player_start = Vector2(1000, 1400)
 level_size = Vector2(2000, 3000)
 camera_drag_left_margin = 0.9
 camera_drag_right_margin = 0.9
