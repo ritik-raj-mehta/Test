@@ -265,9 +265,16 @@ class_name MovingGearController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
-@export_range(1, 20, 1) var zigzag_count: int = 4:
+@export var zigzag_count: int = 4:
 	set(v):
 		zigzag_count = clampi(v, 1, 20)
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var zigzag_start_from_bottom: bool = false:
+	set(v):
+		zigzag_start_from_bottom = v
 		_update_movement_cache()
 		if Engine.is_editor_hint():
 			queue_redraw()
@@ -275,6 +282,13 @@ class_name MovingGearController
 @export var custom_waypoints: Array = []:
 	set(v):
 		custom_waypoints = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var enable_node_pause: bool = false:
+	set(v):
+		enable_node_pause = v
 		_update_movement_cache()
 		if Engine.is_editor_hint():
 			queue_redraw()
@@ -517,6 +531,9 @@ func _rebuild_path_points() -> void:
 				2: _path_points.append(Vector2(half_w, level_y))  # Right Wall Node
 				3: _path_points.append(Vector2(0.0, level_y))    # Center Node
 
+		if zigzag_start_from_bottom:
+			_path_points.reverse()
+
 	var count = _path_points.size()
 	if count >= 2:
 		for i in range(count - 1):
@@ -570,7 +587,7 @@ func _get_position_at_path_time(t_val: float) -> Vector2:
 	if num_segs == 0:
 		return _path_points[0]
 
-	var pause_dur = max(node_pause_time, direction_change_delay)
+	var pause_dur = node_pause_time if enable_node_pause else 0.0
 	if pause_dur <= 0.0:
 		var base_spd = interval_speed if enable_interval_movement else move_speed
 		var dist_val = t_val * base_spd
@@ -911,7 +928,7 @@ func _update_gears_positions(offset_scalar: float) -> void:
 	if is_zigzag or not custom_waypoints.is_empty():
 		if _total_path_length <= 0.001:
 			return
-		var pause_dur = max(node_pause_time, direction_change_delay)
+		var pause_dur = node_pause_time if enable_node_pause else 0.0
 		if pause_dur > 0.0:
 			var base_spd = max(1.0, interval_speed if enable_interval_movement else move_speed)
 			var total_travel_t = _total_path_length / base_spd

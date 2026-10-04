@@ -123,6 +123,9 @@ var zigzag_width_spin: SpinBox
 var zigzag_height_spin: SpinBox
 var zigzag_angle_spin: SpinBox
 var zigzag_count_spin: SpinBox
+var zigzag_start_bottom_check: CheckBox
+var enable_node_pause_check: CheckBox
+var node_pause_time_spin: SpinBox
 var _is_updating_inspector: bool = false
 
 
@@ -368,6 +371,28 @@ func setup_dynamic_inspector_fields() -> void:
 	hbox_zz_ang.add_child(lbl_zz_ang)
 	hbox_zz_ang.add_child(zigzag_angle_spin)
 	prop_zigzag_box.add_child(hbox_zz_ang)
+
+	zigzag_start_bottom_check = CheckBox.new()
+	zigzag_start_bottom_check.text = "Start Gears from Bottom"
+	prop_zigzag_box.add_child(zigzag_start_bottom_check)
+
+	enable_node_pause_check = CheckBox.new()
+	enable_node_pause_check.text = "Enable Node Interval Pause"
+	prop_zigzag_box.add_child(enable_node_pause_check)
+
+	var hbox_zz_p = HBoxContainer.new()
+	var lbl_zz_p = Label.new()
+	lbl_zz_p.text = "Node Pause Time:"
+	lbl_zz_p.custom_minimum_size = Vector2(110, 0)
+	node_pause_time_spin = SpinBox.new()
+	node_pause_time_spin.min_value = 0.0
+	node_pause_time_spin.max_value = 10.0
+	node_pause_time_spin.step = 0.1
+	node_pause_time_spin.suffix = "s"
+	node_pause_time_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_zz_p.add_child(lbl_zz_p)
+	hbox_zz_p.add_child(node_pause_time_spin)
+	prop_zigzag_box.add_child(hbox_zz_p)
 
 	parent_vbox.add_child(prop_zigzag_box)
 	parent_vbox.move_child(prop_zigzag_box, target_index)
@@ -791,6 +816,9 @@ func connect_signals() -> void:
 	if zigzag_height_spin: zigzag_height_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if zigzag_angle_spin: zigzag_angle_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if zigzag_count_spin: zigzag_count_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if zigzag_start_bottom_check: zigzag_start_bottom_check.toggled.connect(func(_t): apply_inspector_changes())
+	if enable_node_pause_check: enable_node_pause_check.toggled.connect(func(_t): apply_inspector_changes())
+	if node_pause_time_spin: node_pause_time_spin.value_changed.connect(func(_v): apply_inspector_changes())
 
 	# Tile Palette signals
 	if atlas_picker:
@@ -1521,6 +1549,9 @@ func update_inspector_values(obj) -> void:
 			zigzag_height_spin.value = float(obj.properties.get("zigzag_height", 180.0))
 			zigzag_angle_spin.value = float(obj.properties.get("zigzag_angle", 45.0))
 			zigzag_count_spin.value = int(obj.properties.get("zigzag_count", 4))
+			zigzag_start_bottom_check.button_pressed = bool(obj.properties.get("zigzag_start_from_bottom", false))
+			enable_node_pause_check.button_pressed = bool(obj.properties.get("enable_node_pause", false))
+			node_pause_time_spin.value = float(obj.properties.get("node_pause_time", 0.5))
 		else:
 			prop_zigzag_box.visible = false
 
@@ -1644,6 +1675,9 @@ func apply_inspector_changes() -> void:
 		obj.properties["zigzag_height"] = zigzag_height_spin.value
 		obj.properties["zigzag_angle"] = zigzag_angle_spin.value
 		obj.properties["zigzag_count"] = int(zigzag_count_spin.value)
+		obj.properties["zigzag_start_from_bottom"] = zigzag_start_bottom_check.button_pressed
+		obj.properties["enable_node_pause"] = enable_node_pause_check.button_pressed
+		obj.properties["node_pause_time"] = node_pause_time_spin.value
 
 	canvas.refresh_canvas()
 
