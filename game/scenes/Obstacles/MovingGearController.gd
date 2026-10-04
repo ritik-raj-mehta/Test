@@ -279,6 +279,13 @@ class_name MovingGearController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
+@export var flip_zigzag: bool = false: # Horizontally flips zigzag (Starts right instead of left)
+	set(v):
+		flip_zigzag = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
 @export var custom_waypoints: Array = []:
 	set(v):
 		custom_waypoints = v
@@ -522,14 +529,15 @@ func _rebuild_path_points() -> void:
 		var step_h = half_w * tan(rad_ang)
 
 		# Build continuous diagonal zigzag nodes: Left -> Center -> Right -> Center -> Left ...
+		var dir_mult = -1.0 if flip_zigzag else 1.0
 		for i in range(zigzag_count * 2 + 1):
 			var level_y = float(i) * step_h
 			var step_type = i % 4
 			match step_type:
-				0: _path_points.append(Vector2(-half_w, level_y)) # Left Wall Node
-				1: _path_points.append(Vector2(0.0, level_y))    # Center Node
-				2: _path_points.append(Vector2(half_w, level_y))  # Right Wall Node
-				3: _path_points.append(Vector2(0.0, level_y))    # Center Node
+				0: _path_points.append(Vector2(-half_w * dir_mult, level_y)) # Start Wall Node
+				1: _path_points.append(Vector2(0.0, level_y))               # Center Node
+				2: _path_points.append(Vector2(half_w * dir_mult, level_y))  # Opposite Wall Node
+				3: _path_points.append(Vector2(0.0, level_y))               # Center Node
 
 		if zigzag_start_from_bottom:
 			_path_points.reverse()
@@ -932,10 +940,12 @@ func _update_gears_positions(offset_scalar: float) -> void:
 		if pause_dur > 0.0:
 			var base_spd = max(1.0, interval_speed if enable_interval_movement else move_speed)
 			var total_travel_t = _total_path_length / base_spd
-			var num_nodes = float(_path_points.size())
-			var spacing_t = (total_travel_t / max(1.0, num_nodes)) + pause_dur
-			if not is_zero_approx(gear_spacing):
-				spacing_t = gear_spacing / base_spd
+			var num_segs = float(_segment_lengths.size())
+			var total_cycle_time = total_travel_t + (num_segs * pause_dur)
+			
+			var spacing_t = gear_spacing / base_spd
+			if is_zero_approx(gear_spacing) or gear_spacing == 100.0: # Default fallback or 0 space evenly across path
+				spacing_t = total_cycle_time / float(count)
 
 			for i in range(count):
 				var body = _gear_bodies[i]

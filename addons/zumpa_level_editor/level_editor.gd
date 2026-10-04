@@ -124,6 +124,7 @@ var zigzag_height_spin: SpinBox
 var zigzag_angle_spin: SpinBox
 var zigzag_count_spin: SpinBox
 var zigzag_start_bottom_check: CheckBox
+var flip_zigzag_check: CheckBox
 var enable_node_pause_check: CheckBox
 var node_pause_time_spin: SpinBox
 var _is_updating_inspector: bool = false
@@ -375,6 +376,10 @@ func setup_dynamic_inspector_fields() -> void:
 	zigzag_start_bottom_check = CheckBox.new()
 	zigzag_start_bottom_check.text = "Start Gears from Bottom"
 	prop_zigzag_box.add_child(zigzag_start_bottom_check)
+
+	flip_zigzag_check = CheckBox.new()
+	flip_zigzag_check.text = "Flip ZigZag Horizontally"
+	prop_zigzag_box.add_child(flip_zigzag_check)
 
 	enable_node_pause_check = CheckBox.new()
 	enable_node_pause_check.text = "Enable Node Interval Pause"
@@ -817,6 +822,7 @@ func connect_signals() -> void:
 	if zigzag_angle_spin: zigzag_angle_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if zigzag_count_spin: zigzag_count_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if zigzag_start_bottom_check: zigzag_start_bottom_check.toggled.connect(func(_t): apply_inspector_changes())
+	if flip_zigzag_check: flip_zigzag_check.toggled.connect(func(_t): apply_inspector_changes())
 	if enable_node_pause_check: enable_node_pause_check.toggled.connect(func(_t): apply_inspector_changes())
 	if node_pause_time_spin: node_pause_time_spin.value_changed.connect(func(_v): apply_inspector_changes())
 
@@ -1550,6 +1556,7 @@ func update_inspector_values(obj) -> void:
 			zigzag_angle_spin.value = float(obj.properties.get("zigzag_angle", 45.0))
 			zigzag_count_spin.value = int(obj.properties.get("zigzag_count", 4))
 			zigzag_start_bottom_check.button_pressed = bool(obj.properties.get("zigzag_start_from_bottom", false))
+			flip_zigzag_check.button_pressed = bool(obj.properties.get("flip_zigzag", false))
 			enable_node_pause_check.button_pressed = bool(obj.properties.get("enable_node_pause", false))
 			node_pause_time_spin.value = float(obj.properties.get("node_pause_time", 0.5))
 		else:
@@ -1676,6 +1683,7 @@ func apply_inspector_changes() -> void:
 		obj.properties["zigzag_angle"] = zigzag_angle_spin.value
 		obj.properties["zigzag_count"] = int(zigzag_count_spin.value)
 		obj.properties["zigzag_start_from_bottom"] = zigzag_start_bottom_check.button_pressed
+		obj.properties["flip_zigzag"] = flip_zigzag_check.button_pressed
 		obj.properties["enable_node_pause"] = enable_node_pause_check.button_pressed
 		obj.properties["node_pause_time"] = node_pause_time_spin.value
 
