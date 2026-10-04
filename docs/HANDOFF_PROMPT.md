@@ -15,9 +15,10 @@ Please inspect `docs/HANDOFF_PROMPT.md`, `docs/CHANGES_SUMMARY.md`, and `docs/LE
 1. Workspace Path: `e:\Test\Test`
 2. Engine: Godot 4.7.2
 3. Key Architecture & Recent Work:
-   - Obstacles (`MovingGearController.gd` & `PathMovingGearController.gd`) have Interval Movement (`enable_interval_movement`, `interval_time`, `interval_speed`), smooth Sinusoidal Speed Wave Curves ("start move a little -> slow down -> speed up -> slow down -> loop repeat"), uniform `gear_scale`, and theme-skinned connecting rods.
+   - Obstacles (`MovingGearController.gd` & `PathMovingGearController.gd`) have Interval Movement (`enable_interval_movement`, `interval_time`, `interval_speed`), smooth Sinusoidal Speed Wave Curves, uniform `gear_scale`, and theme-skinned connecting rods.
+   - **ZigZag Track Architecture**: `MovingGearController.gd` generates diagonal zigzag track nodes (`Left -> Center -> Right -> Center -> Left ...`) with customizable `zigzag_angle`, step levels, node interval pauses (`enable_node_pause`, `node_pause_time`), `zigzag_start_from_bottom` toggle, `flip_zigzag` horizontal mirror toggle, and equal spacing math for any gear count (e.g. 9 gears).
    - Level Editor (`addons/zumpa_level_editor/`) uses a single-sidebar Inspector panel layout (maximizing canvas width) with quick top-bar toggles (`🛠️ Items & Tools` and `⚙️ Inspector`).
-   - Inspector layout order is: Obstacles & Primary Tools (Top) -> Inspector & Apply Button (Middle) -> Tile Map Tools & Atlas Palette (Bottom).
+   - Inspector layout includes **⚡ ZigZag Track Settings** box with full property controls & real-time canvas preview.
    - Multi-Tile Selection & Persistent Stochastic Random Pattern Fill (`Random Pattern`, `100% Solid`, `Multi-Tile Mix`).
    - `Wall.tscn` and all temporary test scenes have been removed.
 

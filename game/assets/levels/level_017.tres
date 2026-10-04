@@ -6,7 +6,7 @@
 [sub_resource type="Resource" id="Resource_rldga"]
 script = ExtResource("1_rldga")
 object_id = "goal"
-position = Vector2(1000, -2240)
+position = Vector2(1000, -2053)
 
 [sub_resource type="Resource" id="Resource_7v10l"]
 script = ExtResource("1_rldga")

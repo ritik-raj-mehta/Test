@@ -153,7 +153,7 @@ tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_1856b")
 
-[node name="LevelRoot" type="Node2D" unique_id=806369713]
+[node name="LevelRoot" type="Node2D" unique_id=585418974]
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=927742863 instance=ExtResource("1_jwfap")]
 z_index = 10
@@ -162,7 +162,7 @@ collision_layer = 2
 collision_mask = 23
 script = ExtResource("2_ioi5d")
 
-[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=570159796]
+[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=99845923]
 z_index = 150
 position = Vector2(40, 0)
 scale = Vector2(1.5, 1.5)
@@ -170,7 +170,7 @@ tile_map_data = PackedByteArray("AAAJACUAAAACAAcAAAAJACQAAAACAAcAAAAJACMAAAACAAc
 tile_set = SubResource("TileSet_gu4hn")
 
 [node name="Goal" type="Area2D" parent="." unique_id=518839195 instance=ExtResource("4_eopev")]
-position = Vector2(1000, -2240)
+position = Vector2(1000, -2053)
 collision_mask = 3
 script = ExtResource("5_1majp")
 world_theme = "world_1"
@@ -184,7 +184,7 @@ script = ExtResource("7_qxoul")
 spike_count = 8
 wall_distance = 45.0
 
-[node name="Spike_2" type="StaticBody2D" parent="." unique_id=1667304322 groups=["obstacle"] instance=ExtResource("6_w7fg7")]
+[node name="Spike_2" type="StaticBody2D" parent="." unique_id=2138515139 groups=["obstacle"] instance=ExtResource("6_w7fg7")]
 z_index = 100
 position = Vector2(1119.0627, 1814.4403)
 collision_layer = 2
@@ -207,7 +207,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearM" type="Node2D" parent="." unique_id=35164172 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM" type="Node2D" parent="." unique_id=1523763871 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1159, 97)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -221,7 +221,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearM_2" type="Node2D" parent="." unique_id=1830760464 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_2" type="Node2D" parent="." unique_id=2141145627 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1256, 288)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -235,7 +235,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearM_3" type="Node2D" parent="." unique_id=726924352 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_3" type="Node2D" parent="." unique_id=593688472 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1061, 1055)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -249,7 +249,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearM_4" type="Node2D" parent="." unique_id=705077689 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_4" type="Node2D" parent="." unique_id=1574287210 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1351, 480)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -263,7 +263,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearM_5" type="Node2D" parent="." unique_id=1610785581 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_5" type="Node2D" parent="." unique_id=1086409795 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1158, 864)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -277,7 +277,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearM_6" type="Node2D" parent="." unique_id=1053699763 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_6" type="Node2D" parent="." unique_id=263243929 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1256, 672)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -291,7 +291,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearRod_2" type="Node2D" parent="." unique_id=363559996 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_2" type="Node2D" parent="." unique_id=1782240228 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, 1056)
 script = ExtResource("9_d3xa2")
 has_rod = true
@@ -305,7 +305,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearRod_3" type="Node2D" parent="." unique_id=378870790 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_3" type="Node2D" parent="." unique_id=895642250 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, 864)
 script = ExtResource("9_d3xa2")
 has_rod = true
@@ -319,7 +319,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearRod_4" type="Node2D" parent="." unique_id=540120665 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_4" type="Node2D" parent="." unique_id=117585619 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, 672)
 script = ExtResource("9_d3xa2")
 has_rod = true
@@ -333,7 +333,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearRod_5" type="Node2D" parent="." unique_id=1251800422 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_5" type="Node2D" parent="." unique_id=1546374911 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, 480)
 script = ExtResource("9_d3xa2")
 has_rod = true
@@ -347,7 +347,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearRod_6" type="Node2D" parent="." unique_id=822824036 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_6" type="Node2D" parent="." unique_id=522771270 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, 96)
 script = ExtResource("9_d3xa2")
 has_rod = true
@@ -361,7 +361,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearM_7" type="Node2D" parent="." unique_id=2119989254 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_7" type="Node2D" parent="." unique_id=1819329097 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(903, -480)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -374,7 +374,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearM_8" type="Node2D" parent="." unique_id=1999124352 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_8" type="Node2D" parent="." unique_id=1501474041 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1096, -96)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -387,7 +387,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearM_9" type="Node2D" parent="." unique_id=1898108497 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_9" type="Node2D" parent="." unique_id=1829828885 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, -288)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -401,7 +401,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearM_10" type="Node2D" parent="." unique_id=1081683653 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_10" type="Node2D" parent="." unique_id=1407610037 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(805, -672)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -415,7 +415,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearM_11" type="Node2D" parent="." unique_id=1050995399 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_11" type="Node2D" parent="." unique_id=1314292613 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(708, -864)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -429,7 +429,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearRod_7" type="Node2D" parent="." unique_id=205582553 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_7" type="Node2D" parent="." unique_id=756372546 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, -96)
 script = ExtResource("9_d3xa2")
 has_rod = true
@@ -443,7 +443,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearRod_8" type="Node2D" parent="." unique_id=1526630405 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_8" type="Node2D" parent="." unique_id=988589900 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, -288)
 script = ExtResource("9_d3xa2")
 has_rod = true
@@ -457,7 +457,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearRod_9" type="Node2D" parent="." unique_id=1968189870 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_9" type="Node2D" parent="." unique_id=1583429694 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, -480)
 script = ExtResource("9_d3xa2")
 has_rod = true
@@ -471,7 +471,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearRod_10" type="Node2D" parent="." unique_id=926011427 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_10" type="Node2D" parent="." unique_id=1954432551 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, -672)
 script = ExtResource("9_d3xa2")
 has_rod = true
@@ -485,7 +485,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearRod_11" type="Node2D" parent="." unique_id=1745018499 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_11" type="Node2D" parent="." unique_id=1576960638 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, -864)
 script = ExtResource("9_d3xa2")
 has_rod = true
@@ -499,7 +499,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearM_12" type="Node2D" parent="." unique_id=1161707577 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_12" type="Node2D" parent="." unique_id=104688087 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(619, -1056)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -513,7 +513,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearRod_12" type="Node2D" parent="." unique_id=1042860354 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_12" type="Node2D" parent="." unique_id=2107859028 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, -1056)
 script = ExtResource("9_d3xa2")
 has_rod = true
@@ -527,7 +527,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearRod_13" type="Node2D" parent="." unique_id=525608030 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_13" type="Node2D" parent="." unique_id=679162663 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, -1248)
 script = ExtResource("9_d3xa2")
 has_rod = true
@@ -541,7 +541,7 @@ rotation_speed = 0.0
 move_speed = 0.0
 world_theme = "world_1"
 
-[node name="GearM_13" type="Node2D" parent="." unique_id=1877655129 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_13" type="Node2D" parent="." unique_id=1181964343 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(709, -1248)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -555,7 +555,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearM_14" type="Node2D" parent="." unique_id=1698685819 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearM_14" type="Node2D" parent="." unique_id=328967822 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(805, -1440)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_d3xa2")
@@ -569,7 +569,7 @@ interval_pause_time = 0.99
 interval_speed = 100.0
 world_theme = "world_1"
 
-[node name="GearRod_14" type="Node2D" parent="." unique_id=956432392 groups=["obstacle"] instance=ExtResource("8_3he0u")]
+[node name="GearRod_14" type="Node2D" parent="." unique_id=1926067509 groups=["obstacle"] instance=ExtResource("8_3he0u")]
 position = Vector2(1000, -1440)
 script = ExtResource("9_d3xa2")
 has_rod = true

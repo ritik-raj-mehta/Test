@@ -127,11 +127,11 @@ A multi-shape trajectory hazard that travels in closed geometric loops with corn
 
 ---
 
-### 2. `gear_m` (Moving Gear) & `gear_with_rod`
-Linear moving gear with independent positive/negative travel distances, customizable angles, start delays, direction change delays, theme rods, loop wrap-around, and interval speed modulation curves.
+### 2. `gear_m` (Moving Gear) & ZigZag Track System
+Linear and diagonal zigzag moving gear with independent positive/negative travel distances, customizable angles, start delays, direction change delays, theme rods, loop wrap-around, and interval speed modulation curves.
 
 * **Scene**: `res://game/scenes/Obstacles/MovingGear.tscn`
-* **Controller**: `MovingGearController.gd`
+* **Controller**: [`MovingGearController.gd`](file:///e:/Test/Test/game/scenes/Obstacles/MovingGearController.gd)
 * **Key Properties**:
   - `move_angle`: Travel direction in degrees (`0` = Right, `90` = Down, `180` = Left, `-90` = Up, or any custom angle).
   - `move_dist_pos`: Distance to travel in the positive direction along `move_angle`.
@@ -143,17 +143,25 @@ Linear moving gear with independent positive/negative travel distances, customiz
   - `loop_reset`: `true` = gear travels along the track and continuously wraps back / respawns at origin; `false` = ping-pong oscillation.
   - `has_rod` & `rod_breadth`: Displays a theme-skinned track rod beneath the gear.
   - `gear_count` & `gear_spacing`: Replicates multiple gears riding the same track.
+  - **⚡ ZigZag Track System**:
+    - `is_zigzag`: Enables diagonal zigzag trajectory generation.
+    - `zigzag_width` & `zigzag_height`: Width and height dimensions of the zigzag bounding corridor.
+    - `zigzag_angle`: Diagonal angle in degrees for segment paths ($5^\circ$ to $85^\circ$, default $45^\circ$).
+    - `zigzag_count`: Number of zigzag step levels.
+    - `zigzag_start_from_bottom`: `true` = gears start at bottom vertex and travel upward; `false` = start at top vertex.
+    - `flip_zigzag`: `true` = horizontally mirrors trajectory (starts right instead of left).
+    - `enable_node_pause`: Toggles interval pauses at every vertex node (Left, Center, Right).
+    - `node_pause_time`: Pause duration in seconds at each node vertex.
   - **Interval Movement & Speed Modulation**:
     - `enable_interval_movement`: Enables fixed-interval timing across oscillation and loop modes.
     - `interval_time`: Fixed period duration in seconds per cycle.
     - `interval_speed`: Fixed speed value during interval.
     - `enable_speed_modulation`: Smooth trigonometric wave curve ("start move a little -> slow down -> speed up -> slow down -> repeat").
-* **Editor Visuals**: Bright cyan dashed line with green origin circle, red end caps, yellow clone resting points, and distance/delay HUD labels.
+* **Editor Visuals**: Bright cyan dashed trajectory with green origin circle, red end caps/nodes, yellow clone resting points, and distance/delay HUD labels.
 * **Movement Dynamics**:
   - **Reverse-only (`neg_d > 0`, `pos_d == 0`)**: Starts at placed position $0$, moves in reverse to $-\text{neg\_d}$, pauses for `direction_change_delay`, and returns.
   - **Forward-only (`pos_d > 0`, `neg_d == 0`)**: Starts at placed position $0$, moves forward to $+\text{pos\_d}$, pauses, and returns.
   - **Bidirectional (`pos_d > 0`, `neg_d > 0`)**: Starts at placed position $0$, travels between $[-\text{neg\_d}, +\text{pos\_d}]$.
-* **Editor Visuals**: Bright cyan dashed line with green origin circle, red end caps, yellow clone resting points, and distance/delay HUD labels.
 
 ---
 
