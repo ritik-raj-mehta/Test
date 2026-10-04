@@ -121,6 +121,7 @@ var prop_zigzag_box: VBoxContainer
 var is_zigzag_check: CheckBox
 var zigzag_width_spin: SpinBox
 var zigzag_height_spin: SpinBox
+var zigzag_angle_spin: SpinBox
 var zigzag_count_spin: SpinBox
 var _is_updating_inspector: bool = false
 
@@ -353,6 +354,20 @@ func setup_dynamic_inspector_fields() -> void:
 	hbox_zz_cnt.add_child(lbl_zz_cnt)
 	hbox_zz_cnt.add_child(zigzag_count_spin)
 	prop_zigzag_box.add_child(hbox_zz_cnt)
+
+	var hbox_zz_ang = HBoxContainer.new()
+	var lbl_zz_ang = Label.new()
+	lbl_zz_ang.text = "Diagonal Angle:"
+	lbl_zz_ang.custom_minimum_size = Vector2(90, 0)
+	zigzag_angle_spin = SpinBox.new()
+	zigzag_angle_spin.min_value = 10
+	zigzag_angle_spin.max_value = 80
+	zigzag_angle_spin.step = 1
+	zigzag_angle_spin.suffix = "°"
+	zigzag_angle_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_zz_ang.add_child(lbl_zz_ang)
+	hbox_zz_ang.add_child(zigzag_angle_spin)
+	prop_zigzag_box.add_child(hbox_zz_ang)
 
 	parent_vbox.add_child(prop_zigzag_box)
 	parent_vbox.move_child(prop_zigzag_box, target_index)
@@ -774,6 +789,7 @@ func connect_signals() -> void:
 	if is_zigzag_check: is_zigzag_check.toggled.connect(func(_t): apply_inspector_changes())
 	if zigzag_width_spin: zigzag_width_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if zigzag_height_spin: zigzag_height_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if zigzag_angle_spin: zigzag_angle_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if zigzag_count_spin: zigzag_count_spin.value_changed.connect(func(_v): apply_inspector_changes())
 
 	# Tile Palette signals
@@ -1503,6 +1519,7 @@ func update_inspector_values(obj) -> void:
 			is_zigzag_check.button_pressed = bool(obj.properties.get("is_zigzag", true))
 			zigzag_width_spin.value = float(obj.properties.get("zigzag_width", 400.0))
 			zigzag_height_spin.value = float(obj.properties.get("zigzag_height", 180.0))
+			zigzag_angle_spin.value = float(obj.properties.get("zigzag_angle", 45.0))
 			zigzag_count_spin.value = int(obj.properties.get("zigzag_count", 4))
 		else:
 			prop_zigzag_box.visible = false
@@ -1625,6 +1642,7 @@ func apply_inspector_changes() -> void:
 		obj.properties["is_zigzag"] = is_zigzag_check.button_pressed
 		obj.properties["zigzag_width"] = zigzag_width_spin.value
 		obj.properties["zigzag_height"] = zigzag_height_spin.value
+		obj.properties["zigzag_angle"] = zigzag_angle_spin.value
 		obj.properties["zigzag_count"] = int(zigzag_count_spin.value)
 
 	canvas.refresh_canvas()

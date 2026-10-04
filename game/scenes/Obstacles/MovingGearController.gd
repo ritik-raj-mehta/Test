@@ -251,6 +251,13 @@ class_name MovingGearController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
+@export var zigzag_angle: float = 45.0: # Angle in degrees for diagonal zigzag segments (e.g. 30, 45, 60)
+	set(v):
+		zigzag_angle = clampf(v, 5.0, 85.0)
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
 @export var zigzag_height: float = 180.0:
 	set(v):
 		zigzag_height = max(10.0, v)
@@ -490,17 +497,18 @@ func _rebuild_path_points() -> void:
 			_path_points.append(Vector2(pt))
 	elif is_zigzag:
 		var half_w = zigzag_width * 0.5
-		var half_h = zigzag_height * 0.5
-		for i in range(zigzag_count):
-			var level_y = float(i) * zigzag_height
-			if i % 2 == 0:
-				_path_points.append(Vector2(-half_w, level_y))
-				_path_points.append(Vector2(0.0, level_y + half_h))
-				_path_points.append(Vector2(half_w, level_y + zigzag_height))
-			else:
-				_path_points.append(Vector2(half_w, level_y))
-				_path_points.append(Vector2(0.0, level_y + half_h))
-				_path_points.append(Vector2(-half_w, level_y + zigzag_height))
+		var rad_ang = deg_to_rad(clampf(zigzag_angle, 5.0, 85.0))
+		var step_h = half_w * tan(rad_ang)
+
+		# Build continuous diagonal zigzag nodes: Left -> Center -> Right -> Center -> Left ...
+		for i in range(zigzag_count * 2 + 1):
+			var level_y = float(i) * step_h
+			var step_type = i % 4
+			match step_type:
+				0: _path_points.append(Vector2(-half_w, level_y)) # Left Wall Node
+				1: _path_points.append(Vector2(0.0, level_y))    # Center Node
+				2: _path_points.append(Vector2(half_w, level_y))  # Right Wall Node
+				3: _path_points.append(Vector2(0.0, level_y))    # Center Node
 
 	var count = _path_points.size()
 	if count >= 2:
