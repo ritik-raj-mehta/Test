@@ -155,7 +155,7 @@ position = Vector2(808, 736)
 rotation = 30.0
 properties = {
 "custom_force": 0.0,
-"force_tier": 4,
+"force_tier": 5,
 "invulnerability_duration": 0.6
 }
 

@@ -1,22 +1,10 @@
 class_name TapTapPopup
-extends AppView
-
+extends CharacterPopup
 
 signal progress_changed(value: float)
 
-
-# ============================================================
-# CONFIG
-# ============================================================
-
 @export var character_id: String = ""
-@export var taps_required: int = 40
 @export var rays_speed: float = 0.12
-
-
-# ============================================================
-# UI
-# ============================================================
 
 @onready var _rays: Control = %Rays
 @onready var _tap_area: Control = %TapArea
@@ -24,291 +12,99 @@ signal progress_changed(value: float)
 @onready var _progress_bar: SkinProgress = %Progress
 @onready var _ring_progress: RingProgress = %CountDownProgress
 
-
-# ============================================================
-# PROGRESS
-# ============================================================
-
-var _player_progress: PlayerProgress
-var _character_progress: CharacterProgress
-
 var _current_progress: int = 0
-
 var _progress_before: float = 0.0
 var _progress_after: float = 0.0
+var _character_completed: bool = false
+var _completion_sent: bool = false
 
-
-# ============================================================
-# SERVICE INJECTION
-# ============================================================
 
 func inject_services(registry: Node) -> void:
-
 	super.inject_services(registry)
+	if _bus and not _bus.character_changed.is_connected(_on_character_changed):
+		_bus.character_changed.connect(_on_character_changed)
 
-	_player_progress = registry.get_service(
-		&"player_progress"
-	) as PlayerProgress
-
-	if _player_progress:
-
-		_character_progress = (
-			_player_progress.character_progress
-		)
-
-		print(
-			"TapTapPopup: PlayerProgress injected."
-		)
-
-		print(
-			"TapTapPopup: CharacterProgress = ",
-			_character_progress
-		)
-
-	else:
-
-		push_error(
-			"TapTapPopup: PlayerProgress service not found."
-		)
-
-
-# ============================================================
-# READY
-# ============================================================
 
 func _on_ready() -> void:
+	call_deferred("_initialize_popup")
 
-	call_deferred(
-		"_initialize_popup"
+
+func _process(delta: float) -> void:
+	if _rays:
+		_rays.rotation += rays_speed * delta
+
+
+# ============================================================
+# PROGRESS HELPERS
+# ============================================================
+
+func _progress_ratio() -> float:
+	return clampf(
+		float(_current_progress) / float(CharacterProgress.REQUIRED_TAPS),
+		0.0, 1.0
 	)
 
 
+# Reads saved progress and snaps the bar to it (no animation from 0).
+func _load_progress() -> void:
+	_current_progress = _player_progress.get_current_progress() if _player_progress else 0
+	var progress := _progress_ratio()
+	_progress_before = progress
+	_progress_after = progress
+	if _progress_bar:
+		_progress_bar.set_value_instant(progress)
+
+
 # ============================================================
-# SELF INITIALIZATION
+# INIT / OPEN
 # ============================================================
 
 func _initialize_popup() -> void:
+	_character_completed = false
+	_completion_sent = false
 
-	print(
-		"========== TAP TAP INITIALIZE =========="
-	)
-
-
-	# --------------------------------------------------------
-	# CHARACTER
-	# --------------------------------------------------------
-
-	if _save:
-
-		var player_skins := PlayerSkins.new(
-			_save
-		)
-
-		character_id = (
-			player_skins.equipped_id()
-		)
-
-		print(
-			"TapTapPopup Character ID: ",
-			character_id
-		)
-
-		if _character:
-
-			_character.set_skin(
-				player_skins.equipped_skin()
-			)
-
+	if _player_progress == null:
+		push_error("TapTapPopup: PlayerProgress is not available.")
 	else:
-
-		push_error(
-			"TapTapPopup: SaveManager is not available."
-		)
-
-
-	# --------------------------------------------------------
-	# PROGRESS BAR
-	# --------------------------------------------------------
-
-	if _progress_bar:
-
-		_progress_bar.set_value_instant(
-			0.0
-		)
-
-	else:
-
-		push_error(
-			"TapTapPopup: Progress bar is not assigned."
-		)
-
-
-	# --------------------------------------------------------
-	# TAP AREA
-	# --------------------------------------------------------
+		character_id = _player_progress.get_current_character_id()
+		_show_equipped(_character)
+		_apply_next_badge(_progress_bar)
+		_load_progress()
 
 	if _tap_area:
-
-		_bind_tap(
-			_tap_area,
-			_on_tap
-		)
-
+		_bind_tap(_tap_area, _on_tap)
 	else:
-
-		push_error(
-			"TapTapPopup: _tap_area is not assigned."
-		)
-
-
-	# --------------------------------------------------------
-	# COUNTDOWN
-	# --------------------------------------------------------
+		push_error("TapTapPopup: _tap_area is not assigned.")
 
 	if _ring_progress:
-
-		if not _ring_progress.countdown_finished.is_connected(
-			_on_countdown_finished
-		):
-
-			_ring_progress.countdown_finished.connect(
-				_on_countdown_finished
-			)
-
-		print(
-			"TapTapPopup: Starting 3 second countdown."
-		)
-
+		if not _ring_progress.countdown_finished.is_connected(_on_countdown_finished):
+			_ring_progress.countdown_finished.connect(_on_countdown_finished)
 		_ring_progress.start_countdown()
-
 	else:
-
-		push_error(
-			"TapTapPopup: RingProgress is not assigned."
-		)
+		push_error("TapTapPopup: RingProgress is not assigned.")
 
 
-	# --------------------------------------------------------
-	# LOAD SAVED CHARACTER PROGRESS
-	# --------------------------------------------------------
+func prepare_for_open() -> void:
+	if _player_progress == null:
+		push_error("TapTapPopup: PlayerProgress is null.")
+		return
 
-	initialize_progress()
+	_character_completed = false
+	_completion_sent = false
+
+	character_id = _player_progress.get_current_character_id()
+	_show_equipped(_character)
+	_apply_next_badge(_progress_bar)
+	_load_progress()
 
 
-	print(
-		"========== TAP TAP INITIALIZED =========="
-	)
-
-
-# ============================================================
-# INITIALIZE SAVED PROGRESS
-# ============================================================
-
+# Kept in case something outside still calls it.
 func initialize_progress() -> void:
-
-	if _character_progress == null:
-
-		push_error(
-			"TapTapPopup: CharacterProgress is null."
-		)
-
+	if _player_progress == null:
+		push_error("TapTapPopup: PlayerProgress is null.")
 		return
-
-
-	if character_id.is_empty():
-
-		push_error(
-			"TapTapPopup: character_id is empty."
-		)
-
-		return
-
-
-	_current_progress = (
-		_character_progress.get_progress(
-			character_id
-		)
-	)
-
-
-	var progress := (
-		float(_current_progress)
-		/
-		float(maxi(1, taps_required))
-	)
-
-	progress = clampf(
-		progress,
-		0.0,
-		1.0
-	)
-
-
-	_progress_before = progress
-	_progress_after = progress
-
-
-	_update_progress_bar()
-
-	if _save:
-		var player_skins := PlayerSkins.new(_save)
-		var next_skin = player_skins.get_next_locked_skin()
-		if not next_skin.is_empty():
-			var idx = SkinCatalog.index_of(next_skin)
-			var skin_data = SkinCatalog.at(idx)
-			if _progress_bar and _progress_bar.has_method("set_badge_skin"):
-				_progress_bar.set_badge_skin(skin_data)
-
-
-	print(
-		"CHARACTER PROGRESS | ",
-		character_id,
-		" = ",
-		_current_progress,
-		"/",
-		taps_required
-	)
-
-
-# ============================================================
-# UPDATE PROGRESS BAR
-# ============================================================
-
-func _update_progress_bar() -> void:
-
-	if _progress_bar == null:
-		return
-
-
-	var progress := (
-		float(_current_progress)
-		/
-		float(maxi(1, taps_required))
-	)
-
-	progress = clampf(
-		progress,
-		0.0,
-		1.0
-	)
-
-
-	_progress_bar.set_value_instant(
-		progress
-	)
-
-
-# ============================================================
-# PROCESS
-# ============================================================
-
-func _process(delta: float) -> void:
-
-	if _rays:
-
-		_rays.rotation += (
-			rays_speed * delta
-		)
+	character_id = _player_progress.get_current_character_id()
+	_load_progress()
 
 
 # ============================================================
@@ -316,157 +112,65 @@ func _process(delta: float) -> void:
 # ============================================================
 
 func _on_tap() -> void:
-
-	# Taps ONLY update character progress.
-	# They do NOT control the popup lifetime.
-
-	if _character_progress == null:
-
-		push_error(
-			"TapTapPopup: CharacterProgress is null."
-		)
-
+	if _character_completed:
 		return
-
-
+	if _player_progress == null:
+		push_error("TapTapPopup: PlayerProgress is null.")
+		return
 	if character_id.is_empty():
-
-		push_error(
-			"TapTapPopup: character_id is empty."
-		)
-
+		push_error("TapTapPopup: character_id is empty.")
 		return
 
-
-	# --------------------------------------------------------
-	# ADD CHARACTER PROGRESS
-	# --------------------------------------------------------
-
-	_current_progress = (
-		_character_progress.add_progress(
-			character_id,
-			1
-		)
-	)
-
-
-	# --------------------------------------------------------
-	# CALCULATE PROGRESS
-	# --------------------------------------------------------
-
-	var progress := (
-		float(_current_progress)
-		/
-		float(maxi(1, taps_required))
-	)
-
-	progress = clampf(
-		progress,
-		0.0,
-		1.0
-	)
-
-	if progress >= 1.0 and _progress_after < 1.0:
-		if _save:
-			var player_skins := PlayerSkins.new(_save)
-			var next_skin = player_skins.get_next_locked_skin()
-			if not next_skin.is_empty():
-				player_skins.grant(next_skin)
-				print("TapTapPopup: Unlocked next character: ", next_skin)
-
+	_current_progress = _player_progress.add_progress(1)
+	var progress := _progress_ratio()
 	_progress_after = progress
 
-
-	# --------------------------------------------------------
-	# SAVE
-	# --------------------------------------------------------
-
 	if _save:
-
 		var result := _save.save_game()
-
 		if result != null and not result.success:
-
-			push_error(
-				"Failed to save character progress: "
-				+ result.error_message
-			)
-
-
-	# --------------------------------------------------------
-	# HAPTICS
-	# --------------------------------------------------------
+			push_error("Failed to save character progress: " + result.error_message)
 
 	if _haptics:
-
 		_haptics.light()
 
-
-	# --------------------------------------------------------
-	# PROGRESS BAR
-	# --------------------------------------------------------
-
 	if _progress_bar:
-
-		_progress_bar.animate_to(
-			_progress_bar.get_value(),
-			progress,
-			0.15
-		)
-
-
-	# --------------------------------------------------------
-	# CHARACTER ANIMATION
-	# --------------------------------------------------------
+		_progress_bar.animate_to(_progress_bar.get_value(), progress, 0.15)
 
 	if _character:
-
 		_character.bounce()
 
+	progress_changed.emit(progress)
 
-	# --------------------------------------------------------
-	# UI SIGNAL ONLY
-	# --------------------------------------------------------
-
-	progress_changed.emit(
-		progress
-	)
-
-
-	print(
-		"CHARACTER UPDATED | ",
-		character_id,
-		" = ",
-		_current_progress,
-		"/",
-		taps_required
-	)
+	# Completion is sent immediately, not after the countdown.
+	if _current_progress >= CharacterProgress.REQUIRED_TAPS:
+		_character_completed = true
+		if not _completion_sent:
+			_completion_sent = true
+			if _bus:
+				_bus.tap_tap_completed.emit(_progress_before, _progress_after)
+			else:
+				push_error("TapTapPopup: GameBus is NULL.")
 
 
 # ============================================================
-# COUNTDOWN FINISHED
+# EVENTS
 # ============================================================
+
+func _on_character_changed(new_character_id: String) -> void:
+	_character_completed = false
+	_completion_sent = false
+	character_id = new_character_id
+
+	_show_equipped(_character)
+	_apply_next_badge(_progress_bar)
+	_load_progress()
+
+	progress_changed.emit(_progress_ratio())
+
 
 func _on_countdown_finished() -> void:
-
-	print(
-		"TapTapPopup: 3 seconds finished."
-	)
-
-	if _bus == null:
-
-		push_error(
-			"TapTapPopup: GameBus is not available."
-		)
-
+	# Countdown never completes a character that already finished.
+	if _character_completed:
 		return
-
-
-	# --------------------------------------------------------
-	# GAME-LEVEL EVENT
-	# --------------------------------------------------------
-
-	_bus.tap_tap_completed.emit(
-		_progress_before,
-		_progress_after
-	)
+	if _bus:
+		_bus.tap_tap_completed.emit(_progress_before, _progress_after)

@@ -13,9 +13,38 @@ const LOCKED_TINT: Color = Color("#000000c0")
 @export var _lock: Control #= %LockIcon
 
 func set_skin(skin: Dictionary, locked: bool = false) -> void:
-	var art = skin.get("texture")
+	if _body == null:
+		push_error("CharacterView: Body TextureRect is not assigned.")
+		return
+
+	var art = skin.get("texture", "")
+
 	if art is Texture2D:
 		_body.texture = art
+
+	elif art is String and not art.is_empty():
+		if ResourceLoader.exists(art):
+			var texture := load(art) as Texture2D
+
+			if texture:
+				_body.texture = texture
+			else:
+				push_error(
+					"CharacterView: Failed to load texture: "
+					+ art
+				)
+		else:
+			push_error(
+				"CharacterView: Texture does not exist: "
+				+ art
+			)
+
+	else:
+		push_error(
+			"CharacterView: Invalid texture for skin: "
+			+ str(skin.get("id", "unknown"))
+		)
+
 	set_locked(locked)
 
 func set_locked(locked: bool) -> void:

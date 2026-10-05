@@ -57,3 +57,9 @@ func get_next_locked_skin() -> String:
 		if not is_owned(s["id"]):
 			return s["id"]
 	return ""
+
+static func resolve_equipped(save: SaveManager, progress: PlayerProgress) -> String:
+	var id: String = PlayerSkins.new(save).equipped_id()
+	if progress and not progress.is_character_unlocked(id):
+		return SkinCatalog.DEFAULT_ID
+	return id

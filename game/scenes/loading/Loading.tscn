@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://bxel875u6617l" path="res://game/assets/sprites/single/ui/LoadingBg.png" id="2_ylmfo"]
 [ext_resource type="Texture2D" uid="uid://dk4pgtdfj0tb0" path="res://game/assets/sprites/single/ui/Reff/Loading_Reff.png" id="3_emt6b"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/components/Clouds.tscn" id="3_pac"]
-[ext_resource type="Script" uid="uid://cbcuapmygo1va" path="res://game/scenes/loading/Loading.gd" id="4_scr"]
+[ext_resource type="Script" uid="uid://b2hbt6g0o5g7h" path="res://game/scenes/loading/Loading.gd" id="4_scr"]
 [ext_resource type="Texture2D" uid="uid://cqc0y1epach0g" path="res://game/assets/sprites/single/ui/ZumpaJumpLogo.png" id="4_ylmfo"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="6_rhkrw"]
 [ext_resource type="FontFile" uid="uid://n6n2r0mt7t5r" path="res://game/assets/fonts/TitanOne-Regular.ttf" id="7_18uoc"]
@@ -85,19 +85,18 @@ theme_override_constants/margin_top = 56
 theme_override_constants/margin_right = 48
 theme_override_constants/margin_bottom = 80
 
-[node name="Column" type="VBoxContainer" parent="Margin" unique_id=990538381]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 0
-
-[node name="Gap1" type="Control" parent="Margin/Column" unique_id=1999211235]
-custom_minimum_size = Vector2(0, 100)
+[node name="Column" type="Control" parent="Margin" unique_id=906263529]
 layout_mode = 2
 mouse_filter = 2
 
 [node name="LogoHolder" type="Control" parent="Margin/Column" unique_id=153180716]
-custom_minimum_size = Vector2(0, 1445)
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = 200.0
+offset_bottom = 200.0
+grow_horizontal = 2
 mouse_filter = 2
 
 [node name="Logo" type="TextureRect" parent="Margin/Column/LogoHolder" unique_id=938172087]
@@ -116,10 +115,35 @@ texture = ExtResource("4_ylmfo")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="LoadingBar" type="TextureProgressBar" parent="Margin/Column" unique_id=116138595]
+[node name="Control" type="Control" parent="Margin/Column" unique_id=505907607]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -384.0
+offset_right = 20.0
+offset_bottom = -344.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="LoadingBar" type="TextureProgressBar" parent="Margin/Column/Control" unique_id=116138595]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -316.5
+offset_top = -41.0
+offset_right = 316.5
+offset_bottom = 41.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
@@ -133,13 +157,19 @@ texture_under = SubResource("AtlasTexture_uvm4r")
 texture_progress = SubResource("AtlasTexture_3f7wr")
 texture_progress_offset = Vector2(5, 8)
 
-[node name="Gap2" type="Control" parent="Margin/Column" unique_id=1764373523]
-custom_minimum_size = Vector2(0, 12)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="LoadingLabel" type="Label" parent="Margin/Column" unique_id=1837304063]
-layout_mode = 2
+[node name="LoadingLabel" type="Label" parent="Margin/Column/Control" unique_id=1837304063]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -316.5
+offset_top = 60.0
+offset_right = 316.5
+offset_bottom = 121.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
 theme_override_colors/font_outline_color = Color(0.10980392, 0.3529412, 0.7058824, 1)

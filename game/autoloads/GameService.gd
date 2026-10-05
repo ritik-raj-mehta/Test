@@ -81,7 +81,7 @@ func _ready() -> void:
 	add_child(ui)
 	
 	player_progress = PlayerProgress.new()
-	player_progress.initialize(save)
+	player_progress.initialize(save,bus)
 	
 	_register_services()
 	logger.info("GameService initialized")

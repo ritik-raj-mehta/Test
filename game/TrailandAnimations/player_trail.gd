@@ -23,6 +23,8 @@ func _process(_delta: float) -> void:
 	for point in queue:
 		add_point(to_local(point))
 
+	print(visible, " ", active, " ", points.size(), " ", width)
+
 
 func _get_position() -> Vector2:
 	return get_parent().global_position

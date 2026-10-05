@@ -67,6 +67,8 @@ static var _registry: Dictionary = {
 			"move_angle": 0.0,
 			"move_direction": "+X",
 			"loop_reset": true,
+			"start_delay": 0.0,
+			"direction_change_delay": 0.0,
 			"rod_breadth": 8.0,
 			"rod_has_collision": false,
 			"gear_count": 1,

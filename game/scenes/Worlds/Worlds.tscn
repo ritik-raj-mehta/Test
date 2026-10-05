@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://b5fucrf0lx748"]
 
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_3b831"]
-[ext_resource type="Texture2D" uid="uid://00poh6l5m3ho" path="res://game/assets/sprites/single/ui/BGs/backgrounds.png" id="3_547ig"]
+[ext_resource type="Texture2D" uid="uid://crarc7ywgq8un" path="res://game/assets/sprites/single/ui/BGs/backgrounds.png" id="3_547ig"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="3_lfd2g"]
 [ext_resource type="Script" uid="uid://uek643mxu3fm" path="res://game/scenes/Worlds/Worlds.gd" id="3_scr"]
-[ext_resource type="Texture2D" uid="uid://db8jly2hmwrgj" path="res://game/assets/sprites/single/ui/Delete/leftArrow.png" id="3_uua01"]
+[ext_resource type="Texture2D" uid="uid://db8jly2hmwrgj" path="res://game/assets/sprites/single/ui/leftArrow.png" id="3_uua01"]
 [ext_resource type="PackedScene" uid="uid://d2b3n20q8x6ym" path="res://game/scenes/Worlds/LevelTile.tscn" id="4_pac"]
-[ext_resource type="Texture2D" uid="uid://buv2tvm4go7h6" path="res://game/assets/sprites/single/ui/Popup/numberTray.png" id="5_naaav"]
+[ext_resource type="Texture2D" uid="uid://buv2tvm4go7h6" path="res://game/assets/sprites/single/ui/numberTray.png" id="5_naaav"]
 [ext_resource type="PackedScene" uid="uid://c782i88d10f30" path="res://game/scenes/Worlds/WorldCard.tscn" id="6_lfd2g"]
 [ext_resource type="Texture2D" uid="uid://u4yhlumej873" path="res://game/assets/sprites/single/ui/Reff/worlds_Reff.png" id="7_lfd2g"]
 [ext_resource type="Script" uid="uid://s5c28rqvei42" path="res://game/scenes/Worlds/WorldCarousel.gd" id="8_wc"]
@@ -54,7 +54,7 @@ _carousel = NodePath("Margin/Column/WorldRow/WorldCarousel")
 _grid = NodePath("Margin/Column/Middle/LevelGrid")
 _prev_button = NodePath("Margin/Column/WorldRow/PrevButton")
 _next_button = NodePath("Margin/Column/WorldRow/NextButton")
-_back_button = NodePath("Margin/Column/BackButton")
+_back_button = NodePath("Margin/BackButton")
 background = NodePath("Background")
 _blur_bg_list = Array[Texture]([SubResource("AtlasTexture_5fjcl"), SubResource("AtlasTexture_yl6ys"), SubResource("AtlasTexture_547ig"), SubResource("AtlasTexture_y1m8c"), SubResource("AtlasTexture_en1yf")])
 
@@ -63,6 +63,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -73.0
+offset_top = -84.0
+offset_right = 73.0
+offset_bottom = 149.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -76,20 +80,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 48
-theme_override_constants/margin_top = 100
-theme_override_constants/margin_right = 48
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 150
+theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 200
 
-[node name="Column" type="Control" parent="Margin" unique_id=717924892]
+[node name="Column" type="TextureRect" parent="Margin" unique_id=703737045]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 mouse_filter = 2
 
 [node name="TitleLabel" type="Label" parent="Margin/Column" unique_id=1983289762]
 layout_mode = 0
-offset_top = 101.0
-offset_right = 984.0
-offset_bottom = 216.0
+offset_left = -500.0
+offset_top = -709.0
+offset_right = 484.0
+offset_bottom = -551.0
 offset_transform_enabled = true
 offset_transform_position = Vector2(7.425, -14.265)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -107,10 +114,10 @@ vertical_alignment = 1
 
 [node name="WorldRow" type="HBoxContainer" parent="Margin/Column" unique_id=163156376]
 layout_mode = 0
-offset_left = -29.0
-offset_top = 291.0
-offset_right = 1003.0
-offset_bottom = 778.0
+offset_left = -529.0
+offset_top = -519.0
+offset_right = 503.0
+offset_bottom = -32.0
 mouse_filter = 2
 theme_override_constants/separation = 30
 alignment = 1
@@ -188,10 +195,10 @@ flip_h = true
 
 [node name="Middle" type="TextureRect" parent="Margin/Column" unique_id=945932745]
 layout_mode = 0
-offset_left = 58.0
-offset_top = 833.0
-offset_right = 923.0
-offset_bottom = 1561.0
+offset_left = -442.0
+offset_top = 10.0
+offset_right = 423.0
+offset_bottom = 738.0
 size_flags_vertical = 3
 mouse_filter = 2
 texture = ExtResource("5_naaav")
@@ -211,18 +218,16 @@ mouse_filter = 2
 script = ExtResource("9_lg")
 tile_scene = ExtResource("4_pac")
 
-[node name="BackButton" type="TextureButton" parent="Margin/Column" unique_id=1363263649]
+[node name="BackButton" type="TextureButton" parent="Margin" unique_id=1363263649]
 unique_name_in_owner = true
-layout_mode = 1
-offset_left = -21.0
-offset_top = -14.0
-offset_right = 108.0
-offset_bottom = 130.0
-size_flags_horizontal = 4
+custom_minimum_size = Vector2(120, 120)
+custom_maximum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 focus_mode = 0
 texture_normal = SubResource("AtlasTexture_lfd2g")
 texture_pressed = SubResource("AtlasTexture_lfd2g")
-ignore_texture_size = true
 stretch_mode = 5
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=2003241596]

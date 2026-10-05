@@ -44,7 +44,10 @@ func _on_ready() -> void:
 	_start_level(LevelManager.get_default_level())
 
 func _open_tap_tap() -> void:
-	_open_popup(ScenePaths.TAP_TAP)
+	var popup := _open_popup(ScenePaths.TAP_TAP) as TapTapPopup
+
+	if popup:
+		popup.prepare_for_open()
 
 func _on_tap_tap_completed(
 	progress_before: float,
@@ -232,7 +235,7 @@ func _enter_tap_to_play() -> void:
 	_started = false
 	_game_manager.reset()
 	_game_manager.start()
-	_game_manager.pause()
+	# _game_manager.pause()
 	_show_home_ui()
 
 

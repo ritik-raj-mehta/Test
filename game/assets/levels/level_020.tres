@@ -37,10 +37,10 @@ position = Vector2(1000, 800)
 rotation = 180.0
 scale = Vector2(1.5, 1.5)
 properties = {
-"enable_node_pause": false,
+"enable_node_pause": true,
 "flip_zigzag": false,
 "gear_count": 8,
-"gear_spacing": 316.0,
+"gear_spacing": 387.0,
 "has_rod": true,
 "is_zigzag": true,
 "loop_reset": true,
@@ -50,8 +50,8 @@ properties = {
 "move_dist_pos": 205.0,
 "move_distance": 205.0,
 "move_speed": 250.0,
-"node_pause_time": 0.5,
-"rotation_speed": 8.0,
+"node_pause_time": 0.3,
+"rotation_speed": 6.0,
 "show_track_rods": true,
 "zigzag_angle": 30.0,
 "zigzag_count": 4,
@@ -67,10 +67,10 @@ position = Vector2(1000, 800)
 rotation = 180.0
 scale = Vector2(1.5, 1.5)
 properties = {
-"enable_node_pause": false,
+"enable_node_pause": true,
 "flip_zigzag": true,
 "gear_count": 8,
-"gear_spacing": 316.0,
+"gear_spacing": 387.0,
 "has_rod": true,
 "is_zigzag": true,
 "loop_reset": true,
@@ -80,8 +80,8 @@ properties = {
 "move_dist_pos": 205.0,
 "move_distance": 205.0,
 "move_speed": 250.0,
-"node_pause_time": 0.5,
-"rotation_speed": 8.0,
+"node_pause_time": 0.3,
+"rotation_speed": 6.0,
 "show_track_rods": true,
 "zigzag_angle": 30.0,
 "zigzag_count": 4,

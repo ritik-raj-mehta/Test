@@ -310,7 +310,7 @@ properties = {
 script = ExtResource("1_6q68g")
 object_id = "booster"
 position = Vector2(744, -1504)
-rotation = 45.0
+rotation = 50.0
 properties = {
 "custom_force": 0.0,
 "force_tier": 3,
@@ -321,7 +321,7 @@ properties = {
 script = ExtResource("1_6q68g")
 object_id = "booster"
 position = Vector2(1256, -1504)
-rotation = -45.0
+rotation = -50.0
 properties = {
 "custom_force": 0.0,
 "force_tier": 3,

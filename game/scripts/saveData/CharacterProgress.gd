@@ -10,6 +10,7 @@ const REQUIRED_TAPS: int = 40
 
 
 func initialize(save: SaveManager) -> void:
+
 	if save == null:
 		push_error(
 			"CharacterProgress: SaveManager is null."
@@ -25,6 +26,7 @@ func initialize(save: SaveManager) -> void:
 
 
 func get_progress(character_id: String) -> int:
+
 	if profile_data == null:
 		return 0
 
@@ -42,19 +44,29 @@ func add_progress(
 ) -> int:
 
 	if profile_data == null:
+
 		push_error(
 			"CharacterProgress: ProfileData is null."
 		)
+
 		return 0
 
+
 	if profile_repo == null:
+
 		push_error(
 			"CharacterProgress: ProfileRepository is null."
 		)
+
 		return 0
 
+
 	if amount <= 0:
-		return get_progress(character_id)
+
+		return get_progress(
+			character_id
+		)
+
 
 	var current := get_progress(
 		character_id
@@ -67,11 +79,14 @@ func add_progress(
 		REQUIRED_TAPS
 	)
 
+
 	profile_data.character_progress[
 		character_id
 	] = current
 
+
 	profile_repo.mark_dirty()
+
 
 	print(
 		"CHARACTER UPDATED | ",
@@ -81,5 +96,6 @@ func add_progress(
 		"/",
 		REQUIRED_TAPS
 	)
+
 
 	return current

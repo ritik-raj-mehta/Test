@@ -192,7 +192,7 @@ properties = {
 "move_dist_pos": 60.0,
 "move_distance": 440.0,
 "move_speed": 250.0,
-"rotation_speed": 2.0,
+"rotation_speed": 10.0,
 "start_delay": 0.0
 }
 

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://dnlidct11aw8w"]
+[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://ba1u4pphi2xna"]
 
 [ext_resource type="Script" uid="uid://cyu66d57u6u66" path="res://game/scripts/data/ObjectData.gd" id="1_7vndi"]
 [ext_resource type="Script" uid="uid://rvbsp8ahmcnm" path="res://game/scripts/data/LevelData.gd" id="2_ijc0c"]

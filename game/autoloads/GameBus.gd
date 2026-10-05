@@ -22,6 +22,9 @@ signal goal_reached(player: Node2D, goal: Node2D)
 signal goal_sequence_finished
 signal tap_tap_started
 signal tap_tap_completed(progress_before: float, progress_after: float)
+
+signal character_completed(character_id: String)
+signal character_changed(character_id: String)
 # ── Economy ───────────────────────────────────────────────────────────────
 signal coins_changed(new_amount: int)
 signal item_unlocked(item_id: String)

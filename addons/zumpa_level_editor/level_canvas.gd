@@ -119,7 +119,7 @@ func refresh_canvas() -> void:
 	p_start_node.z_index = 20
 
 	var p_sprite := Sprite2D.new()
-	var p_tex_path := "res://game/assets/sprites/single/Player.png"
+	var p_tex_path := "res://game/assets/sprites/atlases/Play.png"
 	if not ResourceLoader.exists(p_tex_path):
 		p_tex_path = WorldThemeRegistry.resolve_texture_path("res://game/assets/sprites/Player.png")
 	if ResourceLoader.exists(p_tex_path):

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cbp1iudqmyyi1"]
 
-[ext_resource type="Texture2D" uid="uid://00poh6l5m3ho" path="res://game/assets/sprites/single/ui/BGs/backgrounds.png" id="2_qyhv8"]
+[ext_resource type="Texture2D" uid="uid://crarc7ywgq8un" path="res://game/assets/sprites/single/ui/BGs/backgrounds.png" id="2_qyhv8"]
 [ext_resource type="Texture2D" uid="uid://dtll8bitldi3m" path="res://game/assets/sprites/single/ui/back.png" id="3_ocs36"]
 [ext_resource type="Script" uid="uid://tbcmcffak44o" path="res://game/scenes/Skins/Skins.gd" id="3_scr"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="4_c7mn2"]
@@ -69,6 +69,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -73.0
+offset_top = -84.0
+offset_right = 73.0
+offset_bottom = 149.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -82,10 +86,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 100
-theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 100
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 150
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 200
 
 [node name="Column" type="VBoxContainer" parent="Margin" unique_id=1998847682]
 layout_mode = 2
@@ -141,7 +145,7 @@ theme_override_constants/separation = 40
 [node name="Row" type="HBoxContainer" parent="Margin/Column/Middle/Stage" unique_id=1333781607]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 10
 alignment = 1
 
 [node name="PrevButton" type="TextureButton" parent="Margin/Column/Middle/Stage/Row" unique_id=1724063498]
@@ -175,7 +179,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 script = ExtResource("8_car")
 prefabs = Array[PackedScene]([ExtResource("6_hs8q2"), ExtResource("7_fs46r"), ExtResource("8_vls40"), ExtResource("9_diwqi"), ExtResource("10_fkiww")])
-spacing = 350.0
+spacing = 380.0
 
 [node name="NextButton" type="TextureButton" parent="Margin/Column/Middle/Stage/Row" unique_id=723955327]
 unique_name_in_owner = true

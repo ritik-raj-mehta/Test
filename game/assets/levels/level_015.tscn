@@ -155,7 +155,7 @@ tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_d1xpk")
 
-[node name="LevelRoot" type="Node2D" unique_id=1700201157]
+[node name="LevelRoot" type="Node2D" unique_id=253437149]
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=927742863 instance=ExtResource("1_78gvj")]
 z_index = 10
@@ -164,7 +164,7 @@ collision_layer = 2
 collision_mask = 23
 script = ExtResource("2_tm34h")
 
-[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=1203794715]
+[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=849743022]
 z_index = 150
 position = Vector2(40, 0)
 scale = Vector2(1.5, 1.5)
@@ -186,7 +186,7 @@ script = ExtResource("7_t8rsi")
 spike_count = 8
 wall_distance = 45.0
 
-[node name="Spike_2" type="StaticBody2D" parent="." unique_id=1570551165 groups=["obstacle"] instance=ExtResource("6_y352p")]
+[node name="Spike_2" type="StaticBody2D" parent="." unique_id=206123623 groups=["obstacle"] instance=ExtResource("6_y352p")]
 z_index = 100
 position = Vector2(1119.0627, 1814.4403)
 collision_layer = 2
@@ -216,7 +216,7 @@ interval_move_time = 2.0100000000000002
 interval_pause_time = 0.99
 world_theme = "world_1"
 
-[node name="GearWithRod_2" type="Node2D" parent="." unique_id=280656168 groups=["obstacle"] instance=ExtResource("8_4cqxr")]
+[node name="GearWithRod_2" type="Node2D" parent="." unique_id=1439716583 groups=["obstacle"] instance=ExtResource("8_4cqxr")]
 position = Vector2(1526, 721)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_hran5")
@@ -237,7 +237,7 @@ interval_move_time = 2.0100000000000002
 interval_pause_time = 0.99
 world_theme = "world_1"
 
-[node name="GearWithRod_3" type="Node2D" parent="." unique_id=1533366480 groups=["obstacle"] instance=ExtResource("8_4cqxr")]
+[node name="GearWithRod_3" type="Node2D" parent="." unique_id=1597988330 groups=["obstacle"] instance=ExtResource("8_4cqxr")]
 position = Vector2(476, 176)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_hran5")
@@ -258,7 +258,7 @@ interval_move_time = 2.0100000000000002
 interval_pause_time = 0.99
 world_theme = "world_1"
 
-[node name="GearWithRod_4" type="Node2D" parent="." unique_id=60194626 groups=["obstacle"] instance=ExtResource("8_4cqxr")]
+[node name="GearWithRod_4" type="Node2D" parent="." unique_id=1181290430 groups=["obstacle"] instance=ExtResource("8_4cqxr")]
 position = Vector2(1526, -367)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_hran5")
@@ -286,15 +286,15 @@ collision_mask = 3
 script = ExtResource("11_hl5er")
 force_tier = 4
 
-[node name="Booster_2" type="Area2D" parent="." unique_id=1976525153 groups=["boosters", "obstacle"] instance=ExtResource("10_558qy")]
+[node name="Booster_2" type="Area2D" parent="." unique_id=1065740640 groups=["boosters", "obstacle"] instance=ExtResource("10_558qy")]
 position = Vector2(808, 736)
 rotation = 0.5235988
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("11_hl5er")
-force_tier = 4
+force_tier = 5
 
-[node name="Booster_3" type="Area2D" parent="." unique_id=162140317 groups=["boosters", "obstacle"] instance=ExtResource("10_558qy")]
+[node name="Booster_3" type="Area2D" parent="." unique_id=229988269 groups=["boosters", "obstacle"] instance=ExtResource("10_558qy")]
 position = Vector2(1192, 192)
 rotation = -0.5235988
 collision_layer = 2
@@ -302,7 +302,7 @@ collision_mask = 3
 script = ExtResource("11_hl5er")
 force_tier = 4
 
-[node name="Booster_4" type="Area2D" parent="." unique_id=647522657 groups=["boosters", "obstacle"] instance=ExtResource("10_558qy")]
+[node name="Booster_4" type="Area2D" parent="." unique_id=1745198488 groups=["boosters", "obstacle"] instance=ExtResource("10_558qy")]
 position = Vector2(808, -352)
 rotation = 0.5235988
 collision_layer = 2
@@ -310,7 +310,7 @@ collision_mask = 3
 script = ExtResource("11_hl5er")
 force_tier = 4
 
-[node name="Booster_5" type="Area2D" parent="." unique_id=606142876 groups=["boosters", "obstacle"] instance=ExtResource("10_558qy")]
+[node name="Booster_5" type="Area2D" parent="." unique_id=295721998 groups=["boosters", "obstacle"] instance=ExtResource("10_558qy")]
 position = Vector2(1000, -832)
 collision_layer = 2
 collision_mask = 3

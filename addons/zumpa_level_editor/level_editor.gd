@@ -127,6 +127,10 @@ var zigzag_start_bottom_check: CheckBox
 var flip_zigzag_check: CheckBox
 var enable_node_pause_check: CheckBox
 var node_pause_time_spin: SpinBox
+var prop_has_rod_row: HBoxContainer
+var has_rod_check: CheckBox
+var prop_start_delay_row: HBoxContainer
+var start_delay_spin: SpinBox
 var _is_updating_inspector: bool = false
 
 
@@ -401,6 +405,38 @@ func setup_dynamic_inspector_fields() -> void:
 
 	parent_vbox.add_child(prop_zigzag_box)
 	parent_vbox.move_child(prop_zigzag_box, target_index)
+	target_index += 1
+
+	# Has Rod (Gear with Rod) Row
+	prop_has_rod_row = HBoxContainer.new()
+	prop_has_rod_row.visible = false
+	var lbl_hr = Label.new()
+	lbl_hr.text = "Gear with Rod:"
+	lbl_hr.custom_minimum_size = Vector2(100, 0)
+	has_rod_check = CheckBox.new()
+	has_rod_check.text = "Show Track Rod"
+	prop_has_rod_row.add_child(lbl_hr)
+	prop_has_rod_row.add_child(has_rod_check)
+	parent_vbox.add_child(prop_has_rod_row)
+	parent_vbox.move_child(prop_has_rod_row, target_index)
+	target_index += 1
+
+	# Start Delay Row
+	prop_start_delay_row = HBoxContainer.new()
+	prop_start_delay_row.visible = false
+	var lbl_sd = Label.new()
+	lbl_sd.text = "Start Delay (s):"
+	lbl_sd.custom_minimum_size = Vector2(100, 0)
+	start_delay_spin = SpinBox.new()
+	start_delay_spin.min_value = 0.0
+	start_delay_spin.max_value = 60.0
+	start_delay_spin.step = 0.1
+	start_delay_spin.suffix = "s"
+	start_delay_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	prop_start_delay_row.add_child(lbl_sd)
+	prop_start_delay_row.add_child(start_delay_spin)
+	parent_vbox.add_child(prop_start_delay_row)
+	parent_vbox.move_child(prop_start_delay_row, target_index)
 	target_index += 1
 
 func setup_grid_options() -> void:
@@ -1433,7 +1469,20 @@ func update_inspector_values(obj) -> void:
 		if prop_interval_time_row: prop_interval_time_row.visible = false
 		if prop_interval_speed_row: prop_interval_speed_row.visible = false
 
-	if obj.object_id == "gear_m" or obj.properties.has("direction_change_delay") or obj.properties.has("delay"):
+	if obj.object_id in ["gear_m", "gear_with_rod", "gear_r", "gear_rod", "gear_zigzag"] or obj.properties.has("has_rod") or obj.properties.has("start_delay"):
+		if prop_has_rod_row:
+			prop_has_rod_row.visible = true
+			if has_rod_check:
+				has_rod_check.button_pressed = bool(obj.properties.get("has_rod", obj.object_id in ["gear_with_rod", "gear_rod"]))
+		if prop_start_delay_row:
+			prop_start_delay_row.visible = true
+			if start_delay_spin:
+				start_delay_spin.value = float(obj.properties.get("start_delay", 0.0))
+	else:
+		if prop_has_rod_row: prop_has_rod_row.visible = false
+		if prop_start_delay_row: prop_start_delay_row.visible = false
+
+	if obj.object_id in ["gear_m", "gear_with_rod"] or obj.properties.has("direction_change_delay") or obj.properties.has("delay"):
 		if prop_move_delay_row:
 			prop_move_delay_row.visible = true
 			if move_delay_spin: move_delay_spin.value = float(obj.properties.get("direction_change_delay", obj.properties.get("delay", 0.0)))
@@ -1621,6 +1670,10 @@ func apply_inspector_changes() -> void:
 			obj.properties["gear_spacing"] = gear_spacing_spin.value
 	if prop_move_delay_row and prop_move_delay_row.visible:
 		obj.properties["direction_change_delay"] = move_delay_spin.value
+	if prop_has_rod_row and prop_has_rod_row.visible:
+		obj.properties["has_rod"] = has_rod_check.button_pressed
+	if prop_start_delay_row and prop_start_delay_row.visible:
+		obj.properties["start_delay"] = start_delay_spin.value
 	if prop_enable_interval_row and prop_enable_interval_row.visible:
 		obj.properties["enable_interval_movement"] = enable_interval_check.button_pressed
 	if prop_interval_time_row and prop_interval_time_row.visible:

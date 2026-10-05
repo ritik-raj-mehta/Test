@@ -33,8 +33,9 @@ class ProfileData extends BaseModel:
 	var country_code: String = ""
 	var photo_url: Variant = null
 	var player_title: String = "Novice"
+	var current_character_id: String = "zumpa_green"
 	var character_progress: Dictionary = {}
-
+	
 	func _init() -> void:
 		schema_version = 1
 		var loc = OS.get_locale()

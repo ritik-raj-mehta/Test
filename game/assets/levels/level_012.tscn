@@ -155,7 +155,7 @@ tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_d1xpk")
 
-[node name="LevelRoot" type="Node2D" unique_id=1676425818]
+[node name="LevelRoot" type="Node2D" unique_id=970292650]
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=927742863 instance=ExtResource("1_81wrp")]
 z_index = 10
@@ -164,7 +164,7 @@ collision_layer = 2
 collision_mask = 23
 script = ExtResource("2_g3kts")
 
-[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=354882352]
+[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=1494962268]
 z_index = 150
 position = Vector2(40, 0)
 scale = Vector2(1.5, 1.5)
@@ -186,7 +186,7 @@ script = ExtResource("7_kfx5g")
 spike_count = 8
 wall_distance = 45.0
 
-[node name="Spike_2" type="StaticBody2D" parent="." unique_id=1982313644 groups=["obstacle"] instance=ExtResource("6_dj1qa")]
+[node name="Spike_2" type="StaticBody2D" parent="." unique_id=1628047894 groups=["obstacle"] instance=ExtResource("6_dj1qa")]
 z_index = 100
 position = Vector2(1119.0627, 1814.4403)
 collision_layer = 2
@@ -206,7 +206,7 @@ move_dist_neg = 0.0
 move_distance = 0.0
 world_theme = "world_1"
 
-[node name="GearR_2" type="Node2D" parent="." unique_id=1201789827 groups=["obstacle"] instance=ExtResource("8_3ypad")]
+[node name="GearR_2" type="Node2D" parent="." unique_id=1554413333 groups=["obstacle"] instance=ExtResource("8_3ypad")]
 position = Vector2(1000, 576)
 scale = Vector2(2, 2)
 script = ExtResource("9_q4si8")
@@ -225,7 +225,7 @@ collision_mask = 3
 script = ExtResource("11_riery")
 force_tier = 4
 
-[node name="Booster_2" type="Area2D" parent="." unique_id=645492982 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
+[node name="Booster_2" type="Area2D" parent="." unique_id=1783484104 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
 position = Vector2(1320, 576)
 rotation = -0.83775806
 collision_layer = 2
@@ -233,7 +233,7 @@ collision_mask = 3
 script = ExtResource("11_riery")
 force_tier = 4
 
-[node name="GearR_3" type="Node2D" parent="." unique_id=865250845 groups=["obstacle"] instance=ExtResource("8_3ypad")]
+[node name="GearR_3" type="Node2D" parent="." unique_id=657275224 groups=["obstacle"] instance=ExtResource("8_3ypad")]
 position = Vector2(1000, -384)
 scale = Vector2(2, 2)
 script = ExtResource("9_q4si8")
@@ -244,7 +244,7 @@ move_dist_neg = 0.0
 move_distance = 0.0
 world_theme = "world_1"
 
-[node name="GearR_4" type="Node2D" parent="." unique_id=229015208 groups=["obstacle"] instance=ExtResource("8_3ypad")]
+[node name="GearR_4" type="Node2D" parent="." unique_id=939769372 groups=["obstacle"] instance=ExtResource("8_3ypad")]
 position = Vector2(1000, 96)
 scale = Vector2(2, 2)
 script = ExtResource("9_q4si8")
@@ -255,7 +255,7 @@ move_dist_neg = 0.0
 move_distance = 0.0
 world_theme = "world_1"
 
-[node name="Booster_3" type="Area2D" parent="." unique_id=1784275033 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
+[node name="Booster_3" type="Area2D" parent="." unique_id=722973090 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
 position = Vector2(680, 576)
 rotation = 0.83775806
 collision_layer = 2
@@ -263,7 +263,7 @@ collision_mask = 3
 script = ExtResource("11_riery")
 force_tier = 4
 
-[node name="Booster_4" type="Area2D" parent="." unique_id=2115493894 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
+[node name="Booster_4" type="Area2D" parent="." unique_id=1289349681 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
 position = Vector2(1320, 1088)
 rotation = -0.83775806
 collision_layer = 2
@@ -271,7 +271,7 @@ collision_mask = 3
 script = ExtResource("11_riery")
 force_tier = 4
 
-[node name="Booster_5" type="Area2D" parent="." unique_id=799137616 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
+[node name="Booster_5" type="Area2D" parent="." unique_id=1900236576 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
 position = Vector2(680, 96)
 rotation = 0.83775806
 collision_layer = 2
@@ -279,7 +279,7 @@ collision_mask = 3
 script = ExtResource("11_riery")
 force_tier = 4
 
-[node name="Booster_6" type="Area2D" parent="." unique_id=929673590 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
+[node name="Booster_6" type="Area2D" parent="." unique_id=316938926 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
 position = Vector2(1320, 96)
 rotation = -0.83775806
 collision_layer = 2
@@ -287,7 +287,7 @@ collision_mask = 3
 script = ExtResource("11_riery")
 force_tier = 4
 
-[node name="Booster_7" type="Area2D" parent="." unique_id=1398469695 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
+[node name="Booster_7" type="Area2D" parent="." unique_id=2048016905 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
 position = Vector2(680, -384)
 rotation = 0.83775806
 collision_layer = 2
@@ -295,7 +295,7 @@ collision_mask = 3
 script = ExtResource("11_riery")
 force_tier = 4
 
-[node name="Booster_8" type="Area2D" parent="." unique_id=1293264320 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
+[node name="Booster_8" type="Area2D" parent="." unique_id=589908521 groups=["boosters", "obstacle"] instance=ExtResource("10_xalyx")]
 position = Vector2(1320, -384)
 rotation = -0.83775806
 collision_layer = 2
@@ -303,7 +303,7 @@ collision_mask = 3
 script = ExtResource("11_riery")
 force_tier = 4
 
-[node name="GearR_5" type="Node2D" parent="." unique_id=1599627953 groups=["obstacle"] instance=ExtResource("8_3ypad")]
+[node name="GearR_5" type="Node2D" parent="." unique_id=1790597819 groups=["obstacle"] instance=ExtResource("8_3ypad")]
 position = Vector2(680, -800)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_q4si8")
@@ -314,7 +314,7 @@ move_dist_neg = 0.0
 move_distance = 0.0
 world_theme = "world_1"
 
-[node name="GearR_6" type="Node2D" parent="." unique_id=527561625 groups=["obstacle"] instance=ExtResource("8_3ypad")]
+[node name="GearR_6" type="Node2D" parent="." unique_id=1137940265 groups=["obstacle"] instance=ExtResource("8_3ypad")]
 position = Vector2(1320, -800)
 scale = Vector2(1.5, 1.5)
 script = ExtResource("9_q4si8")
