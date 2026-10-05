@@ -19,6 +19,7 @@ static var _themes: Dictionary = {
 		"theme_color": Color(0.2, 0.8, 0.4, 1.0),
 		"gear_texture": "res://game/assets/sprites/obstacles/Gear1.png",
 		"gear_rod_texture": "res://game/assets/sprites/obstacles/GearRode1.png",
+		"circular_border_texture": "res://game/assets/sprites/obstacles/CircularBoarder1.png",
 		"falling_stone_texture": "res://game/assets/sprites/obstacles/Stone1.png",
 		"falling_stone_spike_texture": "res://game/assets/sprites/obstacles/SpikeStone1.png",
 		"fruit_texture": "res://game/assets/sprites/obstacles/Fruit1.png",
@@ -35,6 +36,7 @@ static var _themes: Dictionary = {
 		"theme_color": Color(0.9, 0.6, 0.2, 1.0),
 		"gear_texture": "res://game/assets/sprites/obstacles/Gear2.png",
 		"gear_rod_texture": "res://game/assets/sprites/obstacles/GearRode2.png",
+		"circular_border_texture": "res://game/assets/sprites/obstacles/CircularBoarder2.png",
 		"falling_stone_texture": "res://game/assets/sprites/obstacles/Stone2.png",
 		"falling_stone_spike_texture": "res://game/assets/sprites/obstacles/SpikeStone2.png",
 		"fruit_texture": "res://game/assets/sprites/obstacles/Fruit2.png",
@@ -51,6 +53,7 @@ static var _themes: Dictionary = {
 		"theme_color": Color(0.2, 0.6, 1.0, 1.0),
 		"gear_texture": "res://game/assets/sprites/obstacles/Gear3.png",
 		"gear_rod_texture": "res://game/assets/sprites/obstacles/GearRode3.png",
+		"circular_border_texture": "res://game/assets/sprites/obstacles/CircularBoarder3.png",
 		"falling_stone_texture": "res://game/assets/sprites/obstacles/Stone3.png",
 		"falling_stone_spike_texture": "res://game/assets/sprites/obstacles/SpikeStone3.png",
 		"fruit_texture": "res://game/assets/sprites/obstacles/Fruit3.png",
@@ -67,6 +70,7 @@ static var _themes: Dictionary = {
 		"theme_color": Color(0.8, 0.3, 0.8, 1.0),
 		"gear_texture": "res://game/assets/sprites/obstacles/Gear4.png",
 		"gear_rod_texture": "res://game/assets/sprites/obstacles/GearRode4.png",
+		"circular_border_texture": "res://game/assets/sprites/obstacles/CircularBoarder4.png",
 		"falling_stone_texture": "res://game/assets/sprites/obstacles/Stone4.png",
 		"falling_stone_spike_texture": "res://game/assets/sprites/obstacles/SpikeStone4.png",
 		"fruit_texture": "res://game/assets/sprites/obstacles/Fruit4.png",
@@ -83,6 +87,7 @@ static var _themes: Dictionary = {
 		"theme_color": Color(0.95, 0.25, 0.2, 1.0),
 		"gear_texture": "res://game/assets/sprites/obstacles/Gear5.png",
 		"gear_rod_texture": "res://game/assets/sprites/obstacles/GearRode5.png",
+		"circular_border_texture": "res://game/assets/sprites/obstacles/CircularBoarder5.png",
 		"falling_stone_texture": "res://game/assets/sprites/obstacles/Stone5.png",
 		"falling_stone_spike_texture": "res://game/assets/sprites/obstacles/SpikeStone5.png",
 		"fruit_texture": "res://game/assets/sprites/obstacles/Fruit5.png",
@@ -180,6 +185,9 @@ static func get_gear_texture(theme_id: String) -> Texture2D:
 
 static func get_gear_rod_texture(theme_id: String) -> Texture2D:
 	return get_asset_texture(theme_id, "gear_rod_texture", "res://game/assets/sprites/obstacles/GearRode1.png")
+
+static func get_circular_border_texture(theme_id: String) -> Texture2D:
+	return get_asset_texture(theme_id, "circular_border_texture", "res://game/assets/sprites/obstacles/CircularBoarder1.png")
 
 static func get_falling_stone_texture(theme_id: String) -> Texture2D:
 	return get_asset_texture(theme_id, "falling_stone_texture", "res://game/assets/sprites/obstacles/Stone1.png")

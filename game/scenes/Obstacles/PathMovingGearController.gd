@@ -115,6 +115,25 @@ enum MoveDirection {
 		_update_caches()
 		queue_redraw()
 
+@export var gear_scale: float = 1.0:
+	set(v):
+		gear_scale = max(0.1, v)
+		_update_gear_scales()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var show_path_rods: bool = true:
+	set(v):
+		show_path_rods = v
+		_update_rod_dimensions()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var rod_breadth: float = 8.0:
+	set(v):
+		rod_breadth = max(1.0, v)
+		_update_rod_dimensions()
+
 @export var show_track_line: bool = true:
 	set(v):
 		show_track_line = v
@@ -171,6 +190,19 @@ func apply_theme(theme_id: String) -> void:
 	world_theme = theme_id
 	_apply_theme()
 
+func _update_gear_scales() -> void:
+	var base_scale = Vector2(0.5, 0.5) * gear_scale
+	for body in _gear_bodies:
+		if body:
+			var spr = body.get_node_or_null("Sprite2D") as Sprite2D
+			if spr:
+				spr.scale = base_scale
+			var col = body.get_node_or_null("CollisionShape2D") as CollisionShape2D
+			if col and col.shape and col.shape is CircleShape2D:
+				if not col.shape.resource_local_to_scene:
+					col.shape = col.shape.duplicate()
+				(col.shape as CircleShape2D).radius = 44.15 * gear_scale
+
 func _apply_theme() -> void:
 	if gear_sprite == null and has_node("GearBody/Sprite2D"):
 		gear_sprite = get_node("GearBody/Sprite2D") as Sprite2D
@@ -184,6 +216,69 @@ func _apply_theme() -> void:
 		for spr in _gear_sprites:
 			if spr:
 				spr.texture = g_tex
+
+	_update_gear_scales()
+	_update_rod_dimensions()
+
+func _update_rod_dimensions() -> void:
+	# Clear previous track rod children
+	for child in get_children(true):
+		if child.name.begins_with("PathTrackRod_") or child.is_in_group("path_track_rod"):
+			child.queue_free()
+			remove_child(child)
+
+	if not show_path_rods:
+		return
+
+	var theme_id = world_theme if world_theme != "" else WorldThemeRegistry.get_current_theme()
+	var norm_shape = path_shape.to_upper()
+	var rod_thick = max(1.0, rod_breadth)
+
+	if norm_shape == "CIRCLE":
+		var circ_tex = WorldThemeRegistry.get_circular_border_texture(theme_id)
+		if circ_tex:
+			var circ_spr := Sprite2D.new()
+			circ_spr.name = "PathTrackRod_Circle"
+			circ_spr.add_to_group("path_track_rod")
+			circ_spr.texture = circ_tex
+			circ_spr.rotation = deg_to_rad(path_rotation)
+			circ_spr.z_index = -1
+			var tex_w = float(circ_tex.get_width())
+			var tex_h = float(circ_tex.get_height())
+			if tex_w > 0.0 and tex_h > 0.0:
+				circ_spr.scale = Vector2(path_width / tex_w, path_height / tex_h)
+			add_child(circ_spr, false, Node.INTERNAL_MODE_BACK)
+		return
+
+	var r_tex = WorldThemeRegistry.get_gear_rod_texture(theme_id)
+	if not r_tex:
+		return
+
+	var n = _vertices.size()
+	for i in range(n):
+		var p1 = _vertices[i]
+		var p2 = _vertices[(i + 1) % n]
+		var seg_len = p1.distance_to(p2)
+		if seg_len <= 0.001:
+			continue
+
+		var seg_center = (p1 + p2) * 0.5
+		var seg_angle = (p2 - p1).angle()
+
+		var rod_spr := Sprite2D.new()
+		rod_spr.name = "PathTrackRod_%d" % i
+		rod_spr.add_to_group("path_track_rod")
+		rod_spr.position = seg_center
+		rod_spr.rotation = seg_angle + PI * 0.5
+		rod_spr.z_index = -1
+		rod_spr.texture = r_tex
+
+		var tex_w = float(r_tex.get_width())
+		var tex_h = float(r_tex.get_height())
+		if tex_h > 0.0: rod_spr.scale.y = seg_len / tex_h
+		if tex_w > 0.0: rod_spr.scale.x = rod_thick / tex_w
+
+		add_child(rod_spr, false, Node.INTERNAL_MODE_BACK)
 
 func _rebuild_gears() -> void:
 	if gear_body == null and has_node("GearBody"):
@@ -218,6 +313,8 @@ func _rebuild_gears() -> void:
 			if spr:
 				_gear_sprites.append(spr)
 
+	_apply_theme()
+
 func _update_path_geometry() -> void:
 	_vertices.clear()
 	_segment_lengths.clear()
@@ -231,15 +328,16 @@ func _update_path_geometry() -> void:
 	var half_h = path_height * 0.5
 	var rad_offset = deg_to_rad(path_rotation)
 
+	if _is_circular:
+		_total_perimeter = PI * (3.0 * (half_w + half_h) - sqrt((3.0 * half_w + half_h) * (half_w + 3.0 * half_h)))
+		if _total_perimeter <= 0.0:
+			_total_perimeter = max(1.0, TAU * half_w)
+		_update_rod_dimensions()
+		return
+
 	var raw_points: Array[Vector2] = []
 
 	match norm_shape:
-		"CIRCLE":
-			_total_perimeter = PI * (3.0 * (half_w + half_h) - sqrt((3.0 * half_w + half_h) * (half_w + 3.0 * half_h)))
-			if _total_perimeter <= 0.0:
-				_total_perimeter = max(1.0, TAU * half_w)
-			return
-
 		"DIAMOND":
 			raw_points = [
 				Vector2(0.0, -half_h),
@@ -287,6 +385,7 @@ func _update_path_geometry() -> void:
 		_cumulative_lengths.append(accum)
 
 	_total_perimeter = accum
+	_update_rod_dimensions()
 
 func _update_caches() -> void:
 	var n_corners = _vertices.size() if not _is_circular else 0
