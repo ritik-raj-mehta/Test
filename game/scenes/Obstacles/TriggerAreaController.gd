@@ -20,6 +20,7 @@ class_name TriggerAreaController
 		queue_redraw()
 
 var triggered: bool = false
+var _retrigger_cooldown: float = 0.0
 
 func _ready() -> void:
 	_on_ready()
@@ -32,6 +33,8 @@ func _on_ready() -> void:
 	if not Engine.is_editor_hint():
 		if not body_entered.is_connected(_on_body_entered):
 			body_entered.connect(_on_body_entered)
+		if not body_exited.is_connected(_on_body_exited):
+			body_exited.connect(_on_body_exited)
 
 func update_shape_size() -> void:
 	var col = get_node_or_null("CollisionShape2D") as CollisionShape2D
@@ -42,23 +45,31 @@ func update_shape_size() -> void:
 			col.shape = col.shape.duplicate()
 		(col.shape as RectangleShape2D).size = Vector2(area_width, area_height)
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		update_shape_size()
 		queue_redraw()
+	elif _retrigger_cooldown > 0.0:
+		_retrigger_cooldown = maxf(_retrigger_cooldown - delta, 0.0)
 
-func _on_body_entered(body: Node2D) -> void:
-	if triggered:
-		return
-
-	var is_player = body is Player \
+func _is_player(body: Node2D) -> bool:
+	return body is Player \
 		or body.is_in_group("player") \
 		or body.name.begins_with("Player") \
 		or (body is CharacterBody2D and not (body is FallingStoneController) and body.has_method("die"))
 
-	if is_player:
+func _on_body_entered(body: Node2D) -> void:
+	if triggered or _retrigger_cooldown > 0.0:
+		return
+
+	if _is_player(body):
 		triggered = true
+		_retrigger_cooldown = 0.25
 		activate_triggers()
+
+func _on_body_exited(body: Node2D) -> void:
+	if _is_player(body):
+		triggered = false
 
 func activate_triggers() -> void:
 	# Trigger all nodes in "triggerable" group with matching trigger_tag

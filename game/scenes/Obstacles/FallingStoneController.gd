@@ -28,6 +28,53 @@ class_name FallingStoneController
 			queue_redraw()
 
 @export var knockback_force: float = 1400.0
+
+@export_group("Initial Launch")
+var _is_setting_preset: bool = false
+
+@export_enum("Down (90°)", "Down-Right (45°)", "Down-Left (135°)", "Right (0°)", "Left (180°)", "Up (-90°)", "Up-Right (-45°)", "Up-Left (-135°)", "Custom Angle") var initial_direction_mode: String = "Down (90°)":
+	set(v):
+		initial_direction_mode = v
+		_is_setting_preset = true
+		match v:
+			"Down (90°)": initial_launch_angle = 90.0
+			"Down-Right (45°)": initial_launch_angle = 45.0
+			"Down-Left (135°)": initial_launch_angle = 135.0
+			"Right (0°)": initial_launch_angle = 0.0
+			"Left (180°)": initial_launch_angle = 180.0
+			"Up (-90°)": initial_launch_angle = -90.0
+			"Up-Right (-45°)": initial_launch_angle = -45.0
+			"Up-Left (-135°)": initial_launch_angle = -135.0
+		_is_setting_preset = false
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export_range(-180.0, 180.0, 1.0) var initial_launch_angle: float = 90.0:
+	set(v):
+		initial_launch_angle = v
+		if not _is_setting_preset:
+			# If user directly modifies angle, verify if it matches a preset or set to Custom Angle
+			var matched := false
+			match int(round(v)):
+				90: if initial_direction_mode == "Down (90°)": matched = true
+				45: if initial_direction_mode == "Down-Right (45°)": matched = true
+				135: if initial_direction_mode == "Down-Left (135°)": matched = true
+				0: if initial_direction_mode == "Right (0°)": matched = true
+				180, -180: if initial_direction_mode == "Left (180°)": matched = true
+				-90: if initial_direction_mode == "Up (-90°)": matched = true
+				-45: if initial_direction_mode == "Up-Right (-45°)": matched = true
+				-135: if initial_direction_mode == "Up-Left (-135°)": matched = true
+			if not matched:
+				initial_direction_mode = "Custom Angle"
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var initial_launch_force: float = 1200.0:
+	set(v):
+		initial_launch_force = max(0.0, v)
+		if Engine.is_editor_hint():
+			queue_redraw()
+
 @export var world_theme: String = "":
 	set(v):
 		world_theme = v
@@ -39,11 +86,33 @@ var has_hit_player: bool = false
 var has_landed: bool = false
 var _rest_timer: float = 0.0
 var _hit_cooldown: float = 0.0
+var _fall_duration: float = 0.0
 var start_pos: Vector2 = Vector2.ZERO
 var initial_rotation: float = 0.0
 
 @onready var sprite: Sprite2D = $Sprite2D if has_node("Sprite2D") else null
 @onready var col_shape: CollisionShape2D = $CollisionShape2D if has_node("CollisionShape2D") else null
+
+
+func get_initial_launch_vector() -> Vector2:
+	var angle_deg: float = initial_launch_angle
+	if initial_direction_mode != "Custom Angle":
+		match initial_direction_mode:
+			"Down (90°)": angle_deg = 90.0
+			"Down-Right (45°)": angle_deg = 45.0
+			"Down-Left (135°)": angle_deg = 135.0
+			"Right (0°)": angle_deg = 0.0
+			"Left (180°)": angle_deg = 180.0
+			"Up (-90°)": angle_deg = -90.0
+			"Up-Right (-45°)": angle_deg = -45.0
+			"Up-Left (-135°)": angle_deg = -135.0
+			_: angle_deg = initial_launch_angle
+	else:
+		angle_deg = initial_launch_angle
+
+	var dir := Vector2.RIGHT.rotated(deg_to_rad(angle_deg))
+	var spd := initial_launch_force if initial_launch_force > 0.0 else fall_speed
+	return dir * spd
 
 
 func _ready() -> void:
@@ -142,6 +211,8 @@ func _physics_process(delta: float) -> void:
 	if not is_falling:
 		return
 
+	_fall_duration += delta
+
 	# 1. Check if standing/landing on a slope or floor
 	var floor_norm := get_floor_normal()
 	var on_slope := is_on_floor() and absf(floor_norm.x) > 0.08 and floor_norm.y < -0.2
@@ -208,7 +279,7 @@ func _physics_process(delta: float) -> void:
 			if is_player:
 				if not has_hit_player:
 					_handle_player_collision(collider, col)
-					return
+					break
 			else:
 				var col_norm := col.get_normal()
 				# Check if collision surface is inclined slope or floor
@@ -272,19 +343,22 @@ func _handle_player_collision(player_node: Node2D, collision: KinematicCollision
 		_deactivate_stone()
 	else:
 		# NON-LETHAL (Normal Falling Stone):
-		# Real-life elastic impulse collision: normal force pushes player, reaction force pushes stone in exact opposite direction
+		# Player gets forcefully knocked/pushed back; stone DOES NOT stop or bounce back!
 		has_hit_player = true
-		_hit_cooldown = 0.55
+		_hit_cooldown = 0.5
 
 		var p_pos := player_node.global_position
 		var contact_normal := (p_pos - global_position).normalized()
-		if contact_normal == Vector2.ZERO or absf(contact_normal.x) < 0.12:
-			var side = 1.0 if (p_pos.x >= global_position.x) else -1.0
-			contact_normal = Vector2(side * 0.75, -0.4).normalized()
+		var travel_dir := velocity.normalized() if velocity.length_squared() > 10.0 else Vector2.DOWN
 
-		# Player is propelled along collision contact normal (away from stone)
-		var player_push_dir := contact_normal
-		var p_impulse: Vector2 = player_push_dir * knockback_force
+		# Combine stone travel direction with contact direction to push player away & in stone's path
+		var push_dir := (travel_dir * 0.65 + contact_normal * 0.5).normalized()
+		if push_dir == Vector2.ZERO or absf(push_dir.x) < 0.05:
+			var side = 1.0 if (p_pos.x >= global_position.x) else -1.0
+			push_dir = Vector2(side * 0.8, -0.3).normalized()
+
+		# Massive impulse so player is launched away cleanly
+		var p_impulse: Vector2 = push_dir * maxf(knockback_force, 1600.0)
 
 		if player_node.has_method("apply_knockback"):
 			player_node.apply_knockback(p_impulse)
@@ -292,25 +366,25 @@ func _handle_player_collision(player_node: Node2D, collision: KinematicCollision
 			player_node.set("velocity", p_impulse)
 
 		if "_input_lock" in player_node:
-			player_node.set("_input_lock", 0.35)
+			player_node.set("_input_lock", 0.4)
 
-		player_node.global_position += player_push_dir * 14.0
+		# Immediate displacement to clear collision overlap so player cannot block or stop the stone
+		player_node.global_position += push_dir * 28.0
 
-		# Newton's 3rd Law: Reaction force acts on stone in the EXACT OPPOSITE direction (-player_push_dir)
-		# Bounces stone in opposite direction with realistic impulse rebound
-		var stone_rebound_dir := -player_push_dir
-		var impact_speed: float = maxf(velocity.length(), fall_speed)
-		var rebound_speed: float = clampf(impact_speed * 0.8, 500.0, 850.0)
-		velocity = stone_rebound_dir * rebound_speed
-		rotation_speed = -signf(player_push_dir.x) * randf_range(10.0, 16.0)
+		# STONE DOES NOT STOP OR REBOUND! It maintains full momentum & trajectory
 		has_landed = false
 		_rest_timer = 0.0
 
 
 func _deactivate_stone() -> void:
 	is_falling = false
+	has_fallen = false
 	visible = false
 	velocity = Vector2.ZERO
+	if start_pos != Vector2.ZERO:
+		global_position = start_pos
+	if sprite:
+		sprite.rotation = initial_rotation
 	if col_shape:
 		col_shape.set_deferred("disabled", true)
 	set_physics_process(false)
@@ -318,20 +392,38 @@ func _deactivate_stone() -> void:
 
 ## Called by TriggerArea when player touches the trigger zone
 func trigger() -> void:
-	if is_falling or has_fallen:
+	# Prevent rapid re-triggering within 0.25 seconds of the same launch
+	if is_falling and _fall_duration < 0.25:
 		return
 
+	# Reset stone back to start position so the exact same stone drops again
+	if start_pos != Vector2.ZERO:
+		global_position = start_pos
+	elif is_inside_tree():
+		start_pos = global_position
+
+	if sprite:
+		sprite.rotation = initial_rotation
+
 	is_falling = true
-	has_fallen = true
+	has_fallen = false
 	has_hit_player = false
 	has_landed = false
 	_rest_timer = 0.0
 	_hit_cooldown = 0.0
+	_fall_duration = 0.0
+
 	visible = true
 	if col_shape:
 		col_shape.set_deferred("disabled", false)
 	set_physics_process(true)
-	velocity = Vector2(0.0, fall_speed)
+
+	# Launch stone in configured initial direction and force
+	velocity = get_initial_launch_vector()
+	if absf(velocity.x) > 10.0:
+		rotation_speed = (velocity.x / 40.0)
+	else:
+		rotation_speed = 6.0
 
 
 ## Reset stone state when player dies/respawns or level restarts
@@ -403,8 +495,20 @@ func _draw() -> void:
 
 	var line_len = min(fall_distance, 350.0)
 	var col = Color(1.0, 0.3, 0.3, 0.8) if is_lethal else Color(1.0, 0.75, 0.2, 0.8)
-	draw_line(Vector2.ZERO, Vector2(0, line_len), col, 2.0)
-	draw_circle(Vector2(0, line_len), 4.0, col)
+	draw_line(Vector2.ZERO, Vector2(0, line_len), Color(col.r, col.g, col.b, 0.3), 1.5)
+	draw_circle(Vector2(0, line_len), 3.0, Color(col.r, col.g, col.b, 0.3))
+
+	# Draw Initial Launch Direction Arrow
+	var launch_vec := get_initial_launch_vector()
+	if launch_vec != Vector2.ZERO:
+		var arrow_dir := launch_vec.normalized()
+		var arrow_len := minf(launch_vec.length() * 0.1, 100.0)
+		var arrow_end := arrow_dir * maxf(arrow_len, 40.0)
+		draw_line(Vector2.ZERO, arrow_end, col, 3.0)
+		var side1 := arrow_end - arrow_dir.rotated(deg_to_rad(30.0)) * 12.0
+		var side2 := arrow_end - arrow_dir.rotated(deg_to_rad(-30.0)) * 12.0
+		draw_line(arrow_end, side1, col, 3.0)
+		draw_line(arrow_end, side2, col, 3.0)
 
 	var font = ThemeDB.fallback_font
 	if font:

@@ -43,10 +43,13 @@ properties = {
 [sub_resource type="Resource" id="Resource_2b4km"]
 script = ExtResource("1_5w1ya")
 object_id = "falling_stone"
-position = Vector2(1326, 181)
+position = Vector2(1335, -109)
 scale = Vector2(3.5, 3.5)
 properties = {
 "fall_speed": 2400.0,
+"initial_direction_mode": "Down-Left (135°)",
+"initial_launch_angle": 125.0,
+"initial_launch_force": 1200.0,
 "is_lethal": false,
 "knockback_force": 600.0,
 "rotation_speed": 1.0,
@@ -114,10 +117,13 @@ properties = {
 [sub_resource type="Resource" id="Resource_2x2dl"]
 script = ExtResource("1_5w1ya")
 object_id = "falling_stone"
-position = Vector2(710, -753)
+position = Vector2(657, -841)
 scale = Vector2(3.5, 3.5)
 properties = {
 "fall_speed": 2000.0,
+"initial_direction_mode": "Down-Right (45°)",
+"initial_launch_angle": 55.0,
+"initial_launch_force": 1200.0,
 "is_lethal": false,
 "knockback_force": 600.0,
 "rotation_speed": 1.0,

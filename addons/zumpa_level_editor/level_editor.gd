@@ -140,6 +140,12 @@ var prop_rod_has_collision_row: HBoxContainer
 var rod_has_collision_check: CheckBox
 var prop_start_delay_row: HBoxContainer
 var start_delay_spin: SpinBox
+var prop_stone_dir_row: HBoxContainer
+var stone_dir_opt: OptionButton
+var prop_stone_angle_row: HBoxContainer
+var stone_angle_spin: SpinBox
+var prop_stone_force_row: HBoxContainer
+var stone_force_spin: SpinBox
 var _is_updating_inspector: bool = false
 
 
@@ -499,6 +505,65 @@ func setup_dynamic_inspector_fields() -> void:
 	prop_start_delay_row.add_child(start_delay_spin)
 	parent_vbox.add_child(prop_start_delay_row)
 	parent_vbox.move_child(prop_start_delay_row, target_index)
+	target_index += 1
+
+	# Stone Launch Direction Row
+	prop_stone_dir_row = HBoxContainer.new()
+	prop_stone_dir_row.visible = false
+	var lbl_st_d = Label.new()
+	lbl_st_d.text = "Launch Dir:"
+	lbl_st_d.custom_minimum_size = Vector2(100, 0)
+	stone_dir_opt = OptionButton.new()
+	stone_dir_opt.add_item("Down (90°)", 0)
+	stone_dir_opt.add_item("Down-Right (45°)", 1)
+	stone_dir_opt.add_item("Down-Left (135°)", 2)
+	stone_dir_opt.add_item("Right (0°)", 3)
+	stone_dir_opt.add_item("Left (180°)", 4)
+	stone_dir_opt.add_item("Up (-90°)", 5)
+	stone_dir_opt.add_item("Up-Right (-45°)", 6)
+	stone_dir_opt.add_item("Up-Left (-135°)", 7)
+	stone_dir_opt.add_item("Custom Angle", 8)
+	stone_dir_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	prop_stone_dir_row.add_child(lbl_st_d)
+	prop_stone_dir_row.add_child(stone_dir_opt)
+	parent_vbox.add_child(prop_stone_dir_row)
+	parent_vbox.move_child(prop_stone_dir_row, target_index)
+	target_index += 1
+
+	# Stone Launch Angle Row
+	prop_stone_angle_row = HBoxContainer.new()
+	prop_stone_angle_row.visible = false
+	var lbl_st_a = Label.new()
+	lbl_st_a.text = "Launch Angle:"
+	lbl_st_a.custom_minimum_size = Vector2(100, 0)
+	stone_angle_spin = SpinBox.new()
+	stone_angle_spin.min_value = -180.0
+	stone_angle_spin.max_value = 180.0
+	stone_angle_spin.step = 1.0
+	stone_angle_spin.suffix = "°"
+	stone_angle_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	prop_stone_angle_row.add_child(lbl_st_a)
+	prop_stone_angle_row.add_child(stone_angle_spin)
+	parent_vbox.add_child(prop_stone_angle_row)
+	parent_vbox.move_child(prop_stone_angle_row, target_index)
+	target_index += 1
+
+	# Stone Initial Force Row
+	prop_stone_force_row = HBoxContainer.new()
+	prop_stone_force_row.visible = false
+	var lbl_st_f = Label.new()
+	lbl_st_f.text = "Initial Force:"
+	lbl_st_f.custom_minimum_size = Vector2(100, 0)
+	stone_force_spin = SpinBox.new()
+	stone_force_spin.min_value = 0.0
+	stone_force_spin.max_value = 5000.0
+	stone_force_spin.step = 50.0
+	stone_force_spin.suffix = "px/s"
+	stone_force_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	prop_stone_force_row.add_child(lbl_st_f)
+	prop_stone_force_row.add_child(stone_force_spin)
+	parent_vbox.add_child(prop_stone_force_row)
+	parent_vbox.move_child(prop_stone_force_row, target_index)
 	target_index += 1
 
 func setup_grid_options() -> void:
@@ -899,6 +964,22 @@ func connect_signals() -> void:
 	if corner_delay_spin: corner_delay_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	trigger_tag_edit.text_changed.connect(func(_t): apply_inspector_changes())
 	fall_speed_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if stone_dir_opt:
+		stone_dir_opt.item_selected.connect(func(idx):
+			if not _is_updating_inspector:
+				var angles = [90.0, 45.0, 135.0, 0.0, 180.0, -90.0, -45.0, -135.0]
+				if idx >= 0 and idx < angles.size() and stone_angle_spin:
+					stone_angle_spin.value = angles[idx]
+				apply_inspector_changes()
+		)
+	if stone_angle_spin:
+		stone_angle_spin.value_changed.connect(func(_v):
+			if not _is_updating_inspector:
+				if stone_dir_opt and stone_dir_opt.selected != 8:
+					stone_dir_opt.select(8)
+				apply_inspector_changes()
+		)
+	if stone_force_spin: stone_force_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	area_width_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	area_height_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	trigger_dist_spin.value_changed.connect(func(_v): apply_inspector_changes())
@@ -1613,11 +1694,33 @@ func update_inspector_values(obj) -> void:
 	else:
 		prop_trigger_tag_row.visible = false
 
-	if obj.properties.has("fall_speed"):
+	if obj.properties.has("fall_speed") or obj.object_id in ["falling_stone", "falling_stone_spike"]:
 		prop_fall_speed_row.visible = true
-		fall_speed_spin.value = float(obj.properties["fall_speed"])
+		fall_speed_spin.value = float(obj.properties.get("fall_speed", 1200.0))
+		if prop_stone_dir_row:
+			prop_stone_dir_row.visible = true
+			var mode_str = str(obj.properties.get("initial_direction_mode", "Down (90°)"))
+			match mode_str:
+				"Down-Right (45°)": stone_dir_opt.select(1)
+				"Down-Left (135°)": stone_dir_opt.select(2)
+				"Right (0°)": stone_dir_opt.select(3)
+				"Left (180°)": stone_dir_opt.select(4)
+				"Up (-90°)": stone_dir_opt.select(5)
+				"Up-Right (-45°)": stone_dir_opt.select(6)
+				"Up-Left (-135°)": stone_dir_opt.select(7)
+				"Custom Angle": stone_dir_opt.select(8)
+				"Down (90°)", _: stone_dir_opt.select(0)
+		if prop_stone_angle_row:
+			prop_stone_angle_row.visible = true
+			stone_angle_spin.value = float(obj.properties.get("initial_launch_angle", 90.0))
+		if prop_stone_force_row:
+			prop_stone_force_row.visible = true
+			stone_force_spin.value = float(obj.properties.get("initial_launch_force", 1200.0))
 	else:
 		prop_fall_speed_row.visible = false
+		if prop_stone_dir_row: prop_stone_dir_row.visible = false
+		if prop_stone_angle_row: prop_stone_angle_row.visible = false
+		if prop_stone_force_row: prop_stone_force_row.visible = false
 
 	if obj.properties.has("area_width"):
 		prop_area_width_row.visible = true
@@ -1797,6 +1900,13 @@ func apply_inspector_changes() -> void:
 		obj.properties["trigger_tag"] = trigger_tag_edit.text
 	if prop_fall_speed_row.visible:
 		obj.properties["fall_speed"] = fall_speed_spin.value
+		if prop_stone_dir_row and prop_stone_dir_row.visible:
+			var modes = ["Down (90°)", "Down-Right (45°)", "Down-Left (135°)", "Right (0°)", "Left (180°)", "Up (-90°)", "Up-Right (-45°)", "Up-Left (-135°)", "Custom Angle"]
+			obj.properties["initial_direction_mode"] = modes[stone_dir_opt.selected] if stone_dir_opt.selected < modes.size() else "Down (90°)"
+		if prop_stone_angle_row and prop_stone_angle_row.visible:
+			obj.properties["initial_launch_angle"] = stone_angle_spin.value
+		if prop_stone_force_row and prop_stone_force_row.visible:
+			obj.properties["initial_launch_force"] = stone_force_spin.value
 	if prop_area_width_row.visible:
 		obj.properties["area_width"] = area_width_spin.value
 	if prop_area_height_row.visible:
