@@ -143,7 +143,7 @@ static var _registry: Dictionary = {
 		"name": "Falling Stone",
 		"scene_path": "res://game/scenes/Obstacles/FallingStone.tscn",
 		"category": "Obstacles",
-		"default_properties": {"is_lethal": false, "trigger_tag": "trap_1", "fall_speed": 1200.0, "rotation_speed": 6.0, "knockback_force": 1400.0, "initial_direction_mode": "Down (90°)", "initial_launch_angle": 90.0, "initial_launch_force": 1200.0},
+		"default_properties": {"is_lethal": false, "trigger_tag": "trap_1", "fall_speed": 1200.0, "rotation_speed": 6.0, "knockback_force": 650.0, "initial_launch_angle": 90.0, "initial_launch_force": 1200.0},
 		"default_scale": Vector2(1, 1)
 	},
 	"falling_stone_spike": {
@@ -151,7 +151,7 @@ static var _registry: Dictionary = {
 		"name": "Falling Stone Spike",
 		"scene_path": "res://game/scenes/Obstacles/FallingStone.tscn",
 		"category": "Obstacles",
-		"default_properties": {"is_lethal": true, "trigger_tag": "trap_1", "fall_speed": 1200.0, "rotation_speed": 6.0, "initial_direction_mode": "Down (90°)", "initial_launch_angle": 90.0, "initial_launch_force": 1200.0},
+		"default_properties": {"is_lethal": true, "trigger_tag": "trap_1", "fall_speed": 1200.0, "rotation_speed": 6.0, "initial_launch_angle": 90.0, "initial_launch_force": 1200.0},
 		"default_scale": Vector2(1, 1)
 	},
 	"trigger_area": {

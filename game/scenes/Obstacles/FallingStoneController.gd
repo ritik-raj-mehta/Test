@@ -27,45 +27,12 @@ class_name FallingStoneController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
-@export var knockback_force: float = 1400.0
+@export var knockback_force: float = 650.0
 
 @export_group("Initial Launch")
-var _is_setting_preset: bool = false
-
-@export_enum("Down (90°)", "Down-Right (45°)", "Down-Left (135°)", "Right (0°)", "Left (180°)", "Up (-90°)", "Up-Right (-45°)", "Up-Left (-135°)", "Custom Angle") var initial_direction_mode: String = "Down (90°)":
-	set(v):
-		initial_direction_mode = v
-		_is_setting_preset = true
-		match v:
-			"Down (90°)": initial_launch_angle = 90.0
-			"Down-Right (45°)": initial_launch_angle = 45.0
-			"Down-Left (135°)": initial_launch_angle = 135.0
-			"Right (0°)": initial_launch_angle = 0.0
-			"Left (180°)": initial_launch_angle = 180.0
-			"Up (-90°)": initial_launch_angle = -90.0
-			"Up-Right (-45°)": initial_launch_angle = -45.0
-			"Up-Left (-135°)": initial_launch_angle = -135.0
-		_is_setting_preset = false
-		if Engine.is_editor_hint():
-			queue_redraw()
-
 @export_range(-180.0, 180.0, 1.0) var initial_launch_angle: float = 90.0:
 	set(v):
 		initial_launch_angle = v
-		if not _is_setting_preset:
-			# If user directly modifies angle, verify if it matches a preset or set to Custom Angle
-			var matched := false
-			match int(round(v)):
-				90: if initial_direction_mode == "Down (90°)": matched = true
-				45: if initial_direction_mode == "Down-Right (45°)": matched = true
-				135: if initial_direction_mode == "Down-Left (135°)": matched = true
-				0: if initial_direction_mode == "Right (0°)": matched = true
-				180, -180: if initial_direction_mode == "Left (180°)": matched = true
-				-90: if initial_direction_mode == "Up (-90°)": matched = true
-				-45: if initial_direction_mode == "Up-Right (-45°)": matched = true
-				-135: if initial_direction_mode == "Up-Left (-135°)": matched = true
-			if not matched:
-				initial_direction_mode = "Custom Angle"
 		if Engine.is_editor_hint():
 			queue_redraw()
 
@@ -95,22 +62,7 @@ var initial_rotation: float = 0.0
 
 
 func get_initial_launch_vector() -> Vector2:
-	var angle_deg: float = initial_launch_angle
-	if initial_direction_mode != "Custom Angle":
-		match initial_direction_mode:
-			"Down (90°)": angle_deg = 90.0
-			"Down-Right (45°)": angle_deg = 45.0
-			"Down-Left (135°)": angle_deg = 135.0
-			"Right (0°)": angle_deg = 0.0
-			"Left (180°)": angle_deg = 180.0
-			"Up (-90°)": angle_deg = -90.0
-			"Up-Right (-45°)": angle_deg = -45.0
-			"Up-Left (-135°)": angle_deg = -135.0
-			_: angle_deg = initial_launch_angle
-	else:
-		angle_deg = initial_launch_angle
-
-	var dir := Vector2.RIGHT.rotated(deg_to_rad(angle_deg))
+	var dir := Vector2.RIGHT.rotated(deg_to_rad(initial_launch_angle))
 	var spd := initial_launch_force if initial_launch_force > 0.0 else fall_speed
 	return dir * spd
 
@@ -140,18 +92,12 @@ func _on_ready() -> void:
 
 	_update_type_and_visuals()
 
-	# In gameplay, hide stone until player triggers the trigger area
-	if not is_in_editor():
-		visible = false
-		is_falling = false
-		if col_shape:
-			col_shape.disabled = true
-		set_physics_process(false)
-	else:
-		visible = true
-		if col_shape:
-			col_shape.disabled = false
-		set_physics_process(false)
+	# In gameplay and editor, keep stone visible and real
+	visible = true
+	is_falling = false
+	if col_shape:
+		col_shape.disabled = false
+	set_physics_process(false)
 
 
 func update_components() -> void:
@@ -312,16 +258,20 @@ func _physics_process(delta: float) -> void:
 
 	# Check if stone has landed on flat ground or stopped moving
 	if (has_landed or (is_on_floor() and not on_slope)) and velocity.length_squared() < 250.0:
-		_rest_timer += delta
-		if _rest_timer >= 2.0:
-			_deactivate_stone()
-			return
-	else:
-		_rest_timer = 0.0
+		velocity.y = 0.0
+		if absf(velocity.x) > 0.0:
+			velocity.x = move_toward(velocity.x, 0.0, 750.0 * delta)
+		rotation_speed = move_toward(rotation_speed, 0.0, 10.0 * delta)
+		if velocity.length_squared() < 10.0:
+			is_falling = false
+			velocity = Vector2.ZERO
+			has_landed = true
 
 	# Stop falling when reaching maximum fall distance
 	if start_pos != Vector2.ZERO and global_position.y > start_pos.y + fall_distance:
-		_deactivate_stone()
+		is_falling = false
+		velocity = Vector2.ZERO
+		has_landed = true
 
 
 func _handle_player_collision(player_node: Node2D, collision: KinematicCollision2D = null) -> void:
@@ -329,7 +279,7 @@ func _handle_player_collision(player_node: Node2D, collision: KinematicCollision
 		return
 
 	if is_lethal:
-		# LETHAL (Spike Stone): Kills player on contact, then destroys/hides spike stone
+		# LETHAL (Spike Stone): Kills player on contact, stays visible
 		has_hit_player = true
 		is_falling = false
 		velocity = Vector2.ZERO
@@ -338,9 +288,6 @@ func _handle_player_collision(player_node: Node2D, collision: KinematicCollision
 			player_node.die()
 		elif player_node.has_method("game_over"):
 			player_node.game_over()
-
-		# Destroy/hide spike stone immediately upon player kill
-		_deactivate_stone()
 	else:
 		# NON-LETHAL (Normal Falling Stone):
 		# Player gets forcefully knocked/pushed back; stone DOES NOT stop or bounce back!
@@ -351,14 +298,15 @@ func _handle_player_collision(player_node: Node2D, collision: KinematicCollision
 		var contact_normal := (p_pos - global_position).normalized()
 		var travel_dir := velocity.normalized() if velocity.length_squared() > 10.0 else Vector2.DOWN
 
-		# Combine stone travel direction with contact direction to push player away & in stone's path
-		var push_dir := (travel_dir * 0.65 + contact_normal * 0.5).normalized()
-		if push_dir == Vector2.ZERO or absf(push_dir.x) < 0.05:
+		# Push player in opposite direction (away from stone) with reduced, optimized force
+		var push_dir := (p_pos - global_position).normalized()
+		if push_dir == Vector2.ZERO or absf(push_dir.x) < 0.08:
 			var side = 1.0 if (p_pos.x >= global_position.x) else -1.0
-			push_dir = Vector2(side * 0.8, -0.3).normalized()
+			push_dir = Vector2(side * 0.85, -0.35).normalized()
 
-		# Massive impulse so player is launched away cleanly
-		var p_impulse: Vector2 = push_dir * maxf(knockback_force, 1600.0)
+		# Reduced, clean knockback force
+		var impulse_strength: float = clampf(knockback_force, 300.0, 750.0)
+		var p_impulse: Vector2 = push_dir * impulse_strength
 
 		if player_node.has_method("apply_knockback"):
 			player_node.apply_knockback(p_impulse)
@@ -366,28 +314,14 @@ func _handle_player_collision(player_node: Node2D, collision: KinematicCollision
 			player_node.set("velocity", p_impulse)
 
 		if "_input_lock" in player_node:
-			player_node.set("_input_lock", 0.4)
+			player_node.set("_input_lock", 0.2)
 
-		# Immediate displacement to clear collision overlap so player cannot block or stop the stone
-		player_node.global_position += push_dir * 28.0
+		# Gentle displacement to clear overlap cleanly
+		player_node.global_position += push_dir * 12.0
 
 		# STONE DOES NOT STOP OR REBOUND! It maintains full momentum & trajectory
 		has_landed = false
 		_rest_timer = 0.0
-
-
-func _deactivate_stone() -> void:
-	is_falling = false
-	has_fallen = false
-	visible = false
-	velocity = Vector2.ZERO
-	if start_pos != Vector2.ZERO:
-		global_position = start_pos
-	if sprite:
-		sprite.rotation = initial_rotation
-	if col_shape:
-		col_shape.set_deferred("disabled", true)
-	set_physics_process(false)
 
 
 ## Called by TriggerArea when player touches the trigger zone
@@ -396,7 +330,7 @@ func trigger() -> void:
 	if is_falling and _fall_duration < 0.25:
 		return
 
-	# Reset stone back to start position so the exact same stone drops again
+	# Stone launches from start position again
 	if start_pos != Vector2.ZERO:
 		global_position = start_pos
 	elif is_inside_tree():
@@ -405,6 +339,7 @@ func trigger() -> void:
 	if sprite:
 		sprite.rotation = initial_rotation
 
+	visible = true
 	is_falling = true
 	has_fallen = false
 	has_hit_player = false
@@ -413,7 +348,6 @@ func trigger() -> void:
 	_hit_cooldown = 0.0
 	_fall_duration = 0.0
 
-	visible = true
 	if col_shape:
 		col_shape.set_deferred("disabled", false)
 	set_physics_process(true)
@@ -440,17 +374,10 @@ func reset() -> void:
 	if sprite:
 		sprite.rotation = initial_rotation
 
-	# In gameplay, hide until triggered again
-	if not is_in_editor():
-		visible = false
-		if col_shape:
-			col_shape.disabled = true
-		set_physics_process(false)
-	else:
-		visible = true
-		if col_shape:
-			col_shape.disabled = false
-		set_physics_process(false)
+	visible = true
+	if col_shape:
+		col_shape.disabled = false
+	set_physics_process(false)
 
 
 func apply_theme(theme_id: String) -> void:
