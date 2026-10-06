@@ -36,7 +36,10 @@ object_id = "gear_r"
 position = Vector2(1000, 512)
 scale = Vector2(4.5, 4.5)
 properties = {
-"rotation_speed": 10.0
+"has_rod": false,
+"rod_has_collision": false,
+"rotation_speed": 5.0,
+"start_delay": 0.0
 }
 
 [sub_resource type="Resource" id="Resource_mdumm"]
@@ -231,6 +234,7 @@ rotation = 180.0
 scale = Vector2(2, 2)
 properties = {
 "breadth": 10.0,
+"direction_change_delay": 0.0,
 "enable_interval_movement": false,
 "gear_count": 3,
 "gear_spacing": 150.0,
@@ -247,7 +251,8 @@ properties = {
 "move_speed": 200.0,
 "rod_breadth": 10.0,
 "rod_has_collision": false,
-"rotation_speed": 8.0,
+"rotation_speed": 6.0,
+"start_delay": 0.0,
 "width": 10.0
 }
 
@@ -258,6 +263,7 @@ position = Vector2(264, -864)
 scale = Vector2(2, 2)
 properties = {
 "breadth": 10.0,
+"direction_change_delay": 0.0,
 "enable_interval_movement": false,
 "gear_count": 3,
 "gear_spacing": 150.0,
@@ -274,7 +280,8 @@ properties = {
 "move_speed": 200.0,
 "rod_breadth": 10.0,
 "rod_has_collision": false,
-"rotation_speed": 8.0,
+"rotation_speed": 6.0,
+"start_delay": 0.0,
 "width": 10.0
 }
 
@@ -286,6 +293,7 @@ rotation = 180.0
 scale = Vector2(2, 2)
 properties = {
 "breadth": 10.0,
+"direction_change_delay": 0.0,
 "enable_interval_movement": false,
 "gear_count": 3,
 "gear_spacing": 150.0,
@@ -302,7 +310,8 @@ properties = {
 "move_speed": 200.0,
 "rod_breadth": 10.0,
 "rod_has_collision": false,
-"rotation_speed": 8.0,
+"rotation_speed": 6.0,
+"start_delay": 0.0,
 "width": 10.0
 }
 

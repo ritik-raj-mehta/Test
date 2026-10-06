@@ -52,6 +52,20 @@ func grant(id: String) -> bool:
 	_save.save_game()
 	return true
 
+func unlock(id: String) -> bool:
+	if _save == null:
+		push_error("PlayerSkins: SaveManager is null.")
+		return false
+	if not SkinCatalog.has_skin(id):
+		push_error(
+			"PlayerSkins: Invalid character ID = " + id
+		)
+		return false
+	# Already unlocked/owned.
+	if is_owned(id):
+		return true
+	return grant(id)
+
 func get_next_locked_skin() -> String:
 	for s in SkinCatalog.SKINS:
 		if not is_owned(s["id"]):
@@ -59,7 +73,10 @@ func get_next_locked_skin() -> String:
 	return ""
 
 static func resolve_equipped(save: SaveManager, progress: PlayerProgress) -> String:
-	var id: String = PlayerSkins.new(save).equipped_id()
-	if progress and not progress.is_character_unlocked(id):
-		return SkinCatalog.DEFAULT_ID
-	return id
+	var skins := PlayerSkins.new(save)
+	var id: String = skins.equipped_id()
+	if skins.is_owned(id):
+		return id
+	if progress and progress.is_character_unlocked(id):
+		return id
+	return SkinCatalog.DEFAULT_ID

@@ -1,0 +1,145 @@
+[gd_scene format=3 uid="uid://bocg5a51t316l"]
+
+[ext_resource type="Script" uid="uid://chd1ewy5psg2l" path="res://game/scenes/ui/hfw/QuitPopup.gd" id="1_a4v14"]
+[ext_resource type="Texture2D" uid="uid://dfge57xjxnq56" path="res://game/assets/sprites/single/ui/Popup/social_popup.png" id="2_mrin3"]
+[ext_resource type="Texture2D" uid="uid://b8whabbodx8su" path="res://game/assets/sprites/single/ui/Button/No_Btn.png" id="3_a4v14"]
+[ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_axs0x"]
+[ext_resource type="Texture2D" uid="uid://qdvch2l8mqdx" path="res://game/assets/sprites/single/ui/Button/Yes_btn.png" id="4_uyuk0"]
+[ext_resource type="Texture2D" uid="uid://dqaa6yow5xem8" path="res://game/assets/sprites/single/ui/Reff/Policy_reff.png" id="10_moli7"]
+
+[node name="QuitPopup" type="Control" unique_id=1513163033 node_paths=PackedStringArray("yes_button", "no_button", "background", "_window")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_a4v14")
+yes_button = NodePath("Holder/Window/TextureRect/HBoxContainer/YesButton")
+no_button = NodePath("Holder/Window/TextureRect/HBoxContainer/NoButton")
+background = NodePath("Backdrop")
+_window = NodePath("Holder/Window")
+
+[node name="Backdrop" type="TextureRect" parent="." unique_id=1437335107]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Holder" type="Control" parent="." unique_id=1570605328]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Window" type="MarginContainer" parent="Holder" unique_id=295000572]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 200
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 200
+
+[node name="TextureRect" type="TextureRect" parent="Holder/Window" unique_id=708517249]
+custom_minimum_size = Vector2(780, 700)
+custom_maximum_size = Vector2(800, 800)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_mrin3")
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="Holder/Window/TextureRect" unique_id=1475051613]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -243.0
+offset_top = 23.0
+offset_right = 243.0
+offset_bottom = 144.0
+grow_horizontal = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(-0.82, 1.61)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/shadow_offset_x = -1
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_outline_size = 8
+theme_override_fonts/font = ExtResource("3_axs0x")
+theme_override_font_sizes/font_size = 81
+text = "Leaving"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Holder/Window/TextureRect" unique_id=2049035041]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -317.0
+offset_top = 81.0
+offset_right = 319.0
+offset_bottom = 210.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 35
+
+[node name="NoButton" type="TextureButton" parent="Holder/Window/TextureRect/HBoxContainer" unique_id=126781256]
+layout_mode = 2
+texture_normal = ExtResource("3_a4v14")
+texture_pressed = ExtResource("3_a4v14")
+
+[node name="YesButton" type="TextureButton" parent="Holder/Window/TextureRect/HBoxContainer" unique_id=29329468]
+layout_mode = 2
+texture_normal = ExtResource("4_uyuk0")
+texture_pressed = ExtResource("4_uyuk0")
+
+[node name="Label" type="Label" parent="Holder/Window/TextureRect" unique_id=1111183798]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -211.0
+offset_top = -120.0
+offset_right = 211.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_axs0x")
+theme_override_font_sizes/font_size = 55
+text = "Do you rellay want
+to quit?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=999334523]
+visible = false
+self_modulate = Color(1, 1, 1, 0.4627451)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("10_moli7")
+expand_mode = 1

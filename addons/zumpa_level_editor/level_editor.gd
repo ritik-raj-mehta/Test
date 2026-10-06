@@ -116,6 +116,13 @@ var booster_tier_opt: OptionButton
 var prop_booster_force_row: HBoxContainer
 var booster_custom_force_spin: SpinBox
 
+# Wall Obstacle Inspector Additions
+var prop_wall_type_row: HBoxContainer
+var wall_type_opt: OptionButton
+var prop_wall_flips_row: HBoxContainer
+var wall_flip_h_check: CheckBox
+var wall_flip_v_check: CheckBox
+
 # ZigZag Track Inspector Additions
 var prop_zigzag_box: VBoxContainer
 var is_zigzag_check: CheckBox
@@ -296,6 +303,11 @@ func setup_dynamic_inspector_fields() -> void:
 	booster_tier_opt.add_item("Tier 3 - High (1300)", 3)
 	booster_tier_opt.add_item("Tier 4 - Super (1700)", 4)
 	booster_tier_opt.add_item("Tier 5 - Mega (2200)", 5)
+	booster_tier_opt.add_item("Tier 6 - Ultra (2800)", 6)
+	booster_tier_opt.add_item("Tier 7 - Hyper (3500)", 7)
+	booster_tier_opt.add_item("Tier 8 - Extreme (4300)", 8)
+	booster_tier_opt.add_item("Tier 9 - Colossal (5200)", 9)
+	booster_tier_opt.add_item("Tier 10 - Huge (6200)", 10)
 	booster_tier_opt.select(1)
 	prop_booster_tier_row.add_child(lbl_bt)
 	prop_booster_tier_row.add_child(booster_tier_opt)
@@ -318,6 +330,40 @@ func setup_dynamic_inspector_fields() -> void:
 	prop_booster_force_row.add_child(booster_custom_force_spin)
 	parent_vbox.add_child(prop_booster_force_row)
 	parent_vbox.move_child(prop_booster_force_row, target_index)
+	target_index += 1
+
+	# Wall Preset Selection Row
+	prop_wall_type_row = HBoxContainer.new()
+	prop_wall_type_row.visible = false
+	var lbl_wt = Label.new()
+	lbl_wt.text = "Wall Preset"
+	lbl_wt.custom_minimum_size = Vector2(100, 0)
+	wall_type_opt = OptionButton.new()
+	wall_type_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	wall_type_opt.add_item("Right Angled Triangle", 0)
+	wall_type_opt.add_item("Company Logo", 1)
+	wall_type_opt.select(0)
+	prop_wall_type_row.add_child(lbl_wt)
+	prop_wall_type_row.add_child(wall_type_opt)
+	parent_vbox.add_child(prop_wall_type_row)
+	parent_vbox.move_child(prop_wall_type_row, target_index)
+	target_index += 1
+
+	# Wall Flips Row
+	prop_wall_flips_row = HBoxContainer.new()
+	prop_wall_flips_row.visible = false
+	var lbl_wf = Label.new()
+	lbl_wf.text = "Flip Wall"
+	lbl_wf.custom_minimum_size = Vector2(100, 0)
+	wall_flip_h_check = CheckBox.new()
+	wall_flip_h_check.text = "Flip H"
+	wall_flip_v_check = CheckBox.new()
+	wall_flip_v_check.text = "Flip V"
+	prop_wall_flips_row.add_child(lbl_wf)
+	prop_wall_flips_row.add_child(wall_flip_h_check)
+	prop_wall_flips_row.add_child(wall_flip_v_check)
+	parent_vbox.add_child(prop_wall_flips_row)
+	parent_vbox.move_child(prop_wall_flips_row, target_index)
 	target_index += 1
 
 	# ZigZag Track Inspector Box
@@ -870,6 +916,10 @@ func connect_signals() -> void:
 	if booster_tier_opt: booster_tier_opt.item_selected.connect(func(_idx): apply_inspector_changes())
 	if booster_custom_force_spin: booster_custom_force_spin.value_changed.connect(func(_v): apply_inspector_changes())
 
+	if wall_type_opt: wall_type_opt.item_selected.connect(func(_idx): apply_inspector_changes())
+	if wall_flip_h_check: wall_flip_h_check.toggled.connect(func(_t): apply_inspector_changes())
+	if wall_flip_v_check: wall_flip_v_check.toggled.connect(func(_t): apply_inspector_changes())
+
 	if is_zigzag_check: is_zigzag_check.toggled.connect(func(_t): apply_inspector_changes())
 	if zigzag_width_spin: zigzag_width_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if zigzag_height_spin: zigzag_height_spin.value_changed.connect(func(_v): apply_inspector_changes())
@@ -1306,6 +1356,8 @@ func on_object_selected(obj) -> void:
 		if prop_zone_margins_row: prop_zone_margins_row.visible = false
 		if prop_booster_tier_row: prop_booster_tier_row.visible = false
 		if prop_booster_force_row: prop_booster_force_row.visible = false
+		if prop_wall_type_row: prop_wall_type_row.visible = false
+		if prop_wall_flips_row: prop_wall_flips_row.visible = false
 		apply_btn.disabled = true
 		delete_btn.disabled = true
 		duplicate_btn.disabled = true
@@ -1619,6 +1671,21 @@ func update_inspector_values(obj) -> void:
 			prop_booster_tier_row.visible = false
 			prop_booster_force_row.visible = false
 
+	if prop_wall_type_row and prop_wall_flips_row:
+		if obj.object_id == "wall" or obj.properties.has("wall_type"):
+			prop_wall_type_row.visible = true
+			prop_wall_flips_row.visible = true
+			var wt = int(obj.properties.get("wall_type", 0))
+			for i in range(wall_type_opt.item_count):
+				if wall_type_opt.get_item_id(i) == wt:
+					wall_type_opt.select(i)
+					break
+			wall_flip_h_check.button_pressed = bool(obj.properties.get("flip_h", false))
+			wall_flip_v_check.button_pressed = bool(obj.properties.get("flip_v", false))
+		else:
+			prop_wall_type_row.visible = false
+			prop_wall_flips_row.visible = false
+
 	if prop_zigzag_box:
 		if obj.object_id == "gear_zigzag" or obj.properties.has("is_zigzag") or obj.properties.has("zigzag_width"):
 			prop_zigzag_box.visible = true
@@ -1753,6 +1820,12 @@ func apply_inspector_changes() -> void:
 		obj.properties["force_tier"] = booster_tier_opt.get_selected_id()
 	if prop_booster_force_row and prop_booster_force_row.visible:
 		obj.properties["custom_force"] = booster_custom_force_spin.value
+
+	if prop_wall_type_row and prop_wall_type_row.visible:
+		obj.properties["wall_type"] = wall_type_opt.get_selected_id()
+	if prop_wall_flips_row and prop_wall_flips_row.visible:
+		obj.properties["flip_h"] = wall_flip_h_check.button_pressed
+		obj.properties["flip_v"] = wall_flip_v_check.button_pressed
 
 	if prop_zigzag_box and prop_zigzag_box.visible:
 		obj.properties["is_zigzag"] = is_zigzag_check.button_pressed

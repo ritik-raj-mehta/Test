@@ -16,7 +16,9 @@ var _scene:   SceneManager
 var _haptics: HapticsManager
 var _logger:  Node
 var _bus:     Node
+var _game:    GameManager
 var _closing: bool = false
+var uses_backdrop: bool = false
 
 ## Registry adapter (called by SceneManager for scenes and UIManager for popups).
 func inject_services(registry: Node) -> void:
@@ -27,16 +29,20 @@ func inject_services(registry: Node) -> void:
 		registry.get_service(&"scene") as SceneManager,
 		registry.get_service(&"haptics") as HapticsManager,
 		registry.get_service(&"logger") as Node,
-		registry.get_service(&"bus") as Node
+		registry.get_service(&"bus") as Node,
+		registry.get_service(&"game") as GameManager,
+		registry.get_service(&"audio") as AudioManager
 	)
 	super.inject_services(registry)  # ui/audio/game → triggers _on_ready()
 
-func inject_extras(save: SaveManager, scene: SceneManager, haptics: HapticsManager, logger: Node, bus: Node) -> void:
+func inject_extras(save: SaveManager, scene: SceneManager, haptics: HapticsManager, logger: Node, bus: Node, game: GameManager, audio: AudioManager) -> void:
 	_save = save
 	_scene = scene
 	_haptics = haptics
 	_logger = logger
 	_bus = bus
+	_game = game
+	_audio = audio
 
 # ── Helpers for subclasses ────────────────────────────────────────────────
 
@@ -112,3 +118,25 @@ func close() -> void:
 	await UIAnim.pop_out(self)
 	if is_inside_tree() and _ui_manager:
 		_ui_manager.pop_screen(self)
+		_game.resume()  
+
+# ── Sound / music switches (shared by SettingsPopup and the pause menu) ───
+
+func _is_sfx_on() -> bool:
+	return _save == null or _save.settings_data == null or _save.settings_data.sfx_enabled
+
+func _is_music_on() -> bool:
+	return _save == null or _save.settings_data == null or _save.settings_data.music_enabled
+
+func _set_sfx(on: bool) -> void:
+	_update_settings(func(d: GameModels.SettingsData) -> void: d.sfx_enabled = on)
+
+func _set_music(on: bool) -> void:
+	_update_settings(func(d: GameModels.SettingsData) -> void: d.music_enabled = on)
+
+func _update_settings(mutator: Callable) -> void:
+	if _save == null:
+		return
+	_save.settings.mutate(mutator)
+	SettingsApplier.apply(_save.settings_data, _audio, _haptics)
+	_save.save_game()

@@ -22,6 +22,7 @@ _content = NodePath("Holder/Window")
 _back_button = NodePath("Holder/Window/BackButton")
 
 [node name="Backdrop" type="ColorRect" parent="." unique_id=2109479275]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

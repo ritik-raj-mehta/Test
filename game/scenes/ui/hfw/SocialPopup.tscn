@@ -1,0 +1,246 @@
+[gd_scene format=3 uid="uid://dk16vaanjttox"]
+
+[ext_resource type="Script" uid="uid://bo4dkquui6nef" path="res://game/scenes/ui/hfw/SocialPopup.gd" id="1_4vp4u"]
+[ext_resource type="Texture2D" uid="uid://dfge57xjxnq56" path="res://game/assets/sprites/single/ui/Popup/social_popup.png" id="2_4vp4u"]
+[ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_02382"]
+[ext_resource type="Texture2D" uid="uid://4v4o4e6cabdj" path="res://game/assets/sprites/single/ui/Popup/button.png" id="4_1nyej"]
+[ext_resource type="Texture2D" uid="uid://dqaa6yow5xem8" path="res://game/assets/sprites/single/ui/Reff/Policy_reff.png" id="5_4vp4u"]
+[ext_resource type="Texture2D" uid="uid://cqh6tvu2qvyca" path="res://game/assets/sprites/single/ui/Popup/facebook_icon.png" id="5_55io7"]
+[ext_resource type="Texture2D" uid="uid://diofn2hijm77n" path="res://game/assets/sprites/single/ui/Popup/youtube_icon.png" id="6_shyri"]
+[ext_resource type="Texture2D" uid="uid://deskot1no3r2o" path="res://game/assets/sprites/single/ui/Popup/instagram_icon.png" id="7_142cw"]
+[ext_resource type="Texture2D" uid="uid://by3nc3na6ekj3" path="res://game/assets/sprites/single/ui/Popup/dicord_icon.png" id="8_g3qsr"]
+[ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="9_1nyej"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_55io7"]
+atlas = ExtResource("9_1nyej")
+region = Rect2(2375, 187, 170, 173)
+
+[node name="SocialPopup" type="Control" unique_id=1513163033 node_paths=PackedStringArray("facebook_button", "youtube_button", "instagram_button", "discord_button", "back_button", "_window")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4vp4u")
+facebook_button = NodePath("Holder/Window/TextureRect/HBoxContainer/FacebookButton")
+youtube_button = NodePath("Holder/Window/TextureRect/HBoxContainer/YoutubeButton")
+instagram_button = NodePath("Holder/Window/TextureRect/HBoxContainer/InstagramButton")
+discord_button = NodePath("Holder/Window/TextureRect/HBoxContainer/DiscordButton")
+back_button = NodePath("Holder/Window/BackButton")
+_window = NodePath("Holder/Window")
+
+[node name="Backdrop" type="TextureRect" parent="." unique_id=1437335107]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Holder" type="Control" parent="." unique_id=1570605328]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Window" type="MarginContainer" parent="Holder" unique_id=295000572]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 200
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 200
+
+[node name="TextureRect" type="TextureRect" parent="Holder/Window" unique_id=708517249]
+custom_minimum_size = Vector2(780, 700)
+custom_maximum_size = Vector2(800, 800)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_4vp4u")
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="Holder/Window/TextureRect" unique_id=1475051613]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -243.0
+offset_top = 35.0
+offset_right = 243.0
+offset_bottom = 156.0
+grow_horizontal = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(-0.82, 1.61)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/shadow_offset_x = -1
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_outline_size = 8
+theme_override_fonts/font = ExtResource("3_02382")
+theme_override_font_sizes/font_size = 81
+text = "Social"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Holder/Window/TextureRect" unique_id=2049035041]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -288.0
+offset_right = 288.0
+offset_bottom = 129.00043
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 35
+
+[node name="FacebookButton" type="TextureButton" parent="Holder/Window/TextureRect/HBoxContainer" unique_id=29329468]
+layout_mode = 2
+texture_normal = ExtResource("4_1nyej")
+texture_pressed = ExtResource("4_1nyej")
+
+[node name="Icon" type="TextureRect" parent="Holder/Window/TextureRect/HBoxContainer/FacebookButton" unique_id=1791092421]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.0
+offset_top = -45.0
+offset_right = 45.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_55io7")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="YoutubeButton" type="TextureButton" parent="Holder/Window/TextureRect/HBoxContainer" unique_id=126781256]
+layout_mode = 2
+texture_normal = ExtResource("4_1nyej")
+texture_pressed = ExtResource("4_1nyej")
+
+[node name="Icon" type="TextureRect" parent="Holder/Window/TextureRect/HBoxContainer/YoutubeButton" unique_id=1234662557]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_shyri")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="InstagramButton" type="TextureButton" parent="Holder/Window/TextureRect/HBoxContainer" unique_id=1117890225]
+layout_mode = 2
+texture_normal = ExtResource("4_1nyej")
+texture_pressed = ExtResource("4_1nyej")
+
+[node name="Icon" type="TextureRect" parent="Holder/Window/TextureRect/HBoxContainer/InstagramButton" unique_id=1855558766]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -35.0
+offset_top = -35.0
+offset_right = 35.0
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_142cw")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="DiscordButton" type="TextureButton" parent="Holder/Window/TextureRect/HBoxContainer" unique_id=1645429417]
+layout_mode = 2
+texture_normal = ExtResource("4_1nyej")
+texture_pressed = ExtResource("4_1nyej")
+
+[node name="Icon" type="TextureRect" parent="Holder/Window/TextureRect/HBoxContainer/DiscordButton" unique_id=396163521]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -37.5
+offset_top = -30.0
+offset_right = 37.5
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_g3qsr")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="Holder/Window/TextureRect" unique_id=1111183798]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -147.0
+offset_top = -109.0
+offset_right = 147.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.3019608, 0.68235296, 0.9372549, 1)
+theme_override_fonts/font = ExtResource("3_02382")
+theme_override_font_sizes/font_size = 50
+text = "Follow Us on:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BackButton" type="TextureButton" parent="Holder/Window" unique_id=1326705087]
+unique_name_in_owner = true
+z_index = 1
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+offset_transform_position = Vector2(2.06, 0)
+focus_mode = 0
+texture_normal = SubResource("AtlasTexture_55io7")
+texture_pressed = SubResource("AtlasTexture_55io7")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=999334523]
+visible = false
+self_modulate = Color(1, 1, 1, 0.4627451)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_4vp4u")
+expand_mode = 1

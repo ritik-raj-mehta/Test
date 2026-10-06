@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="BackdropSet" format=3 uid="uid://5l35dfpsa285"]
+
+[ext_resource type="Script" uid="uid://vbc6xdhtpl5q" path="res://game/scenes/ui/hfw/BackdropSet.gd" id="1_1adw2"]
+[ext_resource type="Texture2D" uid="uid://crarc7ywgq8un" path="res://game/assets/sprites/single/ui/BGs/backgrounds.png" id="2_g0vfe"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5fjcl"]
+atlas = ExtResource("2_g0vfe")
+region = Rect2(90, 142, 1100, 1940)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yl6ys"]
+atlas = ExtResource("2_g0vfe")
+region = Rect2(2692, 142, 1100, 1940)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_547ig"]
+atlas = ExtResource("2_g0vfe")
+region = Rect2(1391, 142, 1100, 1940)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y1m8c"]
+atlas = ExtResource("2_g0vfe")
+region = Rect2(3993, 142, 1100, 1940)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_en1yf"]
+atlas = ExtResource("2_g0vfe")
+region = Rect2(5294, 142, 1100, 1940)
+
+[resource]
+script = ExtResource("1_1adw2")
+world_textures = Array[Texture]([SubResource("AtlasTexture_5fjcl"), SubResource("AtlasTexture_yl6ys"), SubResource("AtlasTexture_547ig"), SubResource("AtlasTexture_y1m8c"), SubResource("AtlasTexture_en1yf")])
+metadata/_custom_type_script = "uid://vbc6xdhtpl5q"

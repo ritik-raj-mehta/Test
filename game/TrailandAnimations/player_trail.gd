@@ -10,20 +10,13 @@ var active: bool = true
 func _process(_delta: float) -> void:
 	if not active:
 		return
-
 	var pos := _get_position()
-
 	queue.push_front(pos)
-
 	if queue.size() > max_length:
 		queue.pop_back()
-
 	clear_points()
-
 	for point in queue:
 		add_point(to_local(point))
-
-	print(visible, " ", active, " ", points.size(), " ", width)
 
 
 func _get_position() -> Vector2:

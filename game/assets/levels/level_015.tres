@@ -37,6 +37,7 @@ position = Vector2(477, 1257)
 scale = Vector2(1.5, 1.5)
 properties = {
 "breadth": 10.0,
+"direction_change_delay": 0.0,
 "enable_interval_movement": false,
 "gear_count": 3,
 "gear_spacing": 100.0,
@@ -53,7 +54,8 @@ properties = {
 "move_speed": 300.0,
 "rod_breadth": 10.0,
 "rod_has_collision": false,
-"rotation_speed": 10.0,
+"rotation_speed": 6.0,
+"start_delay": 0.0,
 "width": 10.0
 }
 
@@ -64,6 +66,7 @@ position = Vector2(1526, 721)
 scale = Vector2(1.5, 1.5)
 properties = {
 "breadth": 10.0,
+"direction_change_delay": 0.0,
 "enable_interval_movement": false,
 "gear_count": 3,
 "gear_spacing": 100.0,
@@ -80,7 +83,8 @@ properties = {
 "move_speed": 300.0,
 "rod_breadth": 10.0,
 "rod_has_collision": false,
-"rotation_speed": 10.0,
+"rotation_speed": 6.0,
+"start_delay": 0.0,
 "width": 10.0
 }
 
@@ -91,6 +95,7 @@ position = Vector2(476, 176)
 scale = Vector2(1.5, 1.5)
 properties = {
 "breadth": 10.0,
+"direction_change_delay": 0.0,
 "enable_interval_movement": false,
 "gear_count": 3,
 "gear_spacing": 100.0,
@@ -107,7 +112,8 @@ properties = {
 "move_speed": 300.0,
 "rod_breadth": 10.0,
 "rod_has_collision": false,
-"rotation_speed": 10.0,
+"rotation_speed": 6.0,
+"start_delay": 0.0,
 "width": 10.0
 }
 
@@ -118,6 +124,7 @@ position = Vector2(1526, -367)
 scale = Vector2(1.5, 1.5)
 properties = {
 "breadth": 10.0,
+"direction_change_delay": 0.0,
 "enable_interval_movement": false,
 "gear_count": 3,
 "gear_spacing": 100.0,
@@ -134,7 +141,8 @@ properties = {
 "move_speed": 300.0,
 "rod_breadth": 10.0,
 "rod_has_collision": false,
-"rotation_speed": 10.0,
+"rotation_speed": 6.0,
+"start_delay": 0.0,
 "width": 10.0
 }
 

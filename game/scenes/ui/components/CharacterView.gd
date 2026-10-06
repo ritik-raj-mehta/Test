@@ -51,5 +51,12 @@ func set_locked(locked: bool) -> void:
 	# _body.self_modulate = LOCKED_TINT if locked else Color.WHITE
 	_lock.visible = locked
 
+func set_texture_direct(tex: Texture2D) -> void:
+	if _body == null:
+		push_error("CharacterView: Body TextureRect is not assigned.")
+		return
+	if tex:
+		_body.texture = tex
+
 func bounce() -> void:
 	UIAnim.bounce(self)

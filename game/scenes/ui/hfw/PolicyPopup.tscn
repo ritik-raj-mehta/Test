@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c30iqyrvo6p3q"]
 
-[ext_resource type="Script" uid="uid://joqh8k1jsxtl" path="res://game/scenes/ui/hfw/PrivacyPopup.gd" id="1_mo2kr"]
-[ext_resource type="Texture2D" uid="uid://c6tojp8wakcrg" path="res://game/assets/sprites/single/ui/popup.png" id="2_i44rj"]
+[ext_resource type="Script" uid="uid://u6clde13bov4" path="res://game/scenes/ui/hfw/PrivacyPopup.gd" id="1_mo2kr"]
+[ext_resource type="Texture2D" uid="uid://dfge57xjxnq56" path="res://game/assets/sprites/single/ui/Popup/social_popup.png" id="2_mo2kr"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_uy18b"]
 [ext_resource type="Texture2D" uid="uid://dqfpjs37l872m" path="res://game/assets/sprites/single/ui/blueBtn.png" id="4_sh8e5"]
 [ext_resource type="Texture2D" uid="uid://dqaa6yow5xem8" path="res://game/assets/sprites/single/ui/Reff/Policy_reff.png" id="6_ah5a8"]
@@ -55,17 +55,18 @@ custom_maximum_size = Vector2(800, 800)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture = ExtResource("2_i44rj")
-expand_mode = 1
+texture = ExtResource("2_mo2kr")
+stretch_mode = 5
 
 [node name="TitleLabel" type="Label" parent="Holder/Window/TextureRect" unique_id=1475051613]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -245.5
-offset_right = 240.5
-offset_bottom = 121.0
+offset_left = -245.0
+offset_top = 35.0
+offset_right = 241.0
+offset_bottom = 156.0
 grow_horizontal = 2
 offset_transform_enabled = true
 offset_transform_position = Vector2(-0.82, 1.61)

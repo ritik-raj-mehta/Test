@@ -2,9 +2,10 @@
 
 [ext_resource type="Script" uid="uid://btx5qit75ev61" path="res://game/scenes/ui/hfw/SettingsPopup.gd" id="1_scr"]
 [ext_resource type="Texture2D" uid="uid://crarc7ywgq8un" path="res://game/assets/sprites/single/ui/BGs/backgrounds.png" id="2_fi6yo"]
-[ext_resource type="Texture2D" uid="uid://c6tojp8wakcrg" path="res://game/assets/sprites/single/ui/popup.png" id="3_qq01r"]
+[ext_resource type="Texture2D" uid="uid://ceqnin1av077y" path="res://game/assets/sprites/single/ui/Popup/settingPop.png" id="3_fi6yo"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_yf848"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="4_k0rgi"]
+[ext_resource type="Texture2D" uid="uid://bem4t4iw8f703" path="res://game/assets/sprites/single/ui/Popup/socialButton.png" id="6_8y0vm"]
 [ext_resource type="Texture2D" uid="uid://bl81gi5h5jaie" path="res://game/assets/sprites/single/ui/Reff/Settings_Reff.png" id="7_8y0vm"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5fjcl"]
@@ -59,7 +60,7 @@ region = Rect2(618, 483, 567, 132)
 atlas = ExtResource("4_k0rgi")
 region = Rect2(2375, 187, 170, 173)
 
-[node name="SettingsPopup" type="Control" unique_id=1955475646 node_paths=PackedStringArray("_window", "_sfx_toggle", "_music_toggle", "_terms_button", "_credits_button", "_privacy_button", "_back_button", "background")]
+[node name="SettingsPopup" type="Control" unique_id=1955475646 node_paths=PackedStringArray("_window", "_sfx_toggle", "_music_toggle", "_terms_button", "_credits_button", "_privacy_button", "_social_button", "_back_button", "background")]
 z_index = 10
 layout_mode = 3
 anchors_preset = 15
@@ -74,6 +75,7 @@ _music_toggle = NodePath("Holder/Window/Frame/Content/Toggles/MusicToggle")
 _terms_button = NodePath("Holder/Window/Frame/Content/TermsButton")
 _credits_button = NodePath("Holder/Window/Frame/Content/CreditsButton")
 _privacy_button = NodePath("Holder/Window/Frame/Content/PrivacyButton")
+_social_button = NodePath("Holder/Window/Frame/Content/SocialButton")
 _back_button = NodePath("Holder/Window/BackButton")
 background = NodePath("Background")
 _blur_bg_list = Array[Texture]([SubResource("AtlasTexture_5fjcl"), SubResource("AtlasTexture_yl6ys"), SubResource("AtlasTexture_547ig"), SubResource("AtlasTexture_y1m8c"), SubResource("AtlasTexture_en1yf")])
@@ -113,7 +115,7 @@ mouse_filter = 2
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_top = 150
 theme_override_constants/margin_right = 50
-theme_override_constants/margin_bottom = 100
+theme_override_constants/margin_bottom = 200
 
 [node name="Frame" type="TextureRect" parent="Holder/Window" unique_id=182380042]
 custom_minimum_size = Vector2(800, 0)
@@ -121,7 +123,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
-texture = ExtResource("3_qq01r")
+texture = ExtResource("3_fi6yo")
+stretch_mode = 5
 
 [node name="TitleLabel" type="Label" parent="Holder/Window/Frame" unique_id=1472791989]
 layout_mode = 1
@@ -171,10 +174,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -289.5
-offset_top = -292.5
-offset_right = 290.5
-offset_bottom = -112.5
+offset_left = -289.0
+offset_top = -348.5
+offset_right = 291.0
+offset_bottom = -168.5
 grow_horizontal = 2
 grow_vertical = 2
 offset_transform_enabled = true
@@ -270,9 +273,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -290.0
-offset_top = -55.0
+offset_top = -129.5
 offset_right = 290.0
-offset_bottom = 55.0
+offset_bottom = -19.5
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
@@ -292,9 +295,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -249.5
-offset_top = 114.5
+offset_top = 40.0
 offset_right = 250.5
-offset_bottom = 224.5
+offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
@@ -302,6 +305,29 @@ offset_transform_enabled = true
 focus_mode = 0
 texture_normal = SubResource("AtlasTexture_q3dfr")
 texture_pressed = SubResource("AtlasTexture_q3dfr")
+ignore_texture_size = true
+stretch_mode = 3
+
+[node name="SocialButton" type="TextureButton" parent="Holder/Window/Frame/Content" unique_id=335123190]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 110)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -249.0
+offset_top = 208.5
+offset_right = 251.0
+offset_bottom = 318.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+offset_transform_enabled = true
+focus_mode = 0
+texture_normal = ExtResource("6_8y0vm")
+texture_pressed = ExtResource("6_8y0vm")
 ignore_texture_size = true
 stretch_mode = 3
 
@@ -313,17 +339,17 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -127.5
-offset_top = 269.5
-offset_right = 127.5
-offset_bottom = 318.5
+offset_left = -127.0
+offset_top = 355.5
+offset_right = 128.0
+offset_bottom = 404.5
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 focus_mode = 0
-theme_override_colors/font_color = Color(0.231, 0.29, 0.4, 1)
-theme_override_colors/font_pressed_color = Color(0.231, 0.29, 0.4, 1)
-theme_override_colors/font_hover_color = Color(0.231, 0.29, 0.4, 1)
+theme_override_colors/font_color = Color(0.3019608, 0.68235296, 0.9372549, 1)
+theme_override_colors/font_pressed_color = Color(0.3019608, 0.68235296, 0.9372549, 1)
+theme_override_colors/font_hover_color = Color(0.3019608, 0.68235296, 0.9372549, 1)
 theme_override_fonts/font = ExtResource("3_yf848")
 theme_override_font_sizes/font_size = 40
 text = "Privacy Policy"

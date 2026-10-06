@@ -73,7 +73,7 @@ func go_to(scene_path: String) -> void:
 		if _logger:
 			_logger.error("Scene load failed", { "path": scene_path })
 		return
-	get_tree().paused = false
+	# get_tree().paused = false
 	get_tree().change_scene_to_packed(packed)
 	await get_tree().process_frame
 	_auto_inject_scene(get_tree().current_scene)

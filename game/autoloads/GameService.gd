@@ -20,6 +20,7 @@ var save: SaveManager
 var scene: SceneManager
 var ui: UIManager
 var player_progress: PlayerProgress
+var backdrop: BackdropManager
 
 func _ready() -> void:
 	# Persist composition root across scene transitions
@@ -79,6 +80,11 @@ func _ready() -> void:
 	ui.name = "UIManager"
 	ui.configure(logger, bus, audio, game)
 	add_child(ui)
+
+	backdrop = BackdropManager.new()
+	backdrop.name = "BackdropManager"
+	backdrop.configure(logger, bus, save, ui)
+	add_child(backdrop)
 	
 	player_progress = PlayerProgress.new()
 	player_progress.initialize(save,bus)

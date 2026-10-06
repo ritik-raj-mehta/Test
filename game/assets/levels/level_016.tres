@@ -96,7 +96,8 @@ properties = {
 "move_dist_pos": 0.0,
 "move_distance": 360.0,
 "move_speed": 200.0,
-"rotation_speed": 8.0,
+"rod_has_collision": false,
+"rotation_speed": 6.0,
 "start_delay": 0.0
 }
 
@@ -120,7 +121,8 @@ properties = {
 "move_dist_pos": 360.0,
 "move_distance": 360.0,
 "move_speed": 200.0,
-"rotation_speed": 8.0,
+"rod_has_collision": false,
+"rotation_speed": 6.0,
 "start_delay": 0.0
 }
 
@@ -144,7 +146,8 @@ properties = {
 "move_dist_pos": 360.0,
 "move_distance": 360.0,
 "move_speed": 200.0,
-"rotation_speed": 8.0,
+"rod_has_collision": false,
+"rotation_speed": 6.0,
 "start_delay": 0.0
 }
 
@@ -172,7 +175,7 @@ properties = {
 "path_rotation": 0.0,
 "path_shape": "Diamond",
 "path_width": 300.0,
-"rotation_speed": 8.0,
+"rotation_speed": 6.0,
 "show_track_line": true
 }
 
@@ -182,7 +185,7 @@ object_id = "booster"
 position = Vector2(1000, 163)
 properties = {
 "custom_force": 0.0,
-"force_tier": 3,
+"force_tier": 7,
 "invulnerability_duration": 0.6
 }
 
@@ -192,7 +195,7 @@ object_id = "gear_rod"
 position = Vector2(840, 684)
 rotation = 90.0
 properties = {
-"breadth": 10.0,
+"breadth": 15.0,
 "gear_count": 1,
 "gear_spacing": 100.0,
 "has_gear": false,
@@ -206,16 +209,17 @@ properties = {
 "move_speed": 0.0,
 "rod_has_collision": false,
 "rotation_speed": 0.0,
-"width": 10.0
+"start_delay": 0.0,
+"width": 15.0
 }
 
 [sub_resource type="Resource" id="Resource_weyjw"]
 script = ExtResource("1_3be57")
 object_id = "gear_rod"
-position = Vector2(1000.62616, 687.4167)
+position = Vector2(1001, 687)
 rotation = 90.0
 properties = {
-"breadth": 10.0,
+"breadth": 15.0,
 "gear_count": 1,
 "gear_spacing": 100.0,
 "has_gear": false,
@@ -229,7 +233,8 @@ properties = {
 "move_speed": 0.0,
 "rod_has_collision": false,
 "rotation_speed": 0.0,
-"width": 10.0
+"start_delay": 0.0,
+"width": 15.0
 }
 
 [sub_resource type="Resource" id="Resource_h4jwm"]
@@ -238,7 +243,7 @@ object_id = "gear_rod"
 position = Vector2(1160, 684)
 rotation = 90.0
 properties = {
-"breadth": 10.0,
+"breadth": 15.0,
 "gear_count": 1,
 "gear_spacing": 100.0,
 "has_gear": false,
@@ -252,7 +257,8 @@ properties = {
 "move_speed": 0.0,
 "rod_has_collision": false,
 "rotation_speed": 0.0,
-"width": 10.0
+"start_delay": 0.0,
+"width": 15.0
 }
 
 [resource]

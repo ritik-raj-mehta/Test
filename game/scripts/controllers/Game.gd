@@ -81,7 +81,7 @@ func _on_goal_reached(goal_player: Node2D, reached_goal: Node2D) -> void:
 
 	if goal_player.has_method("slow_down_at_goal"):
 		goal_player.slow_down_at_goal(reached_goal)
-	camera.zoom_to_goal()
+	camera.zoom_to_goal(reached_goal)
 
 
 func _on_goal_sequence_finished() -> void:

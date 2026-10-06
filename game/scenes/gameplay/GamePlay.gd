@@ -16,10 +16,24 @@ const HOME_OUT_DELAY_SCALE: float = 0.5
 @export var _levels_button: BaseButton
 @export var _skins_button: BaseButton
 
+@export var _pause_button: BaseButton
+@export var _pause_menu_items: Array[Control]  
+@export var _cross_texture: Texture2D
+@export var _sound_on_texture: Texture2D
+@export var _sound_off_texture: Texture2D
+@export var _music_on_texture: Texture2D
+@export var _music_off_texture: Texture2D
+@export var _music_button: BaseButton
+@export var _sfx_button: BaseButton
+@export var _quit_button: BaseButton
+
 var _overlay: Control      
 var _started: bool = false  
 var _home_tweens: Array[Tween] = []
-
+const MENU_STAGGER: float = 0.06
+var _menu_open: bool = false
+var _menu_tweens: Array[Tween] = []
+var _pause_icon: Texture2D
 
 # ── Setup ─────────────────────────────────────────────────────────────────
 
@@ -88,11 +102,13 @@ func _on_tap_tap_completed(
 	)
 
 func _bind_home_ui() -> void:
+	_bus.tap_locked.emit(true) 
 	_bind_tap(_tap_area, _on_tap_to_play)
 	_on_press(_settings_button, func() -> void: _open_overlay(ScenePaths.SETTINGS))
 	_on_press(_levels_button, func() -> void: _open_overlay(ScenePaths.WORLDS))
 	_on_press(_skins_button, func() -> void: _open_overlay(ScenePaths.SKINS))
 	UIAnim.pulse(_tap_label)
+	_setup_pause_ui()
 
 
 # ── Level ─────────────────────────────────────────────────────────────────
@@ -246,6 +262,7 @@ func _on_tap_to_play() -> void:
 	_click()
 	_game_manager.resume()
 	_hide_home_ui()
+	_bus.tap_locked.emit(false)  
 
 func _home_slides() -> Array:
 	return [
@@ -257,6 +274,8 @@ func _home_slides() -> Array:
 
 func _show_home_ui() -> void:
 	_kill_home_tweens()
+	_reset_pause_ui()
+	_home_tweens.append(UIAnim.slide_out(_pause_button, UIAnim.Edge.RIGHT))
 	_home_layer.show()
 	_tap_area.show()
 	for slide in _home_slides():
@@ -272,6 +291,9 @@ func _hide_home_ui() -> void:
 	for slide in _home_slides():
 		last = UIAnim.slide_out(slide[0], slide[1], slide[2] * HOME_OUT_DELAY_SCALE)
 		_home_tweens.append(last)
+	_pause_button.create_tween().tween_property(_pause_button, "position", Vector2(850, _pause_button.position.y), .8).\
+	set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	# _home_tweens.append(UIAnim.slide_in(_pause_button, UIAnim.Edge.RIGHT, 0.25))
 	await last.finished
 	if _started:
 		_home_layer.hide()
@@ -321,3 +343,111 @@ func _on_dev_level_picked(path: String) -> void:
 func _open_editor() -> void:
 	_game_manager.resume()  # never leave the tree paused when leaving
 	get_tree().change_scene_to_file(ScenePaths.LEVEL_EDITOR)
+
+# ── Pause drop-down ───────────────────────────────────────────────────────
+
+func _setup_pause_ui() -> void:
+	# Menu must stay tappable while the game is paused.
+	_pause_button.process_mode = Node.PROCESS_MODE_ALWAYS
+	for item in _pause_menu_items:
+		item.process_mode = Node.PROCESS_MODE_ALWAYS
+		UIAnim.fold(item, _pause_button)
+	UIAnim.capture_rest(_pause_button)
+	UIAnim.hide_offscreen(_pause_button, UIAnim.Edge.RIGHT)
+
+	var pause_tex := _pause_button as TextureButton
+	_pause_icon = pause_tex.texture_normal if pause_tex else null  # remember the pause icon
+
+	_on_press(_pause_button, _on_pause_pressed)
+	if _sfx_button:
+		_on_press(_sfx_button, _on_sfx_pressed)
+	if _music_button:
+		_on_press(_music_button, _on_music_pressed)
+	if _quit_button:
+		_on_press(_quit_button, _open_quit_popup)
+	_refresh_audio_icons()
+
+func _open_quit_popup() -> void:
+	_set_pause_menu(not _menu_open)
+	_open_popup(ScenePaths.QUIT)
+
+func _on_pause_pressed() -> void:
+	if not _started:
+		return
+	_click()
+	UIAnim.bounce(_pause_button)
+	_set_pause_menu(not _menu_open)
+
+
+func _set_pause_menu(open: bool) -> void:
+	if open == _menu_open:
+		return
+	_menu_open = open
+	_kill_menu_tweens()
+	_set_button_icon(_pause_button, _cross_texture if open else _pause_icon)
+	if open:
+		_refresh_audio_icons()  # Settings popup may have changed them since last time
+
+	if open:
+		_game_manager.pause()
+		_bus.tap_locked.emit(true)
+	else:
+		_game_manager.resume()
+		_bus.tap_locked.emit(false)
+
+	var count := _pause_menu_items.size()
+	for i in count:
+		var item := _pause_menu_items[i]
+		if open:
+			_menu_tweens.append(UIAnim.drop_in(item, _pause_button, i * MENU_STAGGER))
+		else:
+			_menu_tweens.append(UIAnim.drop_out(item, _pause_button, (count - 1 - i) * MENU_STAGGER))
+
+
+## Level restarted / back to tap-to-play: menu snaps shut, no resume (reset() already handled it).
+func _reset_pause_ui() -> void:
+	_kill_menu_tweens()
+	_set_button_icon(_pause_button, _pause_icon)
+	_menu_open = false
+	for item in _pause_menu_items:
+		UIAnim.fold(item, _pause_button)
+
+
+func _kill_menu_tweens() -> void:
+	for t in _menu_tweens:
+		if t and t.is_valid():
+			t.kill()
+	_menu_tweens.clear()
+
+# ── Pause menu: sound / music ─────────────────────────────────────────────
+
+# ── Pause menu: sound / music ─────────────────────────────────────────────
+
+func _on_sfx_pressed() -> void:
+	var on := not _is_sfx_on()
+	_set_sfx(on)
+	_refresh_audio_icons()
+	if on:
+		_click()  # _on_press's own click was silent while sfx was still off
+
+
+func _on_music_pressed() -> void:
+	var on := not _is_music_on()
+	_set_music(on)
+	_refresh_audio_icons()
+	if on:
+		_click()
+
+
+func _refresh_audio_icons() -> void:
+	_set_button_icon(_sfx_button, _sound_on_texture if _is_sfx_on() else _sound_off_texture)
+	_set_button_icon(_music_button, _music_on_texture if _is_music_on() else _music_off_texture)
+
+
+## Swaps a TextureButton's icon (normal + pressed). Null button/texture = no change.
+func _set_button_icon(button: BaseButton, tex: Texture2D) -> void:
+	var b := button as TextureButton
+	if b == null or tex == null:
+		return
+	b.texture_normal = tex
+	b.texture_pressed = tex

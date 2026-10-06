@@ -54,7 +54,7 @@ properties = {
 "path_rotation": 0.0,
 "path_shape": "Circle",
 "path_width": 300.0,
-"rotation_speed": 100.0,
+"rotation_speed": 7.0,
 "show_track_line": true
 }
 

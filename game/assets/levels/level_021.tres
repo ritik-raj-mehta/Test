@@ -45,7 +45,10 @@ object_id = "gear_r"
 position = Vector2(1224, 800)
 scale = Vector2(2.5, 2.5)
 properties = {
-"rotation_speed": 9.0
+"has_rod": false,
+"rod_has_collision": false,
+"rotation_speed": 4.0,
+"start_delay": 0.0
 }
 
 [sub_resource type="Resource" id="Resource_wpyq4"]
@@ -54,7 +57,10 @@ object_id = "gear_r"
 position = Vector2(776, 608)
 scale = Vector2(2.5, 2.5)
 properties = {
-"rotation_speed": 9.0
+"has_rod": false,
+"rod_has_collision": false,
+"rotation_speed": 6.0,
+"start_delay": 0.0
 }
 
 [sub_resource type="Resource" id="Resource_dktly"]
@@ -63,7 +69,10 @@ object_id = "gear_r"
 position = Vector2(1352, 352)
 scale = Vector2(3.5, 3.5)
 properties = {
-"rotation_speed": 9.0
+"has_rod": false,
+"rod_has_collision": false,
+"rotation_speed": 4.0,
+"start_delay": 0.0
 }
 
 [sub_resource type="Resource" id="Resource_k3gud"]
@@ -72,14 +81,17 @@ object_id = "gear_r"
 position = Vector2(712, 192)
 scale = Vector2(3.5, 3.5)
 properties = {
-"rotation_speed": 9.0
+"has_rod": false,
+"rod_has_collision": false,
+"rotation_speed": 5.0,
+"start_delay": 0.0
 }
 
 [sub_resource type="Resource" id="Resource_arw2t"]
 script = ExtResource("1_6q68g")
 object_id = "booster"
-position = Vector2(840, 928)
-rotation = 40.0
+position = Vector2(840, 992)
+rotation = 35.0
 properties = {
 "custom_force": 0.0,
 "force_tier": 4,
@@ -89,22 +101,22 @@ properties = {
 [sub_resource type="Resource" id="Resource_l5p5y"]
 script = ExtResource("1_6q68g")
 object_id = "booster"
-position = Vector2(1224, 576)
-rotation = -40.0
+position = Vector2(1128, 544)
+rotation = -50.0
 properties = {
 "custom_force": 0.0,
-"force_tier": 4,
+"force_tier": 3,
 "invulnerability_duration": 0.6
 }
 
 [sub_resource type="Resource" id="Resource_ye4by"]
 script = ExtResource("1_6q68g")
 object_id = "booster"
-position = Vector2(904, 384)
-rotation = 40.0
+position = Vector2(904, 352)
+rotation = 35.0
 properties = {
 "custom_force": 0.0,
-"force_tier": 4,
+"force_tier": 6,
 "invulnerability_duration": 0.6
 }
 
@@ -114,7 +126,10 @@ object_id = "gear_r"
 position = Vector2(1416, -64)
 scale = Vector2(2, 2)
 properties = {
-"rotation_speed": 10.0
+"has_rod": false,
+"rod_has_collision": false,
+"rotation_speed": 5.0,
+"start_delay": 0.0
 }
 
 [sub_resource type="Resource" id="Resource_btgtd"]
@@ -123,7 +138,10 @@ object_id = "gear_r"
 position = Vector2(584, -128)
 scale = Vector2(2, 2)
 properties = {
-"rotation_speed": 10.0
+"has_rod": false,
+"rod_has_collision": false,
+"rotation_speed": 3.0,
+"start_delay": 0.0
 }
 
 [sub_resource type="Resource" id="Resource_ce3xg"]
@@ -132,7 +150,10 @@ object_id = "gear_r"
 position = Vector2(904, -288)
 scale = Vector2(3.5, 3.5)
 properties = {
-"rotation_speed": 9.0
+"has_rod": false,
+"rod_has_collision": false,
+"rotation_speed": 4.0,
+"start_delay": 0.0
 }
 
 [sub_resource type="Resource" id="Resource_4ied3"]
@@ -149,7 +170,7 @@ properties = {
 [sub_resource type="Resource" id="Resource_17187"]
 script = ExtResource("1_6q68g")
 object_id = "booster"
-position = Vector2(1224, -384)
+position = Vector2(1320, -320)
 rotation = -40.0
 properties = {
 "custom_force": 0.0,
@@ -163,7 +184,10 @@ object_id = "gear_r"
 position = Vector2(1352, -672)
 scale = Vector2(2, 2)
 properties = {
-"rotation_speed": 10.0
+"has_rod": false,
+"rod_has_collision": false,
+"rotation_speed": 4.0,
+"start_delay": 0.0
 }
 
 [sub_resource type="Resource" id="Resource_gr3oj"]
@@ -172,7 +196,10 @@ object_id = "gear_r"
 position = Vector2(584, -480)
 scale = Vector2(2, 2)
 properties = {
-"rotation_speed": 10.0
+"has_rod": false,
+"rod_has_collision": false,
+"rotation_speed": 5.0,
+"start_delay": 0.0
 }
 
 [resource]

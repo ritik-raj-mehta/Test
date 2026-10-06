@@ -10,7 +10,7 @@ signal countdown_finished
 
 var time_left: float = 0.0
 var countdown_active: bool = false
-
+var countdown_paused: bool = false
 
 func start_countdown() -> void:
 	print("RING: START COUNTDOWN")
@@ -21,9 +21,14 @@ func start_countdown() -> void:
 	ring.value = 100.0
 	number_label.text = str(ceili(time_left))
 
+func pause_countdown() -> void:
+	print("RING: COUNTDOWN PAUSED")
+	countdown_paused = true
 
 func _process(delta: float) -> void:
 	if not countdown_active:
+		return
+	if countdown_paused:
 		return
 
 	time_left -= delta

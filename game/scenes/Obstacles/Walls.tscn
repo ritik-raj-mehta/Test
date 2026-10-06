@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://cslldjhdxkl26"]
+
+[ext_resource type="Script" uid="uid://bx3ohfhpbs1bx" path="res://game/scenes/Obstacles/Walls.gd" id="1_qr6um"]
+[ext_resource type="Texture2D" uid="uid://b3g5d045agrvd" path="res://game/assets/sprites/obstacles/Trianglewall4.png" id="2_cqohx"]
+[ext_resource type="Texture2D" uid="uid://c5kdpgrglyana" path="res://game/assets/sprites/obstacles/CompanyLogoWall3.png" id="3_jabov"]
+[ext_resource type="Shape2D" uid="uid://dd106126yjlq5" path="res://game/assets/resources/CompanyLogo.tres" id="4_7oxvu"]
+
+[node name="Walls" type="StaticBody2D" unique_id=1312356640]
+z_index = 100
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_qr6um")
+metadata/is_lethal = false
+
+[node name="Sprite2DTraiangle" type="Sprite2D" parent="." unique_id=853520994]
+visible = false
+scale = Vector2(0.72, 0.637)
+texture = ExtResource("2_cqohx")
+
+[node name="Sprite2DLogo" type="Sprite2D" parent="." unique_id=1274121277]
+texture = ExtResource("3_jabov")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=322224644]
+position = Vector2(0, 0.5)
+shape = ExtResource("4_7oxvu")

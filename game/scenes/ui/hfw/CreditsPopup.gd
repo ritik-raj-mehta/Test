@@ -11,9 +11,6 @@ extends AppView
 @export var _back_button: BaseButton #= %BackButton
 
 func _on_ready() -> void:
-	# for entry in UIConfig.CREDITS:
-	# 	var item := entry_scene.instantiate() as CreditEntry
-	# 	_list.add_child(item)
-	# 	item.setup(str(entry[0]), str(entry[1]))
+	uses_backdrop = true
 	_on_press(_back_button, close)
 	UIAnim.pop_in(_content)

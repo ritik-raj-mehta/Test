@@ -23,7 +23,6 @@ const GREY := Color(0.55, 0.55, 0.55, 1.0)
 @export var _back_button: BaseButton
 
 @export var background: TextureRect
-@export var _blur_bg_list: Array[Texture]
 
 var _skins: PlayerSkins
 var _player_progress: PlayerProgress
@@ -37,14 +36,14 @@ var _fade: Tween
 # ============================================================
 
 func inject_services(registry: Node) -> void:
+	if registry:
+		_player_progress = (
+			registry.get_service(
+				&"player_progress"
+			) as PlayerProgress
+		)
 
 	super.inject_services(registry)
-
-	_player_progress = (
-		registry.get_service(
-			&"player_progress"
-		) as PlayerProgress
-	)
 
 	if _player_progress == null:
 		push_error(
@@ -66,9 +65,13 @@ func _on_ready() -> void:
 		_save
 	)
 
-	_index = SkinCatalog.index_of(
-		_skins.equipped_id()
+	var current_equipped: String = (
+		PlayerSkins.resolve_equipped(_save, _player_progress)
+		if _player_progress
+		else _skins.equipped_id()
 	)
+
+	_index = SkinCatalog.index_of(current_equipped)
 
 	if _carousel == null:
 		push_error(
@@ -152,8 +155,7 @@ func _on_ready() -> void:
 
 	_update_arrows()
 	_refresh_select_button(false)
-
-	_Setup_Bg_at_first_world()
+	uses_backdrop = true
 
 
 # ============================================================
@@ -223,61 +225,6 @@ func _on_character_changed(
 
 
 # ============================================================
-# BACKGROUND
-# ============================================================
-
-func _Setup_Bg_at_first_world() -> void:
-
-	var world_index: int = 0
-
-	var current_level: int = (
-		_save.get_level()
-	)
-
-	if current_level <= 10:
-		world_index = 0
-
-	elif current_level <= 20:
-		world_index = 1
-
-	elif current_level <= 30:
-		world_index = 2
-
-	elif current_level <= 40:
-		world_index = 3
-
-	elif current_level <= 50:
-		world_index = 4
-
-	else:
-		world_index = 0
-
-	select_bg_for_world(
-		world_index
-	)
-
-
-func select_bg_for_world(
-	index: int
-) -> void:
-
-	if index < _blur_bg_list.size():
-
-		background.texture = (
-			_blur_bg_list[index]
-		)
-
-	else:
-
-		background.texture = null
-
-		_logger.warn(
-			"SkinsScene: no blur background for world index ",
-			index
-		)
-
-
-# ============================================================
 # CAROUSEL
 # ============================================================
 
@@ -340,6 +287,11 @@ func _on_select_pressed() -> void:
 		skin_id
 	)
 
+	if _bus:
+		_bus.character_changed.emit(
+			skin_id
+		)
+
 	# Equipped character is now grey / "Equipped".
 	_refresh_select_button(
 		true
@@ -367,7 +319,11 @@ func _can_select(
 		return false
 
 	# Already equipped.
-	if _skins.equipped_id() == skin_id:
+	var equipped_id: String = PlayerSkins.resolve_equipped(
+		_save,
+		_player_progress
+	)
+	if equipped_id == skin_id:
 		return false
 
 	return true

@@ -7,6 +7,10 @@ extends RefCounted
 # ── External links (replace before release) ───────────────────────────────
 const TERMS_URL:   String = "https://thegamewise.com/terms-and-conditions"
 const PRIVACY_URL: String = "https://thegamewise.com/privacy-policy"
+const FACEBOOK_URL: String = "https://www.facebook.com/TheGameWise"
+const YOUTUBE_URL: String = "https://www.youtube.com/TheGameWise"
+const INSTAGRAM_URL: String = "https://www.instagram.com/gamewise_india"
+const DISCORD_URL: String = "https://discord.com/invite/gamewise"
 
 # ── Progression layout ────────────────────────────────────────────────────
 const LEVELS_PER_WORLD: int = 10

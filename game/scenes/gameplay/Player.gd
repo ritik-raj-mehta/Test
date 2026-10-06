@@ -20,6 +20,7 @@ var _normal_tex: Texture2D
 var _normal_scale: Vector2 = Vector2.ONE
 var _normal_flip := false
 var _normal_hframes: int = 3
+var _tap_lock : bool = true
 
 @export var fruit_grab_texture: Texture2D = preload("res://game/assets/sprites/atlases/node_specific/FruitGrabAnimation.png")
 
@@ -27,13 +28,13 @@ var _normal_hframes: int = 3
 #@export var goal_scale_duration: float = 0.25
 
 @export var goal_tilt_angle: float = 12.0
-@export var goal_tilt_duration: float = 0.15
+@export var goal_tilt_duration: float = 0.55
 # ============================================================
 # GOAL
 # ============================================================
 
 @export_category("Goal Attraction")
-@export var goal_attraction_speed: float = 60.0
+@export var goal_attraction_speed: float = 38.0
 	
 @onready var visual: Node2D = $Sprite2D   
 @onready var trail: Node2D = $Trail	
@@ -63,23 +64,30 @@ var _bus: GameBus   # use Node if GameBus has no class_name
 
 func setup(bus: GameBus) -> void:
 	_bus = bus
+	_bus.tap_locked.connect(func(locked: bool) -> void:
+		_tap_lock = locked
+	)
+	if not _bus.character_changed.is_connected(_on_character_changed):
+		_bus.character_changed.connect(_on_character_changed)
+	refresh_skin()
+
+
+func _on_character_changed(_character_id: String) -> void:
+	refresh_skin()
 
 
 # ============================================================
 # READY
 # ============================================================
 
-#func _ready() -> void:
-	#update_background_transform()
 func _ready() -> void:
 	if visual:
 		_normal_scale = visual.scale
 
 		var spr := visual as Sprite2D
 		if spr:
-			_normal_tex = spr.texture
 			_normal_flip = spr.flip_h
-			_normal_hframes = spr.hframes
+		refresh_skin()
 
 # ============================================================
 # PHYSICS
@@ -111,31 +119,18 @@ func _physics_process(delta: float) -> void:
 		var stop: float = 0.0 if _approach_offset != Vector2.ZERO else goal_stop_distance
 		var remaining: float = global_position.distance_to(target_position) - stop
 
-		# Transition to Frame 1 (mouth wide open grabbing fruit) as player gets close
-		var spr := visual as Sprite2D
-		if spr and spr.texture == fruit_grab_texture and spr.hframes >= 2:
-			if remaining <= 35.0:
-				spr.frame = 1
-
 		if remaining <= 2.0:
 			velocity = Vector2.ZERO
 			is_goal_zooming = false
-			if spr and spr.texture == fruit_grab_texture and spr.hframes >= 2:
-				spr.frame = 1
 			_finish_goal_sequence()
 			return
 
 		var speed: float = goal_attraction_speed
-
-		if remaining < 50.0:
-			speed *= 0.5
-
-		#if remaining < 25.0:
-			#speed *= 0.5
+		var move_step: float = maxf(speed * delta, remaining * 1.3 * delta)
 
 		global_position = global_position.move_toward(
 			target_position,
-			minf(speed * delta, remaining)
+			minf(move_step, remaining)
 		)
 		return
 
@@ -228,12 +223,17 @@ func _tap(dir: float) -> void:
 	_play_jump_animation()
 
 func _play_jump_animation() -> void:
+	if visual:
+		var spr := visual as Sprite2D
+		if spr and spr.texture != _normal_tex:
+			spr.texture = _normal_tex
+			spr.hframes = _normal_hframes
 	if anim_player:
 		anim_player.stop()
 		anim_player.play("jump")
 
 func _input(event: InputEvent) -> void:
-	if is_dead or is_goal_reached:
+	if is_dead or is_goal_reached or _tap_lock:
 		return
 	var pos := Vector2.ZERO
 	if event is InputEventScreenTouch and event.pressed:
@@ -246,7 +246,7 @@ func _input(event: InputEvent) -> void:
 	_tap(-1.0 if pos.x < w * 0.5 else 1.0)
 
 func _handle_keyboard_input() -> void:
-	if is_dead or is_goal_reached:
+	if is_dead or is_goal_reached or _tap_lock:
 		return
 	if Input.is_action_just_pressed("move_left"):
 		_tap(-1.0)
@@ -281,35 +281,43 @@ func die() -> void:
 	if _bus:
 		_bus.player_died.emit()
 
-
-#func _play_eat() -> void:
-	#if not is_instance_valid(goal_target):
-		#return
-	#var dir := global_position.direction_to(goal_target.get_goal_position())
-	#var base := visual.scale
-	#var t := create_tween()
-	#t.tween_property(self, "global_position", global_position + dir * 18.0, 0.1)
-	#t.tween_callback(goal_target.on_eaten)
-	#for i in 3:
-		#t.tween_property(visual, "scale", base * Vector2(1.25, 0.8), 0.07)
-		#t.tween_property(visual, "scale", base * Vector2(0.9, 1.1), 0.07)
-	#t.tween_property(visual, "scale", base, 0.05)
-	#await t.finished
-
 		
 func _current_skin_id() -> String:
+	var registry: Node = get_tree().root.get_node_or_null("ServiceRegistry") if get_tree() and get_tree().root else null
+	if registry and registry.has_service(&"save"):
+		var save: SaveManager = registry.get_service(&"save") as SaveManager
+		var progress: PlayerProgress = registry.get_service(&"player_progress") as PlayerProgress
+		return PlayerSkins.resolve_equipped(save, progress)
 	return SkinCatalog.DEFAULT_ID
+
+
+func refresh_skin() -> void:
+	if not visual:
+		return
+	var spr := visual as Sprite2D
+	if not spr:
+		return
+
+	var skin_id := _current_skin_id()
+	var jump_tex := SkinCatalog.get_jump_texture(skin_id)
+	if jump_tex:
+		spr.texture = jump_tex
+		var w := jump_tex.get_width()
+		var h := jump_tex.get_height()
+		if w > h and h > 0:
+			spr.hframes = int(round(float(w) / float(h)))
+		else:
+			spr.hframes = 1
+		spr.frame = 0
+
+		_normal_tex = spr.texture
+		_normal_hframes = spr.hframes
+
+
 # ============================================================
 # GOAL
 # ============================================================
 
-#func slow_down_at_goal(goal_node: Node2D) -> void:
-	#if is_goal_reached:
-		#return	
-	#is_goal_reached = true
-	#is_goal_zooming = true
-	#goal_target = goal_node
-	#velocity = Vector2.ZERO
 func slow_down_at_goal(goal_node: Node2D) -> void:
 	if is_goal_reached:
 		return
@@ -344,10 +352,12 @@ func _set_eat_sprite() -> void:
 	rotation = 0.0
 	visual.rotation = 0.0
 
-	var tex: Texture2D = fruit_grab_texture if fruit_grab_texture else SkinCatalog.get_eat_texture(_current_skin_id(), "right")
+	var skin_id := _current_skin_id()
+	var goal_tex := SkinCatalog.get_goal_texture(skin_id)
+	var tex: Texture2D = goal_tex if goal_tex else (fruit_grab_texture if fruit_grab_texture else SkinCatalog.get_eat_texture(skin_id, "right"))
 	if tex:
 		spr.texture = tex
-		spr.hframes = 2
+		spr.hframes = 1
 		spr.frame = 0
 
 	var goal_pos: Vector2 = goal_target.get_goal_position()
@@ -372,74 +382,7 @@ func _set_eat_sprite() -> void:
 	rotation_tween.set_ease(Tween.EASE_OUT)
 	rotation_tween.tween_property(visual, "rotation", target_rotation, goal_tilt_duration)
 
-#with increased scale part
-#func _set_eat_sprite() -> void:
-	#var spr: Sprite2D = visual as Sprite2D
-#
-	#if not spr or not is_instance_valid(goal_target):
-		#return
-#
-	## Always start from the original scale.
-	#spr.scale = _normal_scale
-#
-	#visual.rotation = 0.0
-#
-	#var goal_position: Vector2 = goal_target.get_goal_position()
-#
-	## ========================================================
-	## EAT SPRITE
-	## ========================================================
-#
-	## eat_right visually faces LEFT.
-	#var tex: Texture2D = SkinCatalog.get_eat_texture(
-		#_current_skin_id(),
-		#"right"
-	#)
-#
-	#if tex:
-		#spr.texture = tex
-#
-	## eat_right faces LEFT.
-	## Goal LEFT  -> normal
-	## Goal RIGHT -> flip horizontally
-	#spr.flip_h = goal_position.x > global_position.x
-#
-#
-		## ========================================================
-	## TILT TOWARDS GOAL (8 directions)
-	## ========================================================
-	#rotation = 0.0
-	#var offset: Vector2 = goal_position - global_position
-	#var snapped: float = roundf(offset.angle() / (PI / 4.0)) * (PI / 4.0)
-#
-	#var goal_is_right: bool = offset.x >= 0.0
-	#spr.flip_h = goal_is_right
-#
-	## Sprite faces LEFT unflipped, RIGHT when flipped.
-	#var target_rotation: float = snapped if goal_is_right else wrapf(snapped - PI, -PI, PI)
-#
-	#var rotation_tween: Tween = create_tween()
-	#rotation_tween.set_trans(Tween.TRANS_QUAD)
-	#rotation_tween.set_ease(Tween.EASE_OUT)
-	#rotation_tween.tween_property(visual, "rotation", target_rotation, goal_tilt_duration)
-#
-	## ========================================================
-	## GOAL SCALE
-	## ========================================================
-#
-	#var target_scale: Vector2 = _normal_scale * goal_sprite_scale
-#
-	#var scale_tween: Tween = create_tween()
-#
-	#scale_tween.set_trans(Tween.TRANS_QUAD)
-	#scale_tween.set_ease(Tween.EASE_OUT)
-#
-	#scale_tween.tween_property(
-		#visual,
-		#"scale",
-		#target_scale,
-		#goal_scale_duration
-	#)
+
 # ============================================================
 # RESPAWN
 # ============================================================
@@ -473,10 +416,8 @@ func reset_after_respawn() -> void:
 		# Reset texture.
 		var spr := visual as Sprite2D
 		if spr:
-			spr.texture = _normal_tex
-			spr.hframes = _normal_hframes
+			refresh_skin()
 			spr.flip_h = _normal_flip
-			spr.frame = 0
 
 	show()
 
@@ -549,37 +490,28 @@ func _check_obstacle_collision() -> bool:
 	for i in get_slide_collision_count():
 		var collision := get_slide_collision(i)
 		var collider := collision.get_collider()
+		if not collider:
+			continue
 
-		if collider is ObstacleController or collider.is_in_group("obstacle"):
+		if collider is WallsController or collider.name.begins_with("Wall") or collider.is_in_group("wall"):
+			continue
+
+		if collider is ObstacleController or collider.is_in_group("obstacle") or collider.is_in_group("obstacles"):
 			if collider.get("is_lethal") == false or (collider.has_meta("is_lethal") and not collider.get_meta("is_lethal")):
 				continue
 			die()
 			return true
 	return false
 
-#func _finish_goal_sequence() -> void:
-	#set_physics_process(false)   # otherwise gravity resumes and it falls away from the goal
-	#if trail:
-		#trail.stop_trail()
-	#await _play_eat()
-	#if not is_goal_reached or is_dead:   # respawned during the eat
-		#return
-	#hide()
-	#if _bus:
-		#_bus.goal_sequence_finished.emit()
+
 func _finish_goal_sequence() -> void:
 	set_physics_process(false)
 
 	if trail:
 		trail.stop_trail()
-
-	# Wait 1 second after reaching the goal.
-
-
 	if not is_goal_reached or is_dead:
 		return
 
 	hide()
-
 	if _bus:
 		_bus.goal_sequence_finished.emit()

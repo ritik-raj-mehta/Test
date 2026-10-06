@@ -23,7 +23,8 @@ static var _themes: Dictionary = {
 		"falling_stone_texture": "res://game/assets/sprites/obstacles/Stone1.png",
 		"falling_stone_spike_texture": "res://game/assets/sprites/obstacles/SpikeStone1.png",
 		"fruit_texture": "res://game/assets/sprites/obstacles/Fruit1.png",
-		"fruit_cry_texture": "res://game/assets/sprites/obstacles/Fruit1Cry.png"
+		"fruit_cry_texture": "res://game/assets/sprites/obstacles/Fruit1Cry.png",
+		"fruit_eat_texture": "res://game/assets/sprites/single/ui/Fruits/ApplePhases.png"
 	},
 	"world_2": {
 		"id": "world_2",
@@ -40,7 +41,8 @@ static var _themes: Dictionary = {
 		"falling_stone_texture": "res://game/assets/sprites/obstacles/Stone2.png",
 		"falling_stone_spike_texture": "res://game/assets/sprites/obstacles/SpikeStone2.png",
 		"fruit_texture": "res://game/assets/sprites/obstacles/Fruit2.png",
-		"fruit_cry_texture":"res://game/assets/sprites/obstacles/Fruit2Cry.png"
+		"fruit_cry_texture":"res://game/assets/sprites/obstacles/Fruit2Cry.png",
+		"fruit_eat_texture": "res://game/assets/sprites/single/ui/Fruits/BananaPhases.png"
 	},
 	"world_3": {
 		"id": "world_3",
@@ -57,7 +59,8 @@ static var _themes: Dictionary = {
 		"falling_stone_texture": "res://game/assets/sprites/obstacles/Stone3.png",
 		"falling_stone_spike_texture": "res://game/assets/sprites/obstacles/SpikeStone3.png",
 		"fruit_texture": "res://game/assets/sprites/obstacles/Fruit3.png",
-		"fruit_cry_texture":"res://game/assets/sprites/obstacles/Fruit3Cry.png"
+		"fruit_cry_texture":"res://game/assets/sprites/obstacles/Fruit3Cry.png",
+		"fruit_eat_texture": "res://game/assets/sprites/single/ui/Fruits/OrangePhases.png"
 	},
 	"world_4": {
 		"id": "world_4",
@@ -74,7 +77,8 @@ static var _themes: Dictionary = {
 		"falling_stone_texture": "res://game/assets/sprites/obstacles/Stone4.png",
 		"falling_stone_spike_texture": "res://game/assets/sprites/obstacles/SpikeStone4.png",
 		"fruit_texture": "res://game/assets/sprites/obstacles/Fruit4.png",
-		"fruit_cry_texture":"res://game/assets/sprites/obstacles/Fruit4Cry.png"
+		"fruit_cry_texture":"res://game/assets/sprites/obstacles/Fruit4Cry.png",
+		"fruit_eat_texture": "res://game/assets/sprites/single/ui/Fruits/MelonPhases.png"
 	},
 	"world_5": {
 		"id": "world_5",
@@ -91,7 +95,8 @@ static var _themes: Dictionary = {
 		"falling_stone_texture": "res://game/assets/sprites/obstacles/Stone5.png",
 		"falling_stone_spike_texture": "res://game/assets/sprites/obstacles/SpikeStone5.png",
 		"fruit_texture": "res://game/assets/sprites/obstacles/Fruit5.png",
-		"fruit_cry_texture":"res://game/assets/sprites/obstacles/Fruit5Cry.png"
+		"fruit_cry_texture":"res://game/assets/sprites/obstacles/Fruit5Cry.png",
+		"fruit_eat_texture": "res://game/assets/sprites/single/ui/Fruits/strawberryPhases.png"
 	}
 }
 
@@ -200,6 +205,9 @@ static func get_fruit_texture(theme_id: String) -> Texture2D:
 
 static func get_fruit_cry_texture(theme_id: String) -> Texture2D:
 	return get_asset_texture(theme_id, "fruit_cry_texture", "res://game/assets/sprites/obstacles/Fruit1Cry.png")
+
+static func get_fruit_eat_texture(theme_id: String) -> Texture2D:
+	return get_asset_texture(theme_id, "fruit_eat_texture", "res://game/assets/sprites/single/ui/Fruits/ApplePhases.png")
 
 static func create_tileset_for_theme(theme_id: String) -> TileSet:
 	if _tileset_cache.has(theme_id):

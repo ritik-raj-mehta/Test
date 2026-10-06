@@ -7,7 +7,12 @@ enum ForceTier {
 	TIER_2_MEDIUM = 2,
 	TIER_3_HIGH = 3,
 	TIER_4_SUPER = 4,
-	TIER_5_MEGA = 5
+	TIER_5_MEGA = 5,
+	TIER_6_ULTRA = 6,
+	TIER_7_HYPER = 7,
+	TIER_8_EXTREME = 8,
+	TIER_9_COLOSSAL = 9,
+	TIER_10_HUGE = 10
 }
 
 const FORCE_TIERS: Dictionary = {
@@ -15,12 +20,17 @@ const FORCE_TIERS: Dictionary = {
 	ForceTier.TIER_2_MEDIUM: 950.0,
 	ForceTier.TIER_3_HIGH: 1300.0,
 	ForceTier.TIER_4_SUPER: 1700.0,
-	ForceTier.TIER_5_MEGA: 2200.0
+	ForceTier.TIER_5_MEGA: 2200.0,
+	ForceTier.TIER_6_ULTRA: 2800.0,
+	ForceTier.TIER_7_HYPER: 3500.0,
+	ForceTier.TIER_8_EXTREME: 4300.0,
+	ForceTier.TIER_9_COLOSSAL: 5200.0,
+	ForceTier.TIER_10_HUGE: 6200.0
 }
 
-@export_enum("Tier 1 - Low (650)", "Tier 2 - Medium (950)", "Tier 3 - High (1300)", "Tier 4 - Super (1700)", "Tier 5 - Mega (2200)") var force_tier: int = 2:
+@export_enum("Tier 1 - Low (650)", "Tier 2 - Medium (950)", "Tier 3 - High (1300)", "Tier 4 - Super (1700)", "Tier 5 - Mega (2200)", "Tier 6 - Ultra (2800)", "Tier 7 - Hyper (3500)", "Tier 8 - Extreme (4300)", "Tier 9 - Colossal (5200)", "Tier 10 - Huge (6200)") var force_tier: int = 2:
 	set(v):
-		force_tier = clampi(v, 1, 5)
+		force_tier = clampi(v, 1, 10)
 		if Engine.is_editor_hint():
 			queue_redraw()
 

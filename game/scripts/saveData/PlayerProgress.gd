@@ -47,8 +47,11 @@ func initialize(
 	# Load the active character from saved profile.
 	current_character_id = character_progress.profile_data.current_character_id
 
-	if current_character_id.is_empty():
-		current_character_id = SkinCatalog.DEFAULT_ID
+	# Zumpa (index 0) is always free — it should never be the progression
+	# target. If no value was saved (or an old save stored zumpa), find the
+	# first character whose own tap-progress hasn't reached the cap yet.
+	if current_character_id.is_empty() or current_character_id == SkinCatalog.DEFAULT_ID:
+		current_character_id = _find_first_unlocked_progression_target()
 
 	print(
 		"PLAYER PROGRESS INITIALIZED | Current character: ",
@@ -128,80 +131,113 @@ func _on_character_completed() -> void:
 	# The completed character must remain active
 	# until LevelCompletedPopup finishes its animation.
 
-func activate_next_character() -> String:
+# ============================================================
+# FIND FIRST PROGRESSION TARGET
+# Returns the first character (after zumpa) that hasn't
+# completed its own 40-tap progression yet.
+# ============================================================
 
-	var current_index: int = (
-		SkinCatalog.index_of(
-			current_character_id
+func _find_first_unlocked_progression_target() -> String:
+	for i in range(1, SkinCatalog.count()):
+		var candidate_id: String = str(
+			SkinCatalog.at(i).get("id", "")
 		)
-	)
+		if candidate_id.is_empty():
+			continue
+		if not _is_character_completed(candidate_id):
+			return candidate_id
+	# All characters completed — stay on the last one.
+	var last := SkinCatalog.at(SkinCatalog.count() - 1)
+	return str(last.get("id", SkinCatalog.DEFAULT_ID))
 
-	var next_index: int = current_index + 1
 
-	# --------------------------------------------------------
-	# ALL CHARACTERS COMPLETED
-	# --------------------------------------------------------
+func activate_next_locked_character_after(
+	unlocked_character_id: String
+) -> String:
 
-	if next_index >= SkinCatalog.count():
-
-		print(
-			"PLAYER PROGRESS | All characters completed."
-		)
-
+	if character_progress == null:
+		push_error("PlayerProgress: CharacterProgress is null.")
 		return current_character_id
 
-	# --------------------------------------------------------
-	# GET NEXT CHARACTER
-	# --------------------------------------------------------
-
-	var next_character_id: String = (
-		SkinCatalog.at(next_index)["id"]
+	var unlocked_index: int = (
+		SkinCatalog.index_of(unlocked_character_id)
 	)
 
-	# --------------------------------------------------------
-	# ACTIVATE NEXT CHARACTER
-	# --------------------------------------------------------
-
-	current_character_id = next_character_id
-	character_progress.profile_data.current_character_id = current_character_id
-	character_progress.profile_repo.mark_dirty()
-	print(
-		"PLAYER PROGRESS | NEXT CHARACTER ACTIVATED = ",
-		current_character_id
-	)
-
-	# --------------------------------------------------------
-	# NOTIFY UI
-	# --------------------------------------------------------
-
-	if game_bus:
-		game_bus.character_changed.emit(
-			current_character_id
+	for i in range(
+		unlocked_index + 1,
+		SkinCatalog.count()
+	):
+		var candidate_id: String = str(
+			SkinCatalog.at(i).get("id", "")
 		)
 
+		if candidate_id.is_empty():
+			continue
+
+		# First character whose own progress is still below the cap.
+		if not _is_character_completed(candidate_id):
+			current_character_id = candidate_id
+
+			character_progress.profile_data.current_character_id = (
+				current_character_id
+			)
+
+			character_progress.profile_repo.mark_dirty()
+
+			print(
+				"PLAYER PROGRESS | NEXT LOCKED CHARACTER = ",
+				current_character_id
+			)
+
+			if game_bus:
+				game_bus.character_changed.emit(
+					current_character_id
+				)
+
+			return current_character_id
+
+	print(
+		"PLAYER PROGRESS | No more locked characters."
+	)
+
 	return current_character_id
+
+func is_all_characters_completed() -> bool:
+	for i in range(1, SkinCatalog.count()):
+		var cid: String = str(
+			SkinCatalog.at(i).get("id", "")
+		)
+		if cid.is_empty():
+			continue
+		if not _is_character_completed(cid):
+			return false
+	return true
+
+
+func _is_character_completed(character_id: String) -> bool:
+	if character_progress == null:
+		return false
+
+	return (
+		character_progress.get_progress(character_id)
+		>= CharacterProgress.REQUIRED_TAPS
+	)
 
 
 func is_character_unlocked(character_id: String) -> bool:
 
 	var index: int = SkinCatalog.index_of(character_id)
 
-	# First character is always unlocked.
+	# Zumpa (index 0) is always unlocked.
 	if index == 0:
 		return true
 
 	if character_progress == null:
 		return false
 
-	# Previous character must be 40/40.
-	var previous_id: String = str(
-		SkinCatalog.at(index - 1).get("id", "")
-	)
-
-	if previous_id.is_empty():
-		return false
-
+	# A character is unlocked only when its OWN tap-progress has reached
+	# the required cap. Each character must be individually progressed.
 	return (
-		character_progress.get_progress(previous_id)
+		character_progress.get_progress(character_id)
 		>= CharacterProgress.REQUIRED_TAPS
 	)

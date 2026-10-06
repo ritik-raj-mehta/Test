@@ -219,6 +219,21 @@ static var _registry: Dictionary = {
 		"category": "Obstacles",
 		"default_properties": {"force_tier": 2, "custom_force": 0.0, "invulnerability_duration": 0.6},
 		"default_scale": Vector2(1, 1)
+	},
+	"wall": {
+		"id": "wall",
+		"name": "Wall Obstacle",
+		"scene_path": "res://game/scenes/Obstacles/Walls.tscn",
+		"category": "Obstacles",
+		"default_properties": {
+			"is_lethal": false,
+			"wall_type": 0,
+			"flip_h": false,
+			"flip_v": false,
+			"scale_x": 1.0,
+			"scale_y": 1.0
+		},
+		"default_scale": Vector2(1, 1)
 	}
 }
 

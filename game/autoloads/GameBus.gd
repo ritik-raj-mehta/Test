@@ -10,6 +10,7 @@ signal player_died
 signal player_respawned
 signal score_changed(new_score: int)
 signal health_changed(new_health: int, max_health: int)
+signal tap_locked(locked: bool)
 
 # ── Game State ────────────────────────────────────────────────────────────
 signal game_started
@@ -33,6 +34,7 @@ signal purchase_completed(product_id: String)
 # ── UI ────────────────────────────────────────────────────────────────────
 signal screen_opened(screen_name: String)
 signal screen_closed(screen_name: String)
+signal world_focused(world_index: int)
 
 # ── Network & Persistence ─────────────────────────────────────────────────
 signal auth_completed(uid: String)

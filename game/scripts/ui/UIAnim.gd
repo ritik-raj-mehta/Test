@@ -5,6 +5,7 @@ extends RefCounted
 enum Edge { LEFT, RIGHT, TOP, BOTTOM }
 
 const _REST_META: StringName = &"ui_anim_rest_position"
+const _FOLD_SCALE: Vector2 = Vector2(0.4, 0.4)
 
 
 static func pop_in(node: Control, duration: float = UIConfig.POPUP_IN_SECONDS) -> void:
@@ -78,3 +79,51 @@ static func _offscreen_position(node: Control, edge: Edge, rest: Vector2, margin
 			return rest + Vector2(0.0, -(origin.y + node.size.y + margin))
 		_:
 			return rest + Vector2(0.0, screen.y - origin.y + margin)
+
+
+static func capture_rest(node: Control) -> void:
+	_rest_position(node)
+
+## Park a control off-screen instantly (no animation). Pair with slide_in().
+static func hide_offscreen(node: Control, edge: Edge) -> void:
+	node.position = _offscreen_position(node, edge, _rest_position(node))
+
+## Instantly fold a control under `anchor`, invisible. Pair with drop_in().
+static func fold(node: Control, anchor: Control) -> void:
+	_rest_position(node)
+	node.pivot_offset = node.size * 0.5
+	node.position = _folded_position(node, anchor)
+	node.modulate.a = 0.0
+	node.scale = _FOLD_SCALE
+	node.hide()
+
+## Drop-down reveal: starts folded under `anchor` (e.g. the pause button), drops to its rest spot.
+static func drop_in(node: Control, anchor: Control, delay: float = 0.0, duration: float = 0.35) -> Tween:
+	var rest := _rest_position(node)
+	node.pivot_offset = node.size * 0.5
+	node.position = _folded_position(node, anchor)
+	node.modulate.a = 0.0
+	node.scale = _FOLD_SCALE
+	node.show()
+	var t := node.create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(node, "position", rest, duration).set_delay(delay)
+	t.tween_property(node, "modulate:a", 1.0, duration * 0.6).set_delay(delay)
+	t.tween_property(node, "scale", Vector2.ONE, duration).set_delay(delay)
+	return t
+
+## Reverse of drop_in: folds back under `anchor` and hides itself.
+static func drop_out(node: Control, anchor: Control, delay: float = 0.0, duration: float = 0.22) -> Tween:
+	node.pivot_offset = node.size * 0.5
+	var t := node.create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	t.tween_property(node, "position", _folded_position(node, anchor), duration).set_delay(delay)
+	t.tween_property(node, "modulate:a", 0.0, duration).set_delay(delay)
+	t.tween_property(node, "scale", _FOLD_SCALE, duration).set_delay(delay)
+	t.finished.connect(node.hide)
+	return t
+
+static func _folded_position(node: Control, anchor: Control) -> Vector2:
+	var center := anchor.get_global_rect().get_center()
+	var parent := node.get_parent() as CanvasItem
+	if parent:
+		center = parent.get_global_transform().affine_inverse() * center
+	return center - node.size * 0.5

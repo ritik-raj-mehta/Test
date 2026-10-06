@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://h0y0h6owdl37"]
 
-[ext_resource type="Script" uid="uid://dvxuhqnpul4ie" path="res://game/scenes/Obstacles/Goal.gd" id="1_sk4dj"]
+[ext_resource type="Script" uid="uid://ukvwkll4agq6" path="res://game/scenes/Obstacles/Goal.gd" id="1_sk4dj"]
 [ext_resource type="Texture2D" uid="uid://65pnnmdu54nw" path="res://game/assets/sprites/obstacles/GoalLight.png" id="2_i4fth"]
 [ext_resource type="Texture2D" uid="uid://t1865ha0l83k" path="res://game/assets/sprites/obstacles/Fruit1.png" id="2_sk4dj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sk4dj"]
-radius = 76.53104
+radius = 167.0479
 
 [node name="Goal" type="Area2D" unique_id=518839195]
 collision_mask = 3

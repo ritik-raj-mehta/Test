@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://blyi7mmhbnejx"]
 
 [ext_resource type="Texture2D" uid="uid://plk0ckihr7wt" path="res://game/assets/sprites/single/ui/level_completed.png" id="3_p4usr"]
-[ext_resource type="Script" uid="uid://d3irsxkw4od8w" path="res://game/scenes/ui/hfw/LevelCompletedPopup.gd" id="3_scr"]
+[ext_resource type="Script" uid="uid://cl8sud7yqqgvd" path="res://game/scenes/ui/hfw/LevelCompletedPopup.gd" id="3_scr"]
 [ext_resource type="PackedScene" uid="uid://8tb47baum5hu" path="res://game/scenes/ui/components/CharacterView.tscn" id="4_pac"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="5_p4usr"]
 [ext_resource type="PackedScene" uid="uid://dlgg04c5t1o3" path="res://game/scenes/ui/components/SkinProgress.tscn" id="14_pac"]
@@ -41,6 +41,7 @@ _next_button = NodePath("Margin/Column/Buttons/NextButton")
 _retry_button = NodePath("Margin/Column/Buttons/RetryButton")
 
 [node name="Background" type="TextureRect" parent="." unique_id=491243612]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

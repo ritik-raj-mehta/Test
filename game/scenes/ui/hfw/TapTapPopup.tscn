@@ -68,7 +68,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Margin" type="MarginContainer" parent="." unique_id=1493720782]
+[node name="TapTapContent" type="MarginContainer" parent="." unique_id=1493720782]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -81,28 +81,28 @@ theme_override_constants/margin_top = 380
 theme_override_constants/margin_right = 64
 theme_override_constants/margin_bottom = 420
 
-[node name="Column" type="VBoxContainer" parent="Margin" unique_id=1442391334]
+[node name="Column" type="VBoxContainer" parent="TapTapContent" unique_id=1442391334]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="Margin/Column" unique_id=1495437069]
+[node name="TextureRect" type="TextureRect" parent="TapTapContent/Column" unique_id=1495437069]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("4_ok5le")
 
-[node name="Middle" type="CenterContainer" parent="Margin/Column" unique_id=637544867]
+[node name="Middle" type="CenterContainer" parent="TapTapContent/Column" unique_id=637544867]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="Character" parent="Margin/Column/Middle" unique_id=1096544248 instance=ExtResource("3_pac")]
+[node name="Character" parent="TapTapContent/Column/Middle" unique_id=1096544248 instance=ExtResource("3_pac")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Progress" parent="Margin/Column" unique_id=1424533513 instance=ExtResource("4_pac")]
+[node name="Progress" parent="TapTapContent/Column" unique_id=1424533513 instance=ExtResource("4_pac")]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -119,3 +119,53 @@ offset_top = -69.0
 offset_right = 71.079956
 offset_bottom = 68.0
 grow_horizontal = 0
+
+[node name="UnlockPanel" type="Control" parent="." unique_id=1721598349]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UnlockContent" type="VBoxContainer" parent="UnlockPanel" unique_id=571152494]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="UnlockChar" parent="UnlockPanel/UnlockContent" unique_id=1190953928 instance=ExtResource("3_pac")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UnlockPanel/UnlockContent" unique_id=125005880]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.49014854, 0.3044156, 0.18435174, 1)
+theme_override_font_sizes/font_size = 60
+text = "New Character Unlocked"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonContent" type="HBoxContainer" parent="UnlockPanel/UnlockContent" unique_id=1125188144]
+layout_mode = 2
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="Equip" type="Button" parent="UnlockPanel/UnlockContent/ButtonContent" unique_id=1711931697]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "Equip"
+
+[node name="Continue" type="Button" parent="UnlockPanel/UnlockContent/ButtonContent" unique_id=101674267]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "Continue"
