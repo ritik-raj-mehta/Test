@@ -170,7 +170,7 @@ tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_psvrg")
 
-[node name="LevelRoot" type="Node2D" unique_id=1985130219]
+[node name="LevelRoot" type="Node2D" unique_id=331961776]
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=927742863 instance=ExtResource("1_sgy56")]
 z_index = 10
@@ -179,7 +179,7 @@ collision_layer = 2
 collision_mask = 23
 script = ExtResource("2_3lxoj")
 
-[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=798354556]
+[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=904977775]
 z_index = 150
 position = Vector2(40, 0)
 scale = Vector2(1.5, 1.5)
@@ -201,7 +201,7 @@ script = ExtResource("7_wu7u1")
 spike_count = 8
 wall_distance = 45.0
 
-[node name="Spike_2" type="StaticBody2D" parent="." unique_id=1063448787 groups=["obstacle"] instance=ExtResource("6_121em")]
+[node name="Spike_2" type="StaticBody2D" parent="." unique_id=1122355062 groups=["obstacle"] instance=ExtResource("6_121em")]
 z_index = 100
 position = Vector2(1119.0627, 1814.4403)
 collision_layer = 2
@@ -211,9 +211,9 @@ spike_count = 8
 wall_distance = 45.0
 
 [node name="GearWithRod" type="Node2D" parent="." unique_id=1293548201 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
-position = Vector2(1157, 925)
+position = Vector2(1157, 923)
 rotation = -0.61086524
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.3, 1.3)
 script = ExtResource("9_h6nkb")
 has_rod = true
 rod_breadth = 12.0
@@ -221,9 +221,9 @@ breadth = 12.0
 width = 12.0
 rotation_speed = 5.0
 move_speed = 150.0
-move_dist_pos = 560.0
+move_dist_pos = 660.0
 move_dist_neg = 0.0
-move_distance = 560.0
+move_distance = 660.0
 move_angle = 180.0
 move_direction = "CUSTOM"
 loop_reset = true
@@ -233,9 +233,9 @@ interval_move_time = 2.0100000000000002
 interval_pause_time = 0.99
 world_theme = "world_4"
 
-[node name="GearWithRod_2" type="Node2D" parent="." unique_id=1946702541 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
+[node name="GearWithRod_2" type="Node2D" parent="." unique_id=1654081586 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
 position = Vector2(1157, 868)
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.3, 1.3)
 script = ExtResource("9_h6nkb")
 has_rod = true
 rod_breadth = 12.0
@@ -243,9 +243,9 @@ breadth = 12.0
 width = 12.0
 rotation_speed = 5.0
 move_speed = 150.0
-move_dist_pos = 560.0
+move_dist_pos = 660.0
 move_dist_neg = 0.0
-move_distance = 560.0
+move_distance = 660.0
 move_angle = 180.0
 move_direction = "CUSTOM"
 loop_reset = true
@@ -256,10 +256,10 @@ interval_move_time = 2.0100000000000002
 interval_pause_time = 0.99
 world_theme = "world_4"
 
-[node name="GearWithRod_3" type="Node2D" parent="." unique_id=1450495645 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
+[node name="GearWithRod_3" type="Node2D" parent="." unique_id=324817813 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
 position = Vector2(1157, 807)
 rotation = 0.61086524
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.3, 1.3)
 script = ExtResource("9_h6nkb")
 has_rod = true
 rod_breadth = 12.0
@@ -267,9 +267,9 @@ breadth = 12.0
 width = 12.0
 rotation_speed = 5.0
 move_speed = 150.0
-move_dist_pos = 560.0
+move_dist_pos = 660.0
 move_dist_neg = 0.0
-move_distance = 560.0
+move_distance = 660.0
 move_angle = 180.0
 move_direction = "CUSTOM"
 loop_reset = true
@@ -280,10 +280,10 @@ interval_move_time = 2.0100000000000002
 interval_pause_time = 0.99
 world_theme = "world_4"
 
-[node name="GearWithRod_4" type="Node2D" parent="." unique_id=1380970451 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
+[node name="GearWithRod_4" type="Node2D" parent="." unique_id=88982405 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
 position = Vector2(840, -128)
 rotation = 0.61086524
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.3, 1.3)
 script = ExtResource("9_h6nkb")
 has_rod = true
 rod_breadth = 12.0
@@ -291,9 +291,9 @@ breadth = 12.0
 width = 12.0
 rotation_speed = 5.0
 move_speed = 150.0
-move_dist_pos = 560.0
+move_dist_pos = 660.0
 move_dist_neg = 0.0
-move_distance = 560.0
+move_distance = 660.0
 move_direction = "+X"
 loop_reset = true
 gear_count = 3
@@ -302,9 +302,9 @@ interval_move_time = 2.0100000000000002
 interval_pause_time = 0.99
 world_theme = "world_4"
 
-[node name="GearWithRod_5" type="Node2D" parent="." unique_id=157017560 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
+[node name="GearWithRod_5" type="Node2D" parent="." unique_id=1242763122 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
 position = Vector2(840, -192)
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.3, 1.3)
 script = ExtResource("9_h6nkb")
 has_rod = true
 rod_breadth = 12.0
@@ -312,9 +312,9 @@ breadth = 12.0
 width = 12.0
 rotation_speed = 5.0
 move_speed = 150.0
-move_dist_pos = 560.0
+move_dist_pos = 660.0
 move_dist_neg = 0.0
-move_distance = 560.0
+move_distance = 660.0
 move_direction = "+X"
 loop_reset = true
 start_delay = 0.5
@@ -324,10 +324,10 @@ interval_move_time = 2.0100000000000002
 interval_pause_time = 0.99
 world_theme = "world_4"
 
-[node name="GearWithRod_6" type="Node2D" parent="." unique_id=1222870514 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
-position = Vector2(840, -251)
+[node name="GearWithRod_6" type="Node2D" parent="." unique_id=342362328 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
+position = Vector2(842, -251)
 rotation = -0.61086524
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.3, 1.3)
 script = ExtResource("9_h6nkb")
 has_rod = true
 rod_breadth = 12.0
@@ -335,9 +335,9 @@ breadth = 12.0
 width = 12.0
 rotation_speed = 5.0
 move_speed = 150.0
-move_dist_pos = 560.0
+move_dist_pos = 660.0
 move_dist_neg = 0.0
-move_distance = 560.0
+move_distance = 660.0
 move_direction = "+X"
 loop_reset = true
 start_delay = 1.0
@@ -347,9 +347,9 @@ interval_move_time = 2.0100000000000002
 interval_pause_time = 0.99
 world_theme = "world_4"
 
-[node name="GearWithRod_7" type="Node2D" parent="." unique_id=687912692 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
+[node name="GearWithRod_7" type="Node2D" parent="." unique_id=415240919 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
 position = Vector2(1154, -1245)
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.3, 1.3)
 script = ExtResource("9_h6nkb")
 has_rod = true
 rod_breadth = 12.0
@@ -357,9 +357,9 @@ breadth = 12.0
 width = 12.0
 rotation_speed = 5.0
 move_speed = 150.0
-move_dist_pos = 560.0
+move_dist_pos = 660.0
 move_dist_neg = 0.0
-move_distance = 560.0
+move_distance = 660.0
 move_angle = 180.0
 move_direction = "CUSTOM"
 loop_reset = true
@@ -370,10 +370,10 @@ interval_move_time = 2.0100000000000002
 interval_pause_time = 0.99
 world_theme = "world_4"
 
-[node name="GearWithRod_8" type="Node2D" parent="." unique_id=698814032 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
+[node name="GearWithRod_8" type="Node2D" parent="." unique_id=632834652 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
 position = Vector2(1157, -1303)
 rotation = 0.61086524
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.3, 1.3)
 script = ExtResource("9_h6nkb")
 has_rod = true
 rod_breadth = 12.0
@@ -381,9 +381,9 @@ breadth = 12.0
 width = 12.0
 rotation_speed = 5.0
 move_speed = 150.0
-move_dist_pos = 560.0
+move_dist_pos = 660.0
 move_dist_neg = 0.0
-move_distance = 560.0
+move_distance = 660.0
 move_angle = 180.0
 move_direction = "CUSTOM"
 loop_reset = true
@@ -394,10 +394,10 @@ interval_move_time = 2.0100000000000002
 interval_pause_time = 0.99
 world_theme = "world_4"
 
-[node name="GearWithRod_9" type="Node2D" parent="." unique_id=1642243120 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
+[node name="GearWithRod_9" type="Node2D" parent="." unique_id=1796061529 groups=["obstacle"] instance=ExtResource("8_bx7ge")]
 position = Vector2(1157, -1190)
 rotation = -0.61086524
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.3, 1.3)
 script = ExtResource("9_h6nkb")
 has_rod = true
 rod_breadth = 12.0
@@ -405,9 +405,9 @@ breadth = 12.0
 width = 12.0
 rotation_speed = 5.0
 move_speed = 150.0
-move_dist_pos = 560.0
+move_dist_pos = 660.0
 move_dist_neg = 0.0
-move_distance = 560.0
+move_distance = 660.0
 move_angle = 180.0
 move_direction = "CUSTOM"
 loop_reset = true
@@ -416,3 +416,33 @@ gear_spacing = 120.0
 interval_move_time = 2.0100000000000002
 interval_pause_time = 0.99
 world_theme = "world_4"
+
+[node name="Spike_3" type="StaticBody2D" parent="." unique_id=430261275 groups=["obstacle"] instance=ExtResource("6_121em")]
+z_index = 100
+position = Vector2(1431.85, 1017.7001)
+rotation = 3.1415927
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("7_wu7u1")
+spike_count = 7
+wall_distance = 44.0
+
+[node name="Spike_4" type="StaticBody2D" parent="." unique_id=150930784 groups=["obstacle"] instance=ExtResource("6_121em")]
+z_index = 100
+position = Vector2(831.29987, -38.24992)
+rotation = 3.1415927
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("7_wu7u1")
+spike_count = 7
+wall_distance = 44.0
+
+[node name="Spike_5" type="StaticBody2D" parent="." unique_id=1030163512 groups=["obstacle"] instance=ExtResource("6_121em")]
+z_index = 100
+position = Vector2(1433.282, -1094.0591)
+rotation = 3.1415927
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("7_wu7u1")
+spike_count = 7
+wall_distance = 44.0

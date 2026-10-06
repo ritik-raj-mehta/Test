@@ -13,21 +13,21 @@ class_name FallingStoneController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
-@export var fall_speed: float = 600.0:
+@export var fall_speed: float = 1200.0:
 	set(v):
 		fall_speed = max(0.0, v)
 		if Engine.is_editor_hint():
 			queue_redraw()
 
-@export var gravity: float = 1200.0
-@export var rotation_speed: float = 4.0
-@export var fall_distance: float = 3000.0:
+@export var gravity: float = 2200.0
+@export var rotation_speed: float = 6.0
+@export var fall_distance: float = 3500.0:
 	set(v):
 		fall_distance = max(0.0, v)
 		if Engine.is_editor_hint():
 			queue_redraw()
 
-@export var knockback_force: float = 600.0
+@export var knockback_force: float = 1400.0
 @export var world_theme: String = "":
 	set(v):
 		world_theme = v
@@ -142,15 +142,39 @@ func _physics_process(delta: float) -> void:
 	if not is_falling:
 		return
 
-	# Apply falling velocity and gravity until stone lands on floor
-	if not has_landed and not is_on_floor():
-		velocity.y = minf(1600.0, velocity.y + gravity * delta)
+	# 1. Check if standing/landing on a slope or floor
+	var floor_norm := get_floor_normal()
+	var on_slope := is_on_floor() and absf(floor_norm.x) > 0.08 and floor_norm.y < -0.2
+
+	if on_slope:
+		# Slope Rolling Physics:
+		# Calculate slope tangent vector pointing DOWNHILL along slope surface
+		var slope_tangent := Vector2(floor_norm.y, -floor_norm.x)
+		if slope_tangent.y < 0.0:
+			slope_tangent = -slope_tangent
+
+		# Gravity component parallel to slope surface
+		var slope_accel: float = gravity * slope_tangent.y
+		velocity += slope_tangent * (slope_accel * delta)
+
+		# Terminal rolling speed clamp along slope
+		if velocity.length() > 1400.0:
+			velocity = velocity.normalized() * 1400.0
+
+		# Synchronize sprite rotation speed with linear rolling speed along surface (v = w * r)
+		var target_roll_speed: float = (velocity.x / 30.0) * 4.0
+		rotation_speed = lerpf(rotation_speed, target_roll_speed, 10.0 * delta)
+		has_landed = false
+	elif not has_landed and not is_on_floor():
+		# Free-fall under massive gravity
+		velocity.y = minf(2800.0, velocity.y + gravity * delta)
 		if absf(velocity.x) > 0.0:
-			velocity.x = move_toward(velocity.x, 0.0, 120.0 * delta)
+			velocity.x = move_toward(velocity.x, 0.0, 100.0 * delta)
 	else:
+		# Flat ground friction deceleration
 		velocity.y = 0.0
 		if absf(velocity.x) > 0.0:
-			velocity.x = move_toward(velocity.x, 0.0, 700.0 * delta)
+			velocity.x = move_toward(velocity.x, 0.0, 750.0 * delta)
 		rotation_speed = move_toward(rotation_speed, 0.0, 10.0 * delta)
 
 	if sprite:
@@ -163,6 +187,10 @@ func _physics_process(delta: float) -> void:
 			has_hit_player = false
 
 	if is_inside_tree():
+		# Maintain floor snapping and up vector for smooth slope rolling
+		up_direction = Vector2.UP
+		floor_stop_on_slope = false
+		floor_max_angle = deg_to_rad(75.0)
 		move_and_slide()
 
 		# Process collisions with Terrain and Player
@@ -172,7 +200,7 @@ func _physics_process(delta: float) -> void:
 			if not collider:
 				continue
 
-			var is_player = (collider is CharacterBody2D and collider.name.begins_with("Player")) \
+			var is_player = (collider is CharacterBody2D and (collider.name.begins_with("Player") or collider is Player)) \
 				or collider.is_in_group("player") \
 				or collider.has_method("apply_knockback") \
 				or (collider.has_method("die") and not (collider is FallingStoneController))
@@ -183,19 +211,27 @@ func _physics_process(delta: float) -> void:
 					return
 			else:
 				var col_norm := col.get_normal()
-				if is_on_floor() or col_norm.y < -0.6:
-					# Landed on ground / floor
-					if velocity.y > 160.0:
-						velocity.y = -velocity.y * 0.25
-						velocity.x *= 0.6
+				# Check if collision surface is inclined slope or floor
+				if col_norm.y < -0.2:
+					if absf(col_norm.x) > 0.08:
+						# Slope hit: start rolling down slope
+						has_landed = false
+						var slope_tangent := Vector2(col_norm.y, -col_norm.x)
+						if slope_tangent.y < 0.0: slope_tangent = -slope_tangent
+						velocity += slope_tangent * 80.0
 					else:
-						has_landed = true
-						velocity.y = 0.0
-						velocity.x = move_toward(velocity.x, 0.0, 700.0 * delta)
-						rotation_speed = move_toward(rotation_speed, 0.0, 10.0 * delta)
+						# Flat floor hit
+						if velocity.y > 180.0:
+							velocity.y = -velocity.y * 0.2
+							velocity.x *= 0.7
+						else:
+							has_landed = true
+							velocity.y = 0.0
+							velocity.x = move_toward(velocity.x, 0.0, 750.0 * delta)
+							rotation_speed = move_toward(rotation_speed, 0.0, 10.0 * delta)
 					break
-				elif absf(col_norm.x) > 0.6 and col_norm.y > -0.6:
-					# Wall collision: bounce off wall in opposite direction and keep falling
+				elif absf(col_norm.x) > 0.6 and col_norm.y > -0.2:
+					# Vertical wall collision: bounce off wall in opposite direction and keep falling/rolling
 					velocity.x = -velocity.x * 0.6
 					rotation_speed = -rotation_speed * 0.7
 					global_position += col_norm * 2.0
@@ -203,8 +239,8 @@ func _physics_process(delta: float) -> void:
 					# Ceiling collision: bounce down
 					velocity.y = absf(velocity.y) * 0.5
 
-	# Check if stone has landed on ground or stopped moving
-	if (has_landed or is_on_floor()) and velocity.length_squared() < 250.0:
+	# Check if stone has landed on flat ground or stopped moving
+	if (has_landed or (is_on_floor() and not on_slope)) and velocity.length_squared() < 250.0:
 		_rest_timer += delta
 		if _rest_timer >= 2.0:
 			_deactivate_stone()
@@ -244,7 +280,7 @@ func _handle_player_collision(player_node: Node2D, collision: KinematicCollision
 		var contact_normal := (p_pos - global_position).normalized()
 		if contact_normal == Vector2.ZERO or absf(contact_normal.x) < 0.12:
 			var side = 1.0 if (p_pos.x >= global_position.x) else -1.0
-			contact_normal = Vector2(side * 0.75, 0.65).normalized()
+			contact_normal = Vector2(side * 0.75, -0.4).normalized()
 
 		# Player is propelled along collision contact normal (away from stone)
 		var player_push_dir := contact_normal
@@ -253,7 +289,7 @@ func _handle_player_collision(player_node: Node2D, collision: KinematicCollision
 		if player_node.has_method("apply_knockback"):
 			player_node.apply_knockback(p_impulse)
 		elif "velocity" in player_node:
-			player_node.velocity = p_impulse
+			player_node.set("velocity", p_impulse)
 
 		if "_input_lock" in player_node:
 			player_node.set("_input_lock", 0.35)
@@ -261,7 +297,7 @@ func _handle_player_collision(player_node: Node2D, collision: KinematicCollision
 		player_node.global_position += player_push_dir * 14.0
 
 		# Newton's 3rd Law: Reaction force acts on stone in the EXACT OPPOSITE direction (-player_push_dir)
-		# Bounces stone in opposite direction with upward and outward rebound, then falls back down under gravity
+		# Bounces stone in opposite direction with realistic impulse rebound
 		var stone_rebound_dir := -player_push_dir
 		var impact_speed: float = maxf(velocity.length(), fall_speed)
 		var rebound_speed: float = clampf(impact_speed * 0.8, 500.0, 850.0)
