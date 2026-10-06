@@ -171,6 +171,38 @@ class_name MovingGearController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
+@export_group("Gear Grouping System")
+@export_range(1, 20, 1) var group_count: int = 1:
+	set(v):
+		group_count = clampi(v, 1, 20)
+		_rebuild_gears()
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export_range(1, 20, 1) var gears_per_group: int = 1:
+	set(v):
+		gears_per_group = clampi(v, 1, 20)
+		_rebuild_gears()
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export_range(0.0, 5000.0, 1.0, "or_greater") var group_spacing: float = 300.0:
+	set(v):
+		group_spacing = max(0.0, v)
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var group_phase_stagger: float = 0.0: # Time delay in seconds between movement of successive groups
+	set(v):
+		group_phase_stagger = max(0.0, v)
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+
 @export_group("Interval Movement & Speed Curve")
 @export var enable_interval_movement: bool = false:
 	set(v):
@@ -444,7 +476,11 @@ func _rebuild_gears() -> void:
 	_gear_bodies.clear()
 	_gear_sprites.clear()
 
-	if not has_gear or gear_count == 0:
+	var target_count = gear_count
+	if group_count > 1:
+		target_count = group_count * max(1, gears_per_group)
+
+	if not has_gear or target_count == 0:
 		if gear_body:
 			gear_body.visible = false
 			gear_body.process_mode = Node.PROCESS_MODE_DISABLED
@@ -464,7 +500,6 @@ func _rebuild_gears() -> void:
 			_gear_sprites.append(sprite_gear)
 
 	# Spawn clone gears
-	var target_count = max(1, gear_count)
 	for i in range(1, target_count):
 		if gear_body:
 			var clone := gear_body.duplicate() as StaticBody2D
@@ -763,13 +798,19 @@ func _update_rod_dimensions() -> void:
 	var rod_center: Vector2 = Vector2.ZERO
 
 	if has_gear and _total_span > 0.0:
-		rod_len = _total_span
+		var max_gear_offset: float = 0.0
+		if group_count > 1 and gears_per_group > 0:
+			max_gear_offset = float(group_count - 1) * group_spacing + float(gears_per_group - 1) * gear_spacing
+		elif gear_count > 1:
+			max_gear_offset = float(gear_count - 1) * gear_spacing
+
+		rod_len = max(length, _total_span + max_gear_offset)
 		if move_dist_pos > 0.0 and move_dist_neg <= 0.001:
 			rod_center = _move_dir_vec * (rod_len * 0.5)
 		elif move_dist_neg > 0.0 and move_dist_pos <= 0.001:
 			rod_center = -_move_dir_vec * (rod_len * 0.5)
 		else:
-			rod_center = _move_dir_vec * _center_offset
+			rod_center = _move_dir_vec * (_center_offset + max_gear_offset * 0.5)
 	else:
 		# Static rod barrier centered at node origin
 		rod_len = max(length, move_distance)
@@ -865,79 +906,82 @@ func _physics_process(delta: float) -> void:
 			_update_gears_positions(0.0)
 		else:
 			# Ping-pong oscillation with endpoint delays
-			var offset_scalar: float = 0.0
-			var pos_d = move_dist_pos
-			var neg_d = move_dist_neg
-			var t_pause = direction_change_delay
-			var t_act = _motion_accum_time
-
-			if pos_d > 0.0 and neg_d <= 0.001:
-				var t_one = pos_d / max(1.0, base_spd)
-				if t_pause > 0.0:
-					var cycle = 2.0 * (t_one + t_pause)
-					var t = fmod(t_act, cycle)
-					if t < t_one:
-						var s = (1.0 - cos((t / t_one) * PI)) * 0.5
-						offset_scalar = pos_d * s
-					elif t < t_one + t_pause:
-						offset_scalar = pos_d
-					elif t < 2.0 * t_one + t_pause:
-						var s = (1.0 - cos(((t - (t_one + t_pause)) / t_one) * PI)) * 0.5
-						offset_scalar = pos_d * (1.0 - s)
-					else:
-						offset_scalar = 0.0
-				else:
-					var phase = t_act * (base_spd / max(1.0, pos_d)) * PI
-					offset_scalar = pos_d * 0.5 * (1.0 - cos(phase))
-
-			elif neg_d > 0.0 and pos_d <= 0.001:
-				var t_one = neg_d / max(1.0, base_spd)
-				if t_pause > 0.0:
-					var cycle = 2.0 * (t_one + t_pause)
-					var t = fmod(t_act, cycle)
-					if t < t_one:
-						var s = (1.0 - cos((t / t_one) * PI)) * 0.5
-						offset_scalar = -neg_d * s
-					elif t < t_one + t_pause:
-						offset_scalar = -neg_d
-					elif t < 2.0 * t_one + t_pause:
-						var s = (1.0 - cos(((t - (t_one + t_pause)) / t_one) * PI)) * 0.5
-						offset_scalar = -neg_d * (1.0 - s)
-					else:
-						offset_scalar = 0.0
-				else:
-					var phase = t_act * (base_spd / max(1.0, neg_d)) * PI
-					offset_scalar = -neg_d * 0.5 * (1.0 - cos(phase))
-
-			else:
-				var t_pos = pos_d / max(1.0, base_spd)
-				var t_neg = neg_d / max(1.0, base_spd)
-				var t_span = (pos_d + neg_d) / max(1.0, base_spd)
-				var cycle = 2.0 * t_span + 2.0 * t_pause
-				var t = fmod(t_act, cycle)
-
-				if t < t_pos:
-					var s = sin((t / max(0.001, t_pos)) * (PI * 0.5))
-					offset_scalar = pos_d * s
-				elif t < t_pos + t_pause:
-					offset_scalar = pos_d
-				elif t < t_pos + t_pause + t_span:
-					var u = t - (t_pos + t_pause)
-					var s = (1.0 - cos((u / max(0.001, t_span)) * PI)) * 0.5
-					offset_scalar = pos_d - (pos_d + neg_d) * s
-				elif t < t_pos + 2.0 * t_pause + t_span:
-					offset_scalar = -neg_d
-				else:
-					var v = t - (t_pos + 2.0 * t_pause + t_span)
-					var s = cos((v / max(0.001, t_neg)) * (PI * 0.5))
-					offset_scalar = -neg_d * s
-
+			var offset_scalar = _calculate_offset_scalar(_motion_accum_time)
 			_update_gears_positions(offset_scalar)
+
+func _calculate_offset_scalar(t_act: float) -> float:
+	var base_spd = interval_speed if enable_interval_movement else move_speed
+	var pos_d = move_dist_pos
+	var neg_d = move_dist_neg
+	var t_pause = direction_change_delay
+
+	if pos_d > 0.0 and neg_d <= 0.001:
+		var t_one = pos_d / max(1.0, base_spd)
+		if t_pause > 0.0:
+			var cycle = 2.0 * (t_one + t_pause)
+			var t = fmod(t_act, cycle)
+			if t < t_one:
+				var s = (1.0 - cos((t / t_one) * PI)) * 0.5
+				return pos_d * s
+			elif t < t_one + t_pause:
+				return pos_d
+			elif t < 2.0 * t_one + t_pause:
+				var s = (1.0 - cos(((t - (t_one + t_pause)) / t_one) * PI)) * 0.5
+				return pos_d * (1.0 - s)
+			else:
+				return 0.0
+		else:
+			var phase = t_act * (base_spd / max(1.0, pos_d)) * PI
+			return pos_d * 0.5 * (1.0 - cos(phase))
+
+	elif neg_d > 0.0 and pos_d <= 0.001:
+		var t_one = neg_d / max(1.0, base_spd)
+		if t_pause > 0.0:
+			var cycle = 2.0 * (t_one + t_pause)
+			var t = fmod(t_act, cycle)
+			if t < t_one:
+				var s = (1.0 - cos((t / t_one) * PI)) * 0.5
+				return -neg_d * s
+			elif t < t_one + t_pause:
+				return -neg_d
+			elif t < 2.0 * t_one + t_pause:
+				var s = (1.0 - cos(((t - (t_one + t_pause)) / t_one) * PI)) * 0.5
+				return -neg_d * (1.0 - s)
+			else:
+				return 0.0
+		else:
+			var phase = t_act * (base_spd / max(1.0, neg_d)) * PI
+			return -neg_d * 0.5 * (1.0 - cos(phase))
+
+	else:
+		var t_pos = pos_d / max(1.0, base_spd)
+		var t_neg = neg_d / max(1.0, base_spd)
+		var t_span = (pos_d + neg_d) / max(1.0, base_spd)
+		var cycle = 2.0 * t_span + 2.0 * t_pause
+		var t = fmod(t_act, cycle)
+
+		if t < t_pos:
+			var s = sin((t / max(0.001, t_pos)) * (PI * 0.5))
+			return pos_d * s
+		elif t < t_pos + t_pause:
+			return pos_d
+		elif t < t_pos + t_pause + t_span:
+			var u = t - (t_pos + t_pause)
+			var s = (1.0 - cos((u / max(0.001, t_span)) * PI)) * 0.5
+			return pos_d - (pos_d + neg_d) * s
+		elif t < t_pos + 2.0 * t_pause + t_span:
+			return -neg_d
+		else:
+			var v = t - (t_pos + 2.0 * t_pause + t_span)
+			var s = cos((v / max(0.001, t_neg)) * (PI * 0.5))
+			return -neg_d * s
 
 func _update_gears_positions(offset_scalar: float) -> void:
 	var count = _gear_bodies.size()
 	if count == 0 or not has_gear:
 		return
+
+	var has_groups = (group_count > 1 and gears_per_group > 0)
 
 	if is_zigzag or not custom_waypoints.is_empty():
 		if _total_path_length <= 0.001:
@@ -957,7 +1001,14 @@ func _update_gears_positions(offset_scalar: float) -> void:
 				var body = _gear_bodies[i]
 				if not body:
 					continue
-				var gear_t = _motion_accum_time + float(i) * spacing_t
+				var base_offset_t: float = 0.0
+				if has_groups:
+					var g = i / gears_per_group
+					var k = i % gears_per_group
+					base_offset_t = (float(g) * group_spacing + float(k) * gear_spacing) / base_spd
+				else:
+					base_offset_t = float(i) * spacing_t
+				var gear_t = _motion_accum_time + base_offset_t
 				body.position = _get_position_at_path_time(gear_t)
 			return
 
@@ -971,7 +1022,14 @@ func _update_gears_positions(offset_scalar: float) -> void:
 			var body = _gear_bodies[i]
 			if not body:
 				continue
-			var gear_dist = base_dist + float(i) * effective_spacing
+			var base_offset: float = 0.0
+			if has_groups:
+				var g = i / gears_per_group
+				var k = i % gears_per_group
+				base_offset = float(g) * group_spacing + float(k) * gear_spacing
+			else:
+				base_offset = float(i) * effective_spacing
+			var gear_dist = base_dist + base_offset
 			body.position = _get_position_at_path_distance(gear_dist)
 		return
 
@@ -985,7 +1043,14 @@ func _update_gears_positions(offset_scalar: float) -> void:
 			var body = _gear_bodies[i]
 			if not body:
 				continue
-			var gear_prog = fposmod(_progress + (float(i) * effective_spacing / max(1.0, _total_span)), 1.0)
+			var base_dist: float = 0.0
+			if has_groups:
+				var g = i / gears_per_group
+				var k = i % gears_per_group
+				base_dist = float(g) * group_spacing + float(k) * gear_spacing
+			else:
+				base_dist = float(i) * effective_spacing
+			var gear_prog = fposmod(_progress + (base_dist / max(1.0, _total_span)), 1.0)
 			var travel_offset = gear_prog * _total_span
 			body.position = track_start + (_move_dir_vec * travel_offset)
 	else:
@@ -993,8 +1058,20 @@ func _update_gears_positions(offset_scalar: float) -> void:
 			var body = _gear_bodies[i]
 			if not body:
 				continue
-			var spacing_offset = _move_dir_vec * (float(i) * gear_spacing)
-			body.position = (_move_dir_vec * offset_scalar) + spacing_offset
+			var base_dist: float = 0.0
+			var stagger_scalar: float = offset_scalar
+			if has_groups:
+				var g = i / gears_per_group
+				var k = i % gears_per_group
+				base_dist = float(g) * group_spacing + float(k) * gear_spacing
+				if group_phase_stagger > 0.0:
+					var staggered_t = max(0.0, _motion_accum_time - float(g) * group_phase_stagger)
+					stagger_scalar = _calculate_offset_scalar(staggered_t)
+			else:
+				base_dist = float(i) * gear_spacing
+
+			var spacing_offset = _move_dir_vec * base_dist
+			body.position = (_move_dir_vec * stagger_scalar) + spacing_offset
 
 # ==============================================================================
 # 8. WORLD THEME & RESET
@@ -1089,7 +1166,16 @@ func _draw() -> void:
 		draw_line(p_neg - perp, p_neg + perp, end_col, 3.0)
 		draw_line(p_pos - perp, p_pos + perp, end_col, 3.0)
 
-		if gear_count > 1:
+		var has_groups = (group_count > 1 and gears_per_group > 0)
+		if has_groups:
+			for g in range(group_count):
+				for k in range(gears_per_group):
+					if g == 0 and k == 0:
+						continue
+					var g_offset = (float(g) * group_spacing) + (float(k) * gear_spacing)
+					var g_pos = _move_dir_vec * g_offset
+					draw_circle(g_pos, 4.5, Color(1.0, 0.85, 0.2, 0.9) if k == 0 else Color(0.2, 0.85, 1.0, 0.8))
+		elif gear_count > 1:
 			for i in range(1, gear_count):
 				var g_pos = _move_dir_vec * (float(i) * gear_spacing)
 				draw_circle(g_pos, 4.5, Color(1.0, 0.85, 0.2, 0.9))
@@ -1100,7 +1186,9 @@ func _draw() -> void:
 				label_str += " [Loop Mode]"
 			elif direction_change_delay > 0.0 or start_delay > 0.0:
 				label_str += " | Delay: %.1fs" % [direction_change_delay + start_delay]
-			if gear_count > 1:
+			if has_groups:
+				label_str += " | %d Groups (%d gears/grp, Gap: %.0f, Dist: %.0f)" % [group_count, gears_per_group, gear_spacing, group_spacing]
+			elif gear_count > 1:
 				label_str += " | %d Gears (Gap: %.0f)" % [gear_count, gear_spacing]
 			draw_string(font, p_pos + Vector2(10, 4), label_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1, 0.95))
 

@@ -140,6 +140,14 @@ var prop_rod_has_collision_row: HBoxContainer
 var rod_has_collision_check: CheckBox
 var prop_start_delay_row: HBoxContainer
 var start_delay_spin: SpinBox
+var prop_group_count_row: HBoxContainer
+var group_count_spin: SpinBox
+var prop_gears_per_group_row: HBoxContainer
+var gears_per_group_spin: SpinBox
+var prop_group_spacing_row: HBoxContainer
+var group_spacing_spin: SpinBox
+var prop_group_stagger_row: HBoxContainer
+var group_stagger_spin: SpinBox
 var prop_stone_angle_row: HBoxContainer
 var stone_angle_spin: SpinBox
 var prop_stone_force_row: HBoxContainer
@@ -504,6 +512,81 @@ func setup_dynamic_inspector_fields() -> void:
 	parent_vbox.add_child(prop_start_delay_row)
 	parent_vbox.move_child(prop_start_delay_row, target_index)
 	target_index += 1
+
+	# Group Count Row
+	prop_group_count_row = HBoxContainer.new()
+	prop_group_count_row.visible = false
+	var lbl_gc = Label.new()
+	lbl_gc.text = "Group Count:"
+	lbl_gc.custom_minimum_size = Vector2(100, 0)
+	group_count_spin = SpinBox.new()
+	group_count_spin.min_value = 1.0
+	group_count_spin.max_value = 20.0
+	group_count_spin.step = 1.0
+	group_count_spin.value = 1.0
+	group_count_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	prop_group_count_row.add_child(lbl_gc)
+	prop_group_count_row.add_child(group_count_spin)
+	parent_vbox.add_child(prop_group_count_row)
+	parent_vbox.move_child(prop_group_count_row, target_index)
+	target_index += 1
+
+	# Gears Per Group Row
+	prop_gears_per_group_row = HBoxContainer.new()
+	prop_gears_per_group_row.visible = false
+	var lbl_gpg = Label.new()
+	lbl_gpg.text = "Gears / Group:"
+	lbl_gpg.custom_minimum_size = Vector2(100, 0)
+	gears_per_group_spin = SpinBox.new()
+	gears_per_group_spin.min_value = 1.0
+	gears_per_group_spin.max_value = 20.0
+	gears_per_group_spin.step = 1.0
+	gears_per_group_spin.value = 1.0
+	gears_per_group_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	prop_gears_per_group_row.add_child(lbl_gpg)
+	prop_gears_per_group_row.add_child(gears_per_group_spin)
+	parent_vbox.add_child(prop_gears_per_group_row)
+	parent_vbox.move_child(prop_gears_per_group_row, target_index)
+	target_index += 1
+
+	# Group Spacing Row
+	prop_group_spacing_row = HBoxContainer.new()
+	prop_group_spacing_row.visible = false
+	var lbl_gs = Label.new()
+	lbl_gs.text = "Group Spacing:"
+	lbl_gs.custom_minimum_size = Vector2(100, 0)
+	group_spacing_spin = SpinBox.new()
+	group_spacing_spin.min_value = 0.0
+	group_spacing_spin.max_value = 5000.0
+	group_spacing_spin.step = 10.0
+	group_spacing_spin.value = 300.0
+	group_spacing_spin.suffix = "px"
+	group_spacing_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	prop_group_spacing_row.add_child(lbl_gs)
+	prop_group_spacing_row.add_child(group_spacing_spin)
+	parent_vbox.add_child(prop_group_spacing_row)
+	parent_vbox.move_child(prop_group_spacing_row, target_index)
+	target_index += 1
+
+	# Group Stagger Row
+	prop_group_stagger_row = HBoxContainer.new()
+	prop_group_stagger_row.visible = false
+	var lbl_gst = Label.new()
+	lbl_gst.text = "Group Stagger:"
+	lbl_gst.custom_minimum_size = Vector2(100, 0)
+	group_stagger_spin = SpinBox.new()
+	group_stagger_spin.min_value = 0.0
+	group_stagger_spin.max_value = 60.0
+	group_stagger_spin.step = 0.1
+	group_stagger_spin.value = 0.0
+	group_stagger_spin.suffix = "s"
+	group_stagger_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	prop_group_stagger_row.add_child(lbl_gst)
+	prop_group_stagger_row.add_child(group_stagger_spin)
+	parent_vbox.add_child(prop_group_stagger_row)
+	parent_vbox.move_child(prop_group_stagger_row, target_index)
+	target_index += 1
+
 
 
 
@@ -932,6 +1015,15 @@ func connect_signals() -> void:
 	if loop_reset_check: loop_reset_check.toggled.connect(func(_t): apply_inspector_changes())
 	if gear_count_spin: gear_count_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if gear_spacing_spin: gear_spacing_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if group_count_spin: group_count_spin.value_changed.connect(func(_v):
+		if prop_gears_per_group_row: prop_gears_per_group_row.visible = (_v > 1)
+		if prop_group_spacing_row: prop_group_spacing_row.visible = (_v > 1)
+		if prop_group_stagger_row: prop_group_stagger_row.visible = (_v > 1)
+		apply_inspector_changes()
+	)
+	if gears_per_group_spin: gears_per_group_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if group_spacing_spin: group_spacing_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if group_stagger_spin: group_stagger_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if move_delay_spin: move_delay_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if path_shape_opt: path_shape_opt.item_selected.connect(func(_i):
 		_update_path_shape_delay_label()
@@ -1566,10 +1658,28 @@ func update_inspector_values(obj) -> void:
 		if prop_breadth_row and (obj.object_id == "gear_with_rod" or obj.properties.has("rod_breadth")):
 			prop_breadth_row.visible = true
 			if breadth_spin: breadth_spin.value = float(obj.properties.get("rod_breadth", obj.properties.get("breadth", 8.0)))
+
+		var g_count = int(obj.properties.get("group_count", 1))
+		if prop_group_count_row:
+			prop_group_count_row.visible = true
+			if group_count_spin: group_count_spin.value = g_count
+		if prop_gears_per_group_row:
+			prop_gears_per_group_row.visible = (g_count > 1)
+			if gears_per_group_spin: gears_per_group_spin.value = int(obj.properties.get("gears_per_group", 1))
+		if prop_group_spacing_row:
+			prop_group_spacing_row.visible = (g_count > 1)
+			if group_spacing_spin: group_spacing_spin.value = float(obj.properties.get("group_spacing", 300.0))
+		if prop_group_stagger_row:
+			prop_group_stagger_row.visible = (g_count > 1)
+			if group_stagger_spin: group_stagger_spin.value = float(obj.properties.get("group_phase_stagger", 0.0))
 	else:
 		if prop_loop_reset_row: prop_loop_reset_row.visible = false
 		if prop_gear_count_row: prop_gear_count_row.visible = false
 		if prop_gear_spacing_row: prop_gear_spacing_row.visible = false
+		if prop_group_count_row: prop_group_count_row.visible = false
+		if prop_gears_per_group_row: prop_gears_per_group_row.visible = false
+		if prop_group_spacing_row: prop_group_spacing_row.visible = false
+		if prop_group_stagger_row: prop_group_stagger_row.visible = false
 
 	if obj.object_id in ["gear_m", "gear_with_rod", "gear_path"] or obj.properties.has("enable_interval_movement") or obj.properties.has("interval_time"):
 		if prop_enable_interval_row:
@@ -1831,6 +1941,15 @@ func apply_inspector_changes() -> void:
 		obj.properties["interval_time"] = interval_time_spin.value
 	if prop_interval_speed_row and prop_interval_speed_row.visible:
 		obj.properties["interval_speed"] = interval_speed_spin.value
+	if prop_group_count_row and prop_group_count_row.visible:
+		obj.properties["group_count"] = int(group_count_spin.value)
+	if prop_gears_per_group_row and prop_gears_per_group_row.visible:
+		obj.properties["gears_per_group"] = int(gears_per_group_spin.value)
+	if prop_group_spacing_row and prop_group_spacing_row.visible:
+		obj.properties["group_spacing"] = group_spacing_spin.value
+	if prop_group_stagger_row and prop_group_stagger_row.visible:
+		obj.properties["group_phase_stagger"] = group_stagger_spin.value
+
 
 	if prop_path_shape_row and prop_path_shape_row.visible:
 		var shapes = ["Circle", "Rectangle", "Square", "Triangle", "Diamond"]

@@ -32,7 +32,11 @@ static var _registry: Dictionary = {
 			"direction_change_delay": 0.0,
 			"start_delay": 0.0,
 			"gear_count": 1,
-			"gear_spacing": 100.0
+			"gear_spacing": 100.0,
+			"group_count": 1,
+			"gears_per_group": 1,
+			"group_spacing": 300.0,
+			"group_phase_stagger": 0.0
 		},
 		"default_scale": Vector2(1, 1)
 	},
@@ -72,7 +76,11 @@ static var _registry: Dictionary = {
 			"rod_breadth": 8.0,
 			"rod_has_collision": false,
 			"gear_count": 1,
-			"gear_spacing": 100.0
+			"gear_spacing": 100.0,
+			"group_count": 1,
+			"gears_per_group": 1,
+			"group_spacing": 300.0,
+			"group_phase_stagger": 0.0
 		},
 		"default_scale": Vector2(1, 1)
 	},

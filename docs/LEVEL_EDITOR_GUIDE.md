@@ -143,7 +143,14 @@ Linear and diagonal zigzag moving gear with independent positive/negative travel
   - `direction_change_delay` (or `delay`): Pause duration in seconds at each travel end before reversing.
   - `loop_reset`: `true` = gear travels along the track and continuously wraps back / respawns at origin; `false` = ping-pong oscillation.
   - `has_rod` & `rod_breadth`: Displays a theme-skinned track rod beneath the gear.
-  - `gear_count` & `gear_spacing`: Replicates multiple gears riding the same track.
+  - `gear_count` & `gear_spacing`: Replicates multiple gears riding the same track (legacy single-group mode).
+  - **⚙️ Multi-Group Gear System (New)**:
+    - `group_count`: Number of distinct gear groups moving along the track ($1$ to $20$). When $> 1$, activates multi-group behavior.
+    - `gears_per_group`: Number of individual gears contained within each group ($1$ to $20$).
+    - `group_spacing`: Spatial distance in pixels between the origin anchors of consecutive groups along `move_angle`.
+    - `gear_spacing`: Spatial distance in pixels between individual gears within the same group.
+    - `group_phase_stagger`: Time offset in seconds between groups ($0.0 = $ all groups move in perfect unison; $> 0.0 = $ produces undulating sinusoidal waves).
+    - *Auto Rod Expansion*: When `has_rod = true`, the connecting rod dynamically calculates its span to cover all groups without clipping.
   - **⚡ ZigZag Track System**:
     - `is_zigzag`: Enables diagonal zigzag trajectory generation.
     - `zigzag_width` & `zigzag_height`: Width and height dimensions of the zigzag bounding corridor.
@@ -178,8 +185,9 @@ A mechanical track obstacle featuring a stationary background rod with gears tra
   - `move_speed`: Movement speed of the gears along the rod.
   - `rotation_speed`: Spinning speed of the gears.
   - `loop_reset`: `true` = gears travel from start to end and seamlessly wrap back to origin; `false` = smooth ping-pong oscillation.
-  - `gear_count`: Number of gears riding the rod (1 to 20).
+  - `gear_count`: Number of gears riding the rod (1 to 20; legacy single-group mode).
   - `gear_spacing`: Distance between gears (0 = automatically distributed).
+  - `group_count`, `gears_per_group`, `group_spacing`: Full support for Multi-Group Gear System with rod automatically expanding to house all groups.
   - `world_theme`: Dynamically skins both the rod texture and gear texture to match the world.
 
 ---
