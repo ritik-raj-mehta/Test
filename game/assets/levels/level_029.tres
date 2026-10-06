@@ -433,7 +433,7 @@ properties = {
 [sub_resource type="Resource" id="Resource_k0kb0"]
 script = ExtResource("1_801yo")
 object_id = "gear_rod"
-position = Vector2(1488, 40)
+position = Vector2(1480, 0)
 properties = {
 "breadth": 25.0,
 "gear_count": 1,
