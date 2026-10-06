@@ -129,6 +129,8 @@ var enable_node_pause_check: CheckBox
 var node_pause_time_spin: SpinBox
 var prop_has_rod_row: HBoxContainer
 var has_rod_check: CheckBox
+var prop_rod_has_collision_row: HBoxContainer
+var rod_has_collision_check: CheckBox
 var prop_start_delay_row: HBoxContainer
 var start_delay_spin: SpinBox
 var _is_updating_inspector: bool = false
@@ -419,6 +421,20 @@ func setup_dynamic_inspector_fields() -> void:
 	prop_has_rod_row.add_child(has_rod_check)
 	parent_vbox.add_child(prop_has_rod_row)
 	parent_vbox.move_child(prop_has_rod_row, target_index)
+	target_index += 1
+
+	# Rod Has Collision Row
+	prop_rod_has_collision_row = HBoxContainer.new()
+	prop_rod_has_collision_row.visible = false
+	var lbl_rc = Label.new()
+	lbl_rc.text = "Rod Collision:"
+	lbl_rc.custom_minimum_size = Vector2(100, 0)
+	rod_has_collision_check = CheckBox.new()
+	rod_has_collision_check.text = "Rod Has Collider"
+	prop_rod_has_collision_row.add_child(lbl_rc)
+	prop_rod_has_collision_row.add_child(rod_has_collision_check)
+	parent_vbox.add_child(prop_rod_has_collision_row)
+	parent_vbox.move_child(prop_rod_has_collision_row, target_index)
 	target_index += 1
 
 	# Start Delay Row
@@ -823,6 +839,8 @@ func connect_signals() -> void:
 	if move_dist_pos_spin: move_dist_pos_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if move_dist_neg_spin: move_dist_neg_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if move_dir_opt: move_dir_opt.item_selected.connect(_on_move_dir_preset_selected)
+	if has_rod_check: has_rod_check.toggled.connect(func(_t): apply_inspector_changes())
+	if rod_has_collision_check: rod_has_collision_check.toggled.connect(func(_t): apply_inspector_changes())
 	if loop_reset_check: loop_reset_check.toggled.connect(func(_t): apply_inspector_changes())
 	if gear_count_spin: gear_count_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if gear_spacing_spin: gear_spacing_spin.value_changed.connect(func(_v): apply_inspector_changes())
@@ -1469,17 +1487,22 @@ func update_inspector_values(obj) -> void:
 		if prop_interval_time_row: prop_interval_time_row.visible = false
 		if prop_interval_speed_row: prop_interval_speed_row.visible = false
 
-	if obj.object_id in ["gear_m", "gear_with_rod", "gear_r", "gear_rod", "gear_zigzag"] or obj.properties.has("has_rod") or obj.properties.has("start_delay"):
+	if obj.object_id in ["gear_m", "gear_with_rod", "gear_r", "gear_rod", "gear_zigzag"] or obj.properties.has("has_rod") or obj.properties.has("start_delay") or obj.properties.has("rod_has_collision"):
 		if prop_has_rod_row:
 			prop_has_rod_row.visible = true
 			if has_rod_check:
 				has_rod_check.button_pressed = bool(obj.properties.get("has_rod", obj.object_id in ["gear_with_rod", "gear_rod"]))
+		if prop_rod_has_collision_row:
+			prop_rod_has_collision_row.visible = true
+			if rod_has_collision_check:
+				rod_has_collision_check.button_pressed = bool(obj.properties.get("rod_has_collision", false))
 		if prop_start_delay_row:
 			prop_start_delay_row.visible = true
 			if start_delay_spin:
 				start_delay_spin.value = float(obj.properties.get("start_delay", 0.0))
 	else:
 		if prop_has_rod_row: prop_has_rod_row.visible = false
+		if prop_rod_has_collision_row: prop_rod_has_collision_row.visible = false
 		if prop_start_delay_row: prop_start_delay_row.visible = false
 
 	if obj.object_id in ["gear_m", "gear_with_rod"] or obj.properties.has("direction_change_delay") or obj.properties.has("delay"):
@@ -1672,6 +1695,8 @@ func apply_inspector_changes() -> void:
 		obj.properties["direction_change_delay"] = move_delay_spin.value
 	if prop_has_rod_row and prop_has_rod_row.visible:
 		obj.properties["has_rod"] = has_rod_check.button_pressed
+	if prop_rod_has_collision_row and prop_rod_has_collision_row.visible:
+		obj.properties["rod_has_collision"] = rod_has_collision_check.button_pressed
 	if prop_start_delay_row and prop_start_delay_row.visible:
 		obj.properties["start_delay"] = start_delay_spin.value
 	if prop_enable_interval_row and prop_enable_interval_row.visible:

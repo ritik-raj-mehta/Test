@@ -717,7 +717,10 @@ func _update_rod_dimensions() -> void:
 			seg_rod.add_to_group("zigzag_rod")
 			seg_rod.set_meta("is_lethal", rod_is_lethal)
 
-			if not rod_has_collision:
+			if rod_has_collision:
+				seg_rod.collision_layer = 1 | 4
+				seg_rod.collision_mask = 2
+			else:
 				seg_rod.collision_layer = 0
 				seg_rod.collision_mask = 0
 
@@ -777,7 +780,10 @@ func _update_rod_dimensions() -> void:
 	rod_body.rotation = deg_to_rad(move_angle)
 
 	if rod_body:
-		if not rod_has_collision:
+		if rod_has_collision:
+			rod_body.collision_layer = 1 | 4
+			rod_body.collision_mask = 2
+		else:
 			rod_body.collision_layer = 0
 			rod_body.collision_mask = 0
 
