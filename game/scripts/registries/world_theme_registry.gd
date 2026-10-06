@@ -244,6 +244,11 @@ static func create_tileset_for_theme(theme_id: String) -> TileSet:
 		var cols = max(1, int(tex_size.x / float(t_size.x)))
 		var rows = max(1, int(tex_size.y / float(t_size.y)))
 
+		var bm: BitMap = null
+		if img:
+			bm = BitMap.new()
+			bm.create_from_image_alpha(img, 0.2)
+
 		var half_w = float(t_size.x) / 2.0
 		var half_h = float(t_size.y) / 2.0
 
@@ -253,10 +258,12 @@ static func create_tileset_for_theme(theme_id: String) -> TileSet:
 				atlas_source.create_tile(coords)
 				var tile_data = atlas_source.get_tile_data(coords, 0)
 				if tile_data:
-					var poly = get_tile_collision_polygon(img, coords, t_size, half_w, half_h)
-					if poly.size() >= 3:
-						tile_data.add_collision_polygon(0)
-						tile_data.set_collision_polygon_points(0, 0, poly)
+					var polys: Array[PackedVector2Array] = get_tile_collision_polygons(bm, img, coords, t_size, half_w, half_h)
+					for p_idx in range(polys.size()):
+						var poly = polys[p_idx]
+						if poly.size() >= 3:
+							tile_data.add_collision_polygon(0)
+							tile_data.set_collision_polygon_points(0, p_idx, poly)
 
 	_tileset_cache[theme_id] = tileset
 	return tileset
@@ -264,58 +271,37 @@ static func create_tileset_for_theme(theme_id: String) -> TileSet:
 static func clear_cache() -> void:
 	_tileset_cache.clear()
 
-static func get_tile_collision_polygon(img: Image, coords: Vector2i, t_size: Vector2i, half_w: float, half_h: float) -> PackedVector2Array:
+static func get_tile_collision_polygons(bm: BitMap, img: Image, coords: Vector2i, t_size: Vector2i, half_w: float, half_h: float) -> Array[PackedVector2Array]:
+	var result: Array[PackedVector2Array] = []
 	if not img:
-		return PackedVector2Array([
+		result.append(PackedVector2Array([
 			Vector2(-half_w, -half_h), Vector2(half_w, -half_h),
 			Vector2(half_w, half_h), Vector2(-half_w, half_h)
-		])
+		]))
+		return result
 
 	var start_x = coords.x * t_size.x
 	var start_y = coords.y * t_size.y
 
 	if start_x + t_size.x > img.get_width() or start_y + t_size.y > img.get_height():
-		return PackedVector2Array()
+		return result
 
-	# Sample transparency & color at key points inside tile cell
-	var margin = int(clamp(float(t_size.x) * 0.15, 1.0, 4.0))
-	var tl_solid = is_pixel_solid(img, start_x + margin, start_y + margin)
-	var tr_solid = is_pixel_solid(img, start_x + t_size.x - 1 - margin, start_y + margin)
-	var bl_solid = is_pixel_solid(img, start_x + margin, start_y + t_size.y - 1 - margin)
-	var br_solid = is_pixel_solid(img, start_x + t_size.x - 1 - margin, start_y + t_size.y - 1 - margin)
-	var tm_solid = is_pixel_solid(img, start_x + t_size.x / 2, start_y + margin)
+	# Use BitMap opaque polygon generation to extract exact non-blank geometry
+	if bm:
+		var rect = Rect2i(start_x, start_y, t_size.x, t_size.y)
+		var raw_polys = bm.opaque_to_polygons(rect, 2.0)
+		for raw_poly in raw_polys:
+			if raw_poly.size() >= 3:
+				var centered_poly = PackedVector2Array()
+				for pt in raw_poly:
+					var cx = clampf(roundf(pt.x), 0.0, float(t_size.x)) - half_w
+					var cy = clampf(roundf(pt.y), 0.0, float(t_size.y)) - half_h
+					centered_poly.append(Vector2(cx, cy))
+				if centered_poly.size() >= 3:
+					result.append(centered_poly)
+		return result
 
-	var solid_count = (1 if tl_solid else 0) + (1 if tr_solid else 0) + (1 if bl_solid else 0) + (1 if br_solid else 0)
-
-	if solid_count == 0:
-		return PackedVector2Array() # Blank transparent tile -> No collision
-
-	# Detect Triangle Collision Shapes:
-	# 1. Top-Right Ascending Slope Triangle (bottom-left transparent)
-	if tr_solid and bl_solid and br_solid and not tl_solid:
-		return PackedVector2Array([Vector2(-half_w, half_h), Vector2(half_w, -half_h), Vector2(half_w, half_h)])
-
-	# 2. Top-Left Descending Slope Triangle (top-right transparent)
-	if tl_solid and bl_solid and br_solid and not tr_solid:
-		return PackedVector2Array([Vector2(-half_w, -half_h), Vector2(-half_w, half_h), Vector2(half_w, half_h)])
-
-	# 3. Inverted Top-Right Slope Triangle (bottom-right transparent)
-	if tl_solid and tr_solid and bl_solid and not br_solid:
-		return PackedVector2Array([Vector2(-half_w, -half_h), Vector2(half_w, -half_h), Vector2(-half_w, half_h)])
-
-	# 4. Inverted Top-Left Slope Triangle (bottom-left transparent)
-	if tl_solid and tr_solid and br_solid and not bl_solid:
-		return PackedVector2Array([Vector2(-half_w, -half_h), Vector2(half_w, -half_h), Vector2(half_w, half_h)])
-
-	# 5. Upward Peak / Roof Triangle (tm_solid, bl_solid, br_solid)
-	if tm_solid and bl_solid and br_solid and not tl_solid and not tr_solid:
-		return PackedVector2Array([Vector2(0, -half_h), Vector2(half_w, half_h), Vector2(-half_w, half_h)])
-
-	# Default: Full Square
-	return PackedVector2Array([
-		Vector2(-half_w, -half_h), Vector2(half_w, -half_h),
-		Vector2(half_w, half_h), Vector2(-half_w, half_h)
-	])
+	return result
 
 static func is_pixel_solid(img: Image, px: int, py: int) -> bool:
 	if px < 0 or px >= img.get_width() or py < 0 or py >= img.get_height():
