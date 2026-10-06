@@ -109,6 +109,7 @@ static var _registry: Dictionary = {
 			"move_direction": "Clockwise",
 			"alternate_interval": 0.0,
 			"corner_delay": 0.0,
+			"start_delay": 0.0,
 			"move_speed": 150.0,
 			"rotation_speed": 2.0,
 			"gear_count": 2,

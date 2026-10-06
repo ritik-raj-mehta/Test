@@ -1,192 +1,193 @@
-[gd_scene format=4 uid="uid://bw4xc7nnrv2u7"]
+[gd_scene format=4]
 
-[ext_resource type="PackedScene" uid="uid://b5jwaurrnmkce" path="res://game/scenes/gameplay/Player.tscn" id="1_qping"]
-[ext_resource type="Script" uid="uid://bua50daqrujd6" path="res://game/scenes/gameplay/Player.gd" id="2_f600a"]
-[ext_resource type="Texture2D" uid="uid://c1tdiylrydb82" path="res://game/assets/sprites/atlases/tiles/Tile4.png" id="3_y6rml"]
-[ext_resource type="PackedScene" uid="uid://h0y0h6owdl37" path="res://game/scenes/Obstacles/Goal.tscn" id="4_5og2g"]
-[ext_resource type="Script" uid="uid://ukvwkll4agq6" path="res://game/scenes/Obstacles/Goal.gd" id="5_y8i45"]
-[ext_resource type="PackedScene" uid="uid://dyudu3n1v0tqd" path="res://game/scenes/Obstacles/Spike.tscn" id="6_qmw5k"]
-[ext_resource type="Script" uid="uid://1lwe8eaaf45s" path="res://game/scenes/Obstacles/SpikeController.gd" id="7_hnmlp"]
+[ext_resource type="PackedScene" path="res://game/scenes/gameplay/Player.tscn" id="1_qping"]
+[ext_resource type="Script" path="res://game/scenes/gameplay/Player.gd" id="2_f600a"]
+[ext_resource type="Texture2D" path="res://game/assets/sprites/atlases/tiles/Tile4.png" id="3_y6rml"]
+[ext_resource type="PackedScene" path="res://game/scenes/Obstacles/Goal.tscn" id="4_5og2g"]
+[ext_resource type="Script" path="res://game/scenes/Obstacles/Goal.gd" id="5_y8i45"]
+[ext_resource type="PackedScene" path="res://game/scenes/Obstacles/Spike.tscn" id="6_qmw5k"]
+[ext_resource type="Script" path="res://game/scenes/Obstacles/SpikeController.gd" id="7_hnmlp"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ay4hv"]
 texture = ExtResource("3_y6rml")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-12, -15, -15, -12, -16, -12, -16, 16, 16, 16, 16, -16, -12, -16)
 1:0/0 = 0
-1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 15, -12, 15, -14, -16, -16)
 2:0/0 = 0
-2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 12, -12, 16, 16, 16, 16, -16, -16, -16)
 3:0/0 = 0
-3:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+3:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 12, 16, 15, 12, 16, 12, 16, -16, -16, -16)
 4:0/0 = 0
-4:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+4:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-12, -15, -15, -12, -16, -12, -16, 12, -12, 16, 16, 16, 16, -16, -12, -16)
 5:0/0 = 0
-5:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+5:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 12, 16, 15, 12, 16, 12, 14, -14, 14, -15, -16, -16)
 6:0/0 = 0
-6:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, -16, 16, 16)
+6:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(14, -15, -14, -1, -16, -1, -16, 16, 16, 16, 14, -16)
 0:1/0 = 0
-0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, -16, 16, 16, 16)
+0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -1, -16, -16)
 1:1/0 = 0
-1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, -16, 0)
 2:1/0 = 0
-2:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, -16, 16, 16)
+2:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-1, -15, -15, -1, -16, -1, -16, 16, 16, 16, 16, -16, -1, -16)
 3:1/0 = 0
-3:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16)
+3:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 1, -1, 16, 16, 16, 16, -16, -16, -16)
 4:1/0 = 0
-4:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, -16, 16, 16, 16)
+4:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -1, 1, -15, 1, -16, -16, -16)
 5:1/0 = 0
-5:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, -16, 16)
+5:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 1, 16, 15, 1, 16, 1, 16, -16, -16, -16)
 6:1/0 = 0
-6:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, -16, 16, 16, 16)
+6:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, -16, -16)
 0:2/0 = 0
-0:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, -16, 16, 16)
+0:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(15, -15, -15, 15, -16, 15, -16, 16, 16, 16, 15, -16)
 1:2/0 = 0
-1:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16)
+1:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 1, 14, 16, 16, 16, 16, -16, -16, -16)
 2:2/0 = 0
-2:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, -16, 16)
+2:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 14, 1, 16, 1, 16, -16, -16, -16)
 3:2/0 = 0
-3:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+3:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(14, 1, -14, 15, -16, 15, -16, 16, 16, 16, 14, 0)
 4:2/0 = 0
-4:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+4:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 1, 14, 16, 16, 16, 16, 0, -16, 0)
 5:2/0 = 0
-5:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+5:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 14, 1, 16, 1, -16, 0)
 6:2/0 = 0
-6:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, -16, 16)
+6:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 15, -15, 16, -15, -16, -16)
 0:3/0 = 0
-0:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16)
+0:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -15, 15, 16, 16, 16, 16, -16, -16, -16)
 1:3/0 = 0
-1:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, 0, -16, 0)
 2:3/0 = 0
-2:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 0, 16, 0, -16, -16, -16)
 3:3/0 = 0
-3:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+3:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 4:3/0 = 0
-4:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+4:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-12, -15, -15, -12, -16, -12, -16, 12, -12, 16, 16, 16, 16, -16, -12, -16)
 5:3/0 = 0
-5:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+5:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 12, 16, 15, 12, 16, 12, 14, -14, 14, -15, -16, -16)
 6:3/0 = 0
-6:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, -16, 16, 16)
+6:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(14, -15, -14, -1, -16, -1, -16, 16, 16, 16, 14, -16)
 0:4/0 = 0
-0:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, -16, 16, 16, 16)
+0:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -1, -16, -16)
 1:4/0 = 0
-1:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16)
+1:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 1, 14, 16, 16, 16, 16, -16, -16, -16)
 2:4/0 = 0
-2:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, -16, 16)
+2:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 14, 1, 16, 1, 16, -16, -16, -16)
 3:4/0 = 0
-3:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+3:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-12, -15, -15, -12, -16, -12, -16, 16, 16, 16, 16, -16, -12, -16)
 4:4/0 = 0
-4:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+4:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 15, -12, 15, -14, -16, -16)
 5:4/0 = 0
-5:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+5:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 12, -12, 16, 16, 16, 16, -16, -16, -16)
 6:4/0 = 0
-6:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+6:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 12, 16, 15, 12, 16, 12, 16, -16, -16, -16)
 0:5/0 = 0
-0:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+0:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, -16, 0)
 1:5/0 = 0
-1:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, -16, 16, 16)
+1:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-1, -15, -15, -1, -16, -1, -16, 16, 16, 16, 16, -16, -1, -16)
 2:5/0 = 0
-2:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16)
+2:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 1, -1, 16, 16, 16, 16, -16, -16, -16)
 3:5/0 = 0
-3:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, -16, 16, 16, 16)
+3:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -1, 1, -15, 1, -16, -16, -16)
 4:5/0 = 0
-4:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, -16, 16)
+4:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 1, 16, 15, 1, 16, 1, 16, -16, -16, -16)
 5:5/0 = 0
-5:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, -16, 16, 16, 16)
+5:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, -16, -16)
 6:5/0 = 0
-6:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, -16, 16, 16)
+6:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(15, -15, -15, 15, -16, 15, -16, 16, 16, 16, 15, -16)
 0:6/0 = 0
-0:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+0:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 0, 16, 0, -16, -16, -16)
 1:6/0 = 0
-1:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 1, 14, 16, 16, 16, 16, 0, -16, 0)
 2:6/0 = 0
-2:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 14, 1, 16, 1, -16, 0)
 3:6/0 = 0
-3:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, -16, 16)
+3:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 15, -15, 16, -15, -16, -16)
 4:6/0 = 0
-4:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16)
+4:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -15, 15, 16, 16, 16, 16, -16, -16, -16)
 5:6/0 = 0
-5:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+5:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 6:6/0 = 0
-6:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+6:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, 0, -16, 0)
 0:7/0 = 0
-0:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+0:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 1:7/0 = 0
-1:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 2:7/0 = 0
-2:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 3:7/0 = 0
-3:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+3:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 4:7/0 = 0
-4:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+4:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 5:7/0 = 0
-5:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+5:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 6:7/0 = 0
-6:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+6:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(14, 1, -14, 15, -16, 15, -16, 16, 16, 16, 14, 0)
 0:8/0 = 0
-0:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+0:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, 16, 16, 16, 16, -16, 0, -16)
 1:8/0 = 0
-1:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 0, 16, 0, -16, -16, -16)
 2:8/0 = 0
-2:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, 16, 16, 16, 16, -16, 0, -16)
 3:8/0 = 0
-3:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+3:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 0, 16, 0, -16, -16, -16)
 4:8/0 = 0
-4:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+4:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, 16, 16, 16, 16, -16, 0, -16)
 5:8/0 = 0
-5:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+5:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 0, 16, 0, -16, -16, -16)
 6:8/0 = 0
-6:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+6:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 0:9/0 = 0
-0:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+0:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 1:9/0 = 0
-1:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, -16, 16, 16, 16)
+1:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 0, 0, 0, -16, -16, -16)
 2:9/0 = 0
-2:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, -16, 16, 16)
+2:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, 0, -15, 15, -16, 15, -16, 16, 16, 16, 16, -16, 0, -16)
 3:9/0 = 0
-3:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+3:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 4:9/0 = 0
-4:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+4:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 5:9/0 = 0
-5:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+5:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 6:9/0 = 0
-6:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+6:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 0:10/0 = 0
-0:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16)
+0:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -15, 15, 16, 16, 16, 16, -16, -16, -16)
+0:10/0/physics_layer_0/polygon_1/points = PackedVector2Array(-10, 16, -8, 16, -8, 15, -10, 15)
 1:10/0 = 0
-1:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16)
+1:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -15, -1, 0, 0, 0, 0, 16, 16, 16, 16, -16, -16, -16)
 2:10/0 = 0
-2:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, -16, 16)
+2:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 0, 16, 0, 0, 15, -15, 16, -15, -16, -16)
 3:10/0 = 0
-3:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, -16, 16)
+3:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 15, -15, 16, -15, -16, -16)
 4:10/0 = 0
-4:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+4:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 5:10/0 = 0
-5:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+5:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 6:10/0 = 0
-6:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, -16, 16)
+6:10/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 1, 16, 15, -14, 16, -14, -16, -16)
 0:11/0 = 0
-0:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16)
+0:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -14, -1, 16, 16, 16, 16, -16, -16, -16)
 1:11/0 = 0
-1:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, -1, -14, 0, -14, -16, -16)
 2:11/0 = 0
-2:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, -14, 15, 16, 16, 16, 16, -16, 0, -16)
 3:11/0 = 0
-3:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, -16, 16, 16)
+3:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(15, -15, -14, 15, -15, 15, -15, 16, 16, 16, 15, -16)
 4:11/0 = 0
-4:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, -16, 16, 16, 16)
+4:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 15, 16, -16, -16)
 5:11/0 = 0
-5:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+5:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-15, -15, -16, -15, -16, 16, 16, 16, 16, -16, -15, -16)
 6:11/0 = 0
-6:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+6:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 0:12/0 = 0
-0:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16)
+0:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-15, -15, 15, 16, 16, 16, 16, -16, -15, -16)
 1:12/0 = 0
-1:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, -16, 16)
+1:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 14, -15, 15, -15, -16, -16)
 2:12/0 = 0
-2:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 16, 16, 16, -16, -16, -16)
 3:12/0 = 0
-3:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+3:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, 16, 15, 16, 15, 15, 16, 15, 16, -16, -16, -16)
 4:12/0 = 0
 5:12/0 = 0
 6:12/0 = 0
@@ -196,7 +197,7 @@ tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_ay4hv")
 
-[node name="LevelRoot" type="Node2D" unique_id=1717488702]
+[node name="LevelRoot" type="Node2D" unique_id=1719366601]
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=927742863 instance=ExtResource("1_qping")]
 z_index = 10
@@ -205,7 +206,7 @@ collision_layer = 2
 collision_mask = 23
 script = ExtResource("2_f600a")
 
-[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=49010936]
+[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=1595936576]
 z_index = 150
 position = Vector2(40, 0)
 scale = Vector2(1.5, 1.5)
@@ -227,7 +228,7 @@ script = ExtResource("7_hnmlp")
 spike_count = 8
 wall_distance = 45.0
 
-[node name="Spike_2" type="StaticBody2D" parent="." unique_id=344546810 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_2" type="StaticBody2D" parent="." unique_id=638116466 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(1118.2915, 1814.2081)
 collision_layer = 2
@@ -236,7 +237,7 @@ script = ExtResource("7_hnmlp")
 spike_count = 8
 wall_distance = 45.0
 
-[node name="Spike_3" type="StaticBody2D" parent="." unique_id=245233579 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_3" type="StaticBody2D" parent="." unique_id=698812365 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(845.6943, -458.89407)
 rotation = 4.712389
@@ -246,7 +247,7 @@ script = ExtResource("7_hnmlp")
 spike_count = 3
 wall_distance = 43.0
 
-[node name="Spike_4" type="StaticBody2D" parent="." unique_id=2007274006 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_4" type="StaticBody2D" parent="." unique_id=947557992 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(1153.1483, 558.4615)
 rotation = 1.5707964
@@ -256,7 +257,7 @@ script = ExtResource("7_hnmlp")
 spike_count = 3
 wall_distance = 43.0
 
-[node name="Spike_5" type="StaticBody2D" parent="." unique_id=1928246645 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_5" type="StaticBody2D" parent="." unique_id=427324845 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(1155, 1038.2404)
 rotation = 1.5707964
@@ -265,7 +266,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_6" type="StaticBody2D" parent="." unique_id=1443856998 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_6" type="StaticBody2D" parent="." unique_id=563808077 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(886.6838, 999.91907)
 collision_layer = 2
@@ -273,7 +274,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_7" type="StaticBody2D" parent="." unique_id=6183722 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_7" type="StaticBody2D" parent="." unique_id=76704426 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(845.2562, 1267.5674)
 rotation = 4.712389
@@ -282,7 +283,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_8" type="StaticBody2D" parent="." unique_id=1484278633 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_8" type="StaticBody2D" parent="." unique_id=1426027275 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(1112.7856, 1304.8153)
 rotation = 3.1415927
@@ -291,7 +292,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_9" type="StaticBody2D" parent="." unique_id=512876611 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_9" type="StaticBody2D" parent="." unique_id=1990876851 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(1113.6489, 201.4928)
 rotation = 3.1415927
@@ -300,7 +301,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_10" type="StaticBody2D" parent="." unique_id=1533038264 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_10" type="StaticBody2D" parent="." unique_id=1408529701 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(885.6882, -105.504745)
 collision_layer = 2
@@ -308,7 +309,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_11" type="StaticBody2D" parent="." unique_id=404138643 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_11" type="StaticBody2D" parent="." unique_id=1289970027 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(1153.6261, -65.71379)
 rotation = 1.5707964
@@ -317,7 +318,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_12" type="StaticBody2D" parent="." unique_id=135851676 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_12" type="StaticBody2D" parent="." unique_id=45761549 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(847.6755, 163.55655)
 rotation = 4.712389

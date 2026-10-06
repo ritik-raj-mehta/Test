@@ -111,7 +111,8 @@ A multi-shape trajectory hazard that travels in closed geometric loops with corn
   - `path_rotation`: Rotation angle of the whole path geometry (in degrees).
   - `move_direction`: Travel direction (`"Clockwise"`, `"Counter-Clockwise"`, `"Alternating"`).
   - `alternate_interval`: Time in seconds between direction reversals when using `Alternating` (0 = reverse after every full loop).
-  - `corner_delay`: Pause duration in seconds at each corner vertex.
+  - `corner_delay`: Pause duration in seconds at each corner vertex (polygon tracks).
+  - `start_delay`: Pause duration in seconds at the start position where movement begins (applies to circular paths and initial loop start).
   - `move_speed`: Base linear travel speed along the perimeter path (in pixels/sec).
   - `rotation_speed`: Self-rotation speed of the gear sprites (radians/sec).
   - `gear_count`: Number of synchronized gears spaced evenly around the loop (1 to 10).

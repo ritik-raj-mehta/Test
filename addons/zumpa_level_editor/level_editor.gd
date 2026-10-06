@@ -933,7 +933,10 @@ func connect_signals() -> void:
 	if gear_count_spin: gear_count_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if gear_spacing_spin: gear_spacing_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if move_delay_spin: move_delay_spin.value_changed.connect(func(_v): apply_inspector_changes())
-	if path_shape_opt: path_shape_opt.item_selected.connect(func(_i): apply_inspector_changes())
+	if path_shape_opt: path_shape_opt.item_selected.connect(func(_i):
+		_update_path_shape_delay_label()
+		apply_inspector_changes()
+	)
 	if path_width_spin: path_width_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if path_height_spin: path_height_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if path_rot_spin: path_rot_spin.value_changed.connect(func(_v): apply_inspector_changes())
@@ -1609,9 +1612,9 @@ func update_inspector_values(obj) -> void:
 		if prop_move_delay_row: prop_move_delay_row.visible = false
 
 	if obj.object_id == "gear_path" or obj.properties.has("path_shape"):
+		var shape_str = str(obj.properties.get("path_shape", "Diamond")).to_upper()
 		if prop_path_shape_row:
 			prop_path_shape_row.visible = true
-			var shape_str = str(obj.properties.get("path_shape", "Diamond")).to_upper()
 			match shape_str:
 				"CIRCLE": path_shape_opt.select(0)
 				"RECTANGLE": path_shape_opt.select(1)
@@ -1636,7 +1639,11 @@ func update_inspector_values(obj) -> void:
 				_: path_dir_opt.select(0)
 		if prop_corner_delay_row:
 			prop_corner_delay_row.visible = true
-			corner_delay_spin.value = float(obj.properties.get("corner_delay", 0.0))
+			var is_circ = (shape_str == "CIRCLE")
+			var delay_lbl = prop_corner_delay_row.get_node_or_null("Lbl") as Label
+			if delay_lbl:
+				delay_lbl.text = "Start Delay (s): " if is_circ else "Corner Delay (s): "
+			corner_delay_spin.value = float(obj.properties.get("start_delay", obj.properties.get("corner_delay", 0.0))) if is_circ else float(obj.properties.get("corner_delay", 0.0))
 		if prop_gear_count_row:
 			prop_gear_count_row.visible = true
 			gear_count_spin.value = int(obj.properties.get("gear_count", 2))
@@ -1839,6 +1846,10 @@ func apply_inspector_changes() -> void:
 		obj.properties["move_direction"] = dirs[path_dir_opt.selected] if path_dir_opt.selected < dirs.size() else "Clockwise"
 	if prop_corner_delay_row and prop_corner_delay_row.visible:
 		obj.properties["corner_delay"] = corner_delay_spin.value
+		var cur_shape = str(obj.properties.get("path_shape", "Diamond")).to_upper()
+		if cur_shape == "CIRCLE":
+			obj.properties["start_delay"] = corner_delay_spin.value
+
 
 	if prop_loop_reset_row and prop_loop_reset_row.visible:
 		obj.properties["loop_reset"] = loop_reset_check.button_pressed
@@ -1895,6 +1906,14 @@ func apply_inspector_changes() -> void:
 		obj.properties["node_pause_time"] = node_pause_time_spin.value
 
 	canvas.refresh_canvas()
+
+func _update_path_shape_delay_label() -> void:
+	if not prop_corner_delay_row or not path_shape_opt:
+		return
+	var delay_lbl = prop_corner_delay_row.get_node_or_null("Lbl") as Label
+	if delay_lbl:
+		var is_circ = (path_shape_opt.selected == 0)
+		delay_lbl.text = "Start Delay (s): " if is_circ else "Corner Delay (s): "
 
 func on_player_start_changed(pos: Vector2) -> void:
 	player_x_spin.value = pos.x

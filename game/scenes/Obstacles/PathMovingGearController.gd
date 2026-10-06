@@ -55,11 +55,18 @@ enum MoveDirection {
 		alternate_interval = max(0.0, v)
 		_update_caches()
 
-@export var corner_delay: float = 0.0: # Pause duration in seconds at each corner vertex
+@export var corner_delay: float = 0.0: # Pause duration in seconds at each corner vertex (polygon paths)
 	set(v):
 		corner_delay = max(0.0, v)
 		_update_caches()
 		queue_redraw()
+
+@export var start_delay: float = 0.0: # Pause/delay duration in seconds from where movement starts (circular paths or initial start)
+	set(v):
+		start_delay = max(0.0, v)
+		_update_caches()
+		queue_redraw()
+
 
 @export var move_speed: float = 150.0:
 	set(v):
@@ -388,9 +395,14 @@ func _update_path_geometry() -> void:
 	_update_rod_dimensions()
 
 func _update_caches() -> void:
-	var n_corners = _vertices.size() if not _is_circular else 0
-	var travel_time = _total_perimeter / max(1.0, move_speed)
-	_cycle_duration = travel_time + float(n_corners) * corner_delay
+	var base_spd = interval_speed if enable_interval_movement else move_speed
+	var travel_time = _total_perimeter / max(1.0, base_spd)
+	if _is_circular:
+		var circ_delay = max(start_delay, corner_delay)
+		_cycle_duration = travel_time + circ_delay
+	else:
+		var n_corners = _vertices.size()
+		_cycle_duration = travel_time + float(n_corners) * corner_delay
 	_update_gears_positions(0.0)
 
 func _get_effective_speed(t_active: float) -> float:
@@ -450,23 +462,47 @@ func _update_gears_positions(t_current: float) -> void:
 
 		# Distribute gears evenly around the loop
 		var gear_offset_time = float(i) * (_cycle_duration / float(count))
-		var effective_t: float = 0.0
 
-		if _current_dir_sign >= 0.0:
-			effective_t = fposmod(t_current + gear_offset_time, max(0.0001, _cycle_duration))
+		if _is_circular:
+			var circ_delay = max(start_delay, corner_delay)
+			var base_spd = interval_speed if enable_interval_movement else move_speed
+			var travel_time = _total_perimeter / max(1.0, base_spd)
+			var local_t = fposmod(t_current + gear_offset_time, max(0.0001, _cycle_duration))
+			body.position = _sample_circular_position(local_t, circ_delay, travel_time, _current_dir_sign)
 		else:
-			effective_t = fposmod((_cycle_duration - fposmod(t_current, _cycle_duration)) + gear_offset_time, max(0.0001, _cycle_duration))
+			var effective_t: float = 0.0
+			if _current_dir_sign >= 0.0:
+				effective_t = fposmod(t_current + gear_offset_time, max(0.0001, _cycle_duration))
+			else:
+				effective_t = fposmod((_cycle_duration - fposmod(t_current, _cycle_duration)) + gear_offset_time, max(0.0001, _cycle_duration))
+			body.position = _sample_path_position(effective_t)
 
-		body.position = _sample_path_position(effective_t)
+func _sample_circular_position(local_t: float, delay_val: float, travel_t: float, dir_sign: float) -> Vector2:
+	var half_w = path_width * 0.5
+	var half_h = path_height * 0.5
+	var rad_offset = deg_to_rad(path_rotation)
+
+	if delay_val > 0.0:
+		if local_t < delay_val:
+			# Paused at the starting position before/between movement loops
+			return Vector2(cos(rad_offset) * half_w, sin(rad_offset) * half_h)
+		else:
+			var move_t = local_t - delay_val
+			var progress = clampf(move_t / max(0.0001, travel_t), 0.0, 1.0)
+			var angle = (progress * TAU if dir_sign >= 0.0 else -progress * TAU) + rad_offset
+			return Vector2(cos(angle) * half_w, sin(angle) * half_h)
+	else:
+		var progress = fposmod(local_t / max(0.0001, travel_t), 1.0)
+		var angle = (progress * TAU if dir_sign >= 0.0 else -progress * TAU) + rad_offset
+		return Vector2(cos(angle) * half_w, sin(angle) * half_h)
 
 func _sample_path_position(t: float) -> Vector2:
 	if _is_circular:
-		var travel_time = _cycle_duration
-		var progress = fposmod(t / max(0.0001, travel_time), 1.0)
-		var angle = progress * TAU + deg_to_rad(path_rotation)
-		var half_w = path_width * 0.5
-		var half_h = path_height * 0.5
-		return Vector2(cos(angle) * half_w, sin(angle) * half_h)
+		var circ_delay = max(start_delay, corner_delay)
+		var base_spd = interval_speed if enable_interval_movement else move_speed
+		var travel_time = _total_perimeter / max(1.0, base_spd)
+		return _sample_circular_position(t, circ_delay, travel_time, _current_dir_sign)
+
 
 	var n = _vertices.size()
 	if n == 0:
@@ -540,13 +576,20 @@ func _draw() -> void:
 			pts.append(Vector2(cos(a) * half_w, sin(a) * half_h))
 		draw_polyline(pts, draw_col, track_width, true)
 
-		# Draw direction arrows in editor
+		# Draw direction arrows and start position marker in editor
 		if in_ed:
 			for k in range(4):
 				var ang = (float(k) / 4.0) * TAU + rad_offset
 				var pt = Vector2(cos(ang) * half_w, sin(ang) * half_h)
 				var tangent = Vector2(-sin(ang) * half_w, cos(ang) * half_h).normalized()
+				if _current_dir_sign < 0.0:
+					tangent = -tangent
 				_draw_arrow_head(pt, tangent * 10.0, Color(1.0, 0.85, 0.2, 0.9))
+
+			# Draw start point marker where movement begins
+			var start_pt = Vector2(cos(rad_offset) * half_w, sin(rad_offset) * half_h)
+			draw_circle(start_pt, 5.0, Color(0.2, 1.0, 0.4, 0.95))
+			draw_arc(start_pt, 8.0, 0.0, TAU, 16, Color(1.0, 0.85, 0.2, 0.9), 1.5)
 	else:
 		var n = _vertices.size()
 		if n >= 2:
@@ -572,9 +615,17 @@ func _draw() -> void:
 		var font = ThemeDB.fallback_font
 		if font:
 			var info = "%s (%.0fx%.0f) | %d Gears | %s" % [path_shape, path_width, path_height, gear_count, move_direction]
-			if corner_delay > 0.0:
-				info += " | Delay: %.1fs" % corner_delay
+			if _is_circular:
+				var delay_val = max(start_delay, corner_delay)
+				if delay_val > 0.0:
+					info += " | Start Delay: %.1fs" % delay_val
+			else:
+				if corner_delay > 0.0:
+					info += " | Corner Delay: %.1fs" % corner_delay
+				elif start_delay > 0.0:
+					info += " | Start Delay: %.1fs" % start_delay
 			draw_string(font, Vector2(-path_width * 0.5, path_height * 0.5 + 20.0), info, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1, 1, 1, 0.9))
+
 
 func _draw_arrow_head(tip: Vector2, dir_vec: Vector2, color: Color) -> void:
 	var perp = dir_vec.orthogonal() * 0.5
