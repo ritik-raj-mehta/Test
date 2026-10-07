@@ -159,3 +159,18 @@ func _save_drag() -> void:
 func _restore_drag() -> void:
 	drag_horizontal_enabled = _drag_h
 	drag_vertical_enabled = _drag_v
+
+
+# ============================================================
+# SCREEN SHAKE
+# ============================================================
+
+func shake(strength: float = 6.0, duration: float = 0.16) -> void:
+	var base_offset := offset
+	var tw := create_tween()
+	tw.tween_method(func(factor: float) -> void:
+		offset = base_offset + Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * (strength * factor)
+	, 1.0, 0.0, duration)
+	tw.tween_callback(func() -> void:
+		offset = base_offset
+	)

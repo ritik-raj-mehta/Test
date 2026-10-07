@@ -36,9 +36,12 @@ var _tap_lock : bool = true
 @export_category("Goal Attraction")
 @export var goal_attraction_speed: float = 38.0
 	
+const DeathEffectScene: PackedScene = preload("res://game/TrailandAnimations/PlayerDeathEffect.tscn")
 @onready var visual: Node2D = $Sprite2D   
 @onready var trail: Node2D = $Trail	
 @onready var anim_player: AnimationPlayer = $AnimationPlayer if has_node("AnimationPlayer") else null	
+@onready var death_effect: Node2D = $DeathEffect if has_node("DeathEffect") else null
+var _death_sequence_id: int = 0	
 # ============================================================
 # STATE
 # ============================================================
@@ -274,16 +277,94 @@ func die() -> void:
 	if is_dead:
 		return
 	is_dead = true
+	_death_sequence_id += 1
+	var current_seq := _death_sequence_id
+
+	if visual == null and has_node("Sprite2D"):
+		visual = get_node("Sprite2D")
+	if death_effect == null and has_node("DeathEffect"):
+		death_effect = get_node("DeathEffect")
+
 	_clear_motion_state()
 	if trail:
 		trail.stop_trail()
-	hide()
+
+	if visual:
+		visual.hide()
+
+	_set_collision_active(false)
+	_trigger_death_camera_shake()
+
+	# Play split-body death effect (attractive visible pieces bursting)
+	await _play_death_split_effect()
+
+	# Guard against scene transition or external respawn during the await
+	if current_seq != _death_sequence_id or not is_inside_tree():
+		return
+
 	if _bus:
 		_bus.player_died.emit()
+	else:
+		reset_after_respawn()
+
+
+func _play_death_split_effect() -> void:
+	if visual == null and has_node("Sprite2D"):
+		visual = get_node("Sprite2D")
+	var effect: Node2D = death_effect
+	if effect == null and has_node("DeathEffect"):
+		effect = get_node("DeathEffect") as Node2D
+		death_effect = effect
+	if effect == null:
+		if DeathEffectScene:
+			effect = DeathEffectScene.instantiate() as Node2D
+			add_child(effect)
+		death_effect = effect
+
+	if effect and effect.has_method("play_death") and visual:
+		effect.call("play_death", visual as Sprite2D, velocity)
+		if effect.has_signal("finished"):
+			await effect.finished
+		elif is_inside_tree() and get_tree():
+			await get_tree().create_timer(0.45).timeout
+	elif is_inside_tree() and get_tree():
+		await get_tree().create_timer(0.45).timeout
+
+
+
+func _set_collision_active(active: bool) -> void:
+	for child in get_children():
+		if child is CollisionShape2D:
+			child.set_deferred("disabled", not active)
+
+
+func _cleanup_death_effects() -> void:
+	if death_effect and is_instance_valid(death_effect) and death_effect.has_method("clear_pieces"):
+		death_effect.call("clear_pieces")
+
+
+func _trigger_death_camera_shake() -> void:
+	var cam := get_node_or_null("Camera2D")
+	if cam and cam.has_method("shake"):
+		cam.shake(9.0, 0.15)
+
+
+func _play_respawn_pop_animation() -> void:
+	if not visual:
+		return
+	visual.scale = Vector2.ZERO
+	var tw := create_tween()
+	tw.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.tween_property(visual, "scale", _normal_scale * 1.25, 0.14)
+	tw.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(visual, "scale", _normal_scale, 0.12)
+
 
 		
 func _current_skin_id() -> String:
-	var registry: Node = get_tree().root.get_node_or_null("ServiceRegistry") if get_tree() and get_tree().root else null
+	if not is_inside_tree() or get_tree() == null:
+		return SkinCatalog.DEFAULT_ID
+	var registry: Node = get_tree().root.get_node_or_null("ServiceRegistry") if get_tree().root else null
 	if registry and registry.has_service(&"save"):
 		var save: SaveManager = registry.get_service(&"save") as SaveManager
 		var progress: PlayerProgress = registry.get_service(&"player_progress") as PlayerProgress
@@ -387,9 +468,12 @@ func _set_eat_sprite() -> void:
 # RESPAWN
 # ============================================================
 func reset_after_respawn() -> void:
+	_death_sequence_id += 1
 	set_physics_process(true)
 
 	_clear_motion_state()
+	_cleanup_death_effects()
+	_set_collision_active(true)
 
 	is_invulnerable = false
 	_input_lock = 0.2
@@ -420,9 +504,13 @@ func reset_after_respawn() -> void:
 			spr.flip_h = _normal_flip
 
 	show()
+	if visual:
+		visual.show()
 
 	if trail:
 		trail.start_trail()
+
+	_play_respawn_pop_animation()
 	
 # ============================================================
 # BOOSTER
