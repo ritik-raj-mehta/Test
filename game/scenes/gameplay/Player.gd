@@ -36,7 +36,7 @@ var _tap_lock : bool = true
 @export_category("Goal Attraction")
 @export var goal_attraction_speed: float = 38.0
 	
-const DeathEffectScene: PackedScene = preload("res://game/TrailandAnimations/PlayerDeathEffect.tscn")
+const DeathEffectScript: Script = preload("res://game/scenes/gameplay/death_effect.gd")
 @onready var visual: Node2D = $Sprite2D   
 @onready var trail: Node2D = $Trail	
 @onready var anim_player: AnimationPlayer = $AnimationPlayer if has_node("AnimationPlayer") else null	
@@ -316,8 +316,10 @@ func _play_death_split_effect() -> void:
 		effect = get_node("DeathEffect") as Node2D
 		death_effect = effect
 	if effect == null:
-		if DeathEffectScene:
-			effect = DeathEffectScene.instantiate() as Node2D
+		if DeathEffectScript:
+			effect = Node2D.new()
+			effect.name = "DeathEffect"
+			effect.set_script(DeathEffectScript)
 			add_child(effect)
 		death_effect = effect
 
