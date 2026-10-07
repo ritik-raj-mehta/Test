@@ -140,6 +140,20 @@ var zigzag_start_bottom_check: CheckBox
 var flip_zigzag_check: CheckBox
 var enable_node_pause_check: CheckBox
 var node_pause_time_spin: SpinBox
+
+# Snake / Wave Form Inspector Additions
+var prop_snake_box: VBoxContainer
+var is_snake_wave_check: CheckBox
+var snake_controls_container: VBoxContainer
+var snake_gear_count_spin: SpinBox
+var snake_spacing_y_spin: SpinBox
+var snake_delay_spin: SpinBox
+var snake_mode_opt: OptionButton
+var prop_snake_wave_cycles_row: HBoxContainer
+var snake_wave_cycles_spin: SpinBox
+var snake_show_rods_check: CheckBox
+var snake_reverse_follow_check: CheckBox
+
 var prop_has_rod_row: HBoxContainer
 var has_rod_check: CheckBox
 var prop_rod_has_collision_row: HBoxContainer
@@ -530,6 +544,115 @@ func setup_dynamic_inspector_fields() -> void:
 
 	parent_vbox.add_child(prop_zigzag_box)
 	parent_vbox.move_child(prop_zigzag_box, target_index)
+	target_index += 1
+
+	# Snake / Wave Form Inspector Box
+	prop_snake_box = VBoxContainer.new()
+	prop_snake_box.name = "SnakeWaveControlBox"
+	prop_snake_box.visible = false
+
+	var lbl_snake_hdr = Label.new()
+	lbl_snake_hdr.text = "🐍 Snake / Wave Form Settings"
+	prop_snake_box.add_child(lbl_snake_hdr)
+
+	is_snake_wave_check = CheckBox.new()
+	is_snake_wave_check.text = "Enable Snake / Wave Form"
+	prop_snake_box.add_child(is_snake_wave_check)
+
+	snake_controls_container = VBoxContainer.new()
+	snake_controls_container.visible = false
+
+	# Snake Gear Count
+	var hbox_s_gears = HBoxContainer.new()
+	var lbl_s_gears = Label.new()
+	lbl_s_gears.text = "Snake Gears:"
+	lbl_s_gears.custom_minimum_size = Vector2(100, 0)
+	snake_gear_count_spin = SpinBox.new()
+	snake_gear_count_spin.min_value = 1
+	snake_gear_count_spin.max_value = 40
+	snake_gear_count_spin.step = 1
+	snake_gear_count_spin.value = 12
+	snake_gear_count_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_s_gears.add_child(lbl_s_gears)
+	hbox_s_gears.add_child(snake_gear_count_spin)
+	snake_controls_container.add_child(hbox_s_gears)
+
+	# Snake Tier Gap Y
+	var hbox_s_gap_y = HBoxContainer.new()
+	var lbl_s_gap_y = Label.new()
+	lbl_s_gap_y.text = "Tier Gap Y:"
+	lbl_s_gap_y.custom_minimum_size = Vector2(100, 0)
+	snake_spacing_y_spin = SpinBox.new()
+	snake_spacing_y_spin.min_value = -2000.0
+	snake_spacing_y_spin.max_value = 2000.0
+	snake_spacing_y_spin.step = 10.0
+	snake_spacing_y_spin.value = 120.0
+	snake_spacing_y_spin.suffix = "px"
+	snake_spacing_y_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_s_gap_y.add_child(lbl_s_gap_y)
+	hbox_s_gap_y.add_child(snake_spacing_y_spin)
+	snake_controls_container.add_child(hbox_s_gap_y)
+
+	# Snake Follow Delay
+	var hbox_s_lag = HBoxContainer.new()
+	var lbl_s_lag = Label.new()
+	lbl_s_lag.text = "Follow Delay:"
+	lbl_s_lag.custom_minimum_size = Vector2(100, 0)
+	snake_delay_spin = SpinBox.new()
+	snake_delay_spin.min_value = 0.0
+	snake_delay_spin.max_value = 10.0
+	snake_delay_spin.step = 0.05
+	snake_delay_spin.value = 0.20
+	snake_delay_spin.suffix = "s"
+	snake_delay_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_s_lag.add_child(lbl_s_lag)
+	hbox_s_lag.add_child(snake_delay_spin)
+	snake_controls_container.add_child(hbox_s_lag)
+
+	# Snake Wave Mode
+	var hbox_s_mode = HBoxContainer.new()
+	var lbl_s_mode = Label.new()
+	lbl_s_mode.text = "Wave Mode:"
+	lbl_s_mode.custom_minimum_size = Vector2(100, 0)
+	snake_mode_opt = OptionButton.new()
+	snake_mode_opt.add_item("⏱️ Time Delay (Follow)", 0)
+	snake_mode_opt.add_item("🌊 Wave Cycles (Full Wave)", 1)
+	snake_mode_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_s_mode.add_child(lbl_s_mode)
+	hbox_s_mode.add_child(snake_mode_opt)
+	snake_controls_container.add_child(hbox_s_mode)
+
+	# Snake Wave Cycles Row
+	prop_snake_wave_cycles_row = HBoxContainer.new()
+	prop_snake_wave_cycles_row.visible = false
+	var lbl_s_cycles = Label.new()
+	lbl_s_cycles.text = "Wave Cycles:"
+	lbl_s_cycles.custom_minimum_size = Vector2(100, 0)
+	snake_wave_cycles_spin = SpinBox.new()
+	snake_wave_cycles_spin.min_value = 0.1
+	snake_wave_cycles_spin.max_value = 10.0
+	snake_wave_cycles_spin.step = 0.1
+	snake_wave_cycles_spin.value = 1.0
+	snake_wave_cycles_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	prop_snake_wave_cycles_row.add_child(lbl_s_cycles)
+	prop_snake_wave_cycles_row.add_child(snake_wave_cycles_spin)
+	snake_controls_container.add_child(prop_snake_wave_cycles_row)
+
+	# Show Track Rods on Tiers
+	snake_show_rods_check = CheckBox.new()
+	snake_show_rods_check.text = "Show Track Rods on Tiers"
+	snake_show_rods_check.button_pressed = true
+	snake_controls_container.add_child(snake_show_rods_check)
+
+	# Reverse Wave Follow
+	snake_reverse_follow_check = CheckBox.new()
+	snake_reverse_follow_check.text = "Reverse Wave Direction (Bottom-to-Top)"
+	snake_controls_container.add_child(snake_reverse_follow_check)
+
+	prop_snake_box.add_child(snake_controls_container)
+
+	parent_vbox.add_child(prop_snake_box)
+	parent_vbox.move_child(prop_snake_box, target_index)
 	target_index += 1
 
 	# Has Rod (Gear with Rod) Row
@@ -1103,6 +1226,20 @@ func connect_signals() -> void:
 	if gears_per_group_spin: gears_per_group_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if group_spacing_spin: group_spacing_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if group_stagger_spin: group_stagger_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if is_snake_wave_check: is_snake_wave_check.toggled.connect(func(_t):
+		if snake_controls_container: snake_controls_container.visible = _t
+		apply_inspector_changes()
+	)
+	if snake_gear_count_spin: snake_gear_count_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if snake_spacing_y_spin: snake_spacing_y_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if snake_delay_spin: snake_delay_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if snake_mode_opt: snake_mode_opt.item_selected.connect(func(_i):
+		if prop_snake_wave_cycles_row: prop_snake_wave_cycles_row.visible = (_i == 1)
+		apply_inspector_changes()
+	)
+	if snake_wave_cycles_spin: snake_wave_cycles_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if snake_show_rods_check: snake_show_rods_check.toggled.connect(func(_t): apply_inspector_changes())
+	if snake_reverse_follow_check: snake_reverse_follow_check.toggled.connect(func(_t): apply_inspector_changes())
 	if move_delay_spin: move_delay_spin.value_changed.connect(func(_v): apply_inspector_changes())
 	if path_shape_opt: path_shape_opt.item_selected.connect(func(_i):
 		_update_path_shape_delay_label()
@@ -1580,6 +1717,7 @@ func on_object_selected(obj) -> void:
 		if prop_booster_angles_str_row: prop_booster_angles_str_row.visible = false
 		if prop_wall_type_row: prop_wall_type_row.visible = false
 		if prop_wall_flips_row: prop_wall_flips_row.visible = false
+		if prop_snake_box: prop_snake_box.visible = false
 		apply_btn.disabled = true
 		delete_btn.disabled = true
 		duplicate_btn.disabled = true
@@ -2003,6 +2141,25 @@ func update_inspector_values(obj) -> void:
 		else:
 			prop_zigzag_box.visible = false
 
+	if prop_snake_box:
+		var is_gear_obj = (obj.object_id in ["gear_m", "gear_with_rod", "gear_snake"] or obj.properties.has("is_snake_wave") or obj.properties.has("gear_count") or obj.properties.has("move_dist_pos"))
+		if is_gear_obj and not (obj.properties.has("is_zigzag") and bool(obj.properties.get("is_zigzag", false))):
+			prop_snake_box.visible = true
+			var is_snake = bool(obj.properties.get("is_snake_wave", obj.object_id == "gear_snake"))
+			is_snake_wave_check.button_pressed = is_snake
+			if snake_controls_container: snake_controls_container.visible = is_snake
+			snake_gear_count_spin.value = int(obj.properties.get("snake_gear_count", 12))
+			snake_spacing_y_spin.value = float(obj.properties.get("snake_spacing_y", 120.0))
+			snake_delay_spin.value = float(obj.properties.get("snake_delay", 0.20))
+			var mode_str = str(obj.properties.get("snake_mode", "Time Delay (Follow)"))
+			snake_mode_opt.select(1 if "CYCLE" in mode_str.to_upper() else 0)
+			if prop_snake_wave_cycles_row: prop_snake_wave_cycles_row.visible = (snake_mode_opt.selected == 1)
+			snake_wave_cycles_spin.value = float(obj.properties.get("snake_wave_cycles", 1.0))
+			snake_show_rods_check.button_pressed = bool(obj.properties.get("snake_show_rods", true))
+			snake_reverse_follow_check.button_pressed = bool(obj.properties.get("snake_reverse_follow", false))
+		else:
+			prop_snake_box.visible = false
+
 	var is_cam_drag_obj = (obj.object_id == "horizontal_zone_start" or obj.object_id == "horizontal_zone_end" or obj.object_id == "horizontal_zone_trigger")
 	var is_player = (canvas and canvas.active_placement_id == "player_start")
 	set_camera_drag_section_visible(is_cam_drag_obj or is_player)
@@ -2172,6 +2329,20 @@ func apply_inspector_changes() -> void:
 		obj.properties["node_pause_time"] = node_pause_time_spin.value
 		if point_delays_edit:
 			obj.properties["point_delays_str"] = point_delays_edit.text
+
+	if prop_snake_box and prop_snake_box.visible:
+		var is_snake = is_snake_wave_check.button_pressed
+		obj.properties["is_snake_wave"] = is_snake
+		if is_snake:
+			obj.properties["snake_gear_count"] = int(snake_gear_count_spin.value)
+			obj.properties["snake_spacing_y"] = snake_spacing_y_spin.value
+			obj.properties["snake_delay"] = snake_delay_spin.value
+			obj.properties["snake_mode"] = "Wave Cycles (Full Wave)" if snake_mode_opt.selected == 1 else "Time Delay (Follow)"
+			obj.properties["snake_wave_cycles"] = snake_wave_cycles_spin.value
+			obj.properties["snake_show_rods"] = snake_show_rods_check.button_pressed
+			obj.properties["snake_reverse_follow"] = snake_reverse_follow_check.button_pressed
+			if snake_show_rods_check.button_pressed:
+				obj.properties["has_rod"] = true
 
 	canvas.refresh_canvas()
 

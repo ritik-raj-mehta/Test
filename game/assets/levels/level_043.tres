@@ -56,7 +56,8 @@ properties = {
 "move_speed": 100.0,
 "rod_has_collision": false,
 "rotation_speed": 2.0,
-"start_delay": 1.0
+"start_delay": 1.0,
+"stop_at_end": true
 }
 
 [resource]

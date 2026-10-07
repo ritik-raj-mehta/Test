@@ -210,6 +210,95 @@ class_name MovingGearController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
+@export_group("Snake / Wave Form System")
+## Enables snake wave form mode where multiple gears move in an undulating wave following each other
+@export var is_snake_wave: bool = false:
+	set(v):
+		is_snake_wave = v
+		_rebuild_gears()
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+## Total number of gears in the snake wave
+@export_range(1, 40, 1) var snake_gear_count: int = 12:
+	set(v):
+		snake_gear_count = clampi(v, 1, 40)
+		_rebuild_gears()
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+## Vertical distance between each gear tier/row in the snake (positive = downward)
+@export var snake_spacing_y: float = 120.0:
+	set(v):
+		snake_spacing_y = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+## Horizontal spacing between each gear tier (0.0 for vertical column)
+@export var snake_spacing_x: float = 0.0:
+	set(v):
+		snake_spacing_x = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+## Time delay (lag in seconds) that each gear follows the previous gear (creates the trailing snake effect)
+@export var snake_delay: float = 0.2:
+	set(v):
+		snake_delay = max(0.0, v)
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+## Wave phase shift mode: "Time Delay (Follow)" or "Wave Cycles (Full Wave)"
+@export_enum("Time Delay (Follow)", "Wave Cycles (Full Wave)") var snake_mode: String = "Time Delay (Follow)":
+	set(v):
+		snake_mode = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+## Number of full sine wave cycles across the entire snake when using Wave Cycles mode
+@export var snake_wave_cycles: float = 1.0:
+	set(v):
+		snake_wave_cycles = max(0.1, v)
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+## Whether to spawn a track rod for every gear in the snake (matching the reference screenshot)
+@export var snake_show_rods: bool = true:
+	set(v):
+		snake_show_rods = v
+		_update_rod_dimensions()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+## Invert follow direction (bottom-to-top wave instead of top-to-bottom)
+@export var snake_reverse_follow: bool = false:
+	set(v):
+		snake_reverse_follow = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+func _get_snake_gear_time_offset(i: int, target_count: int, base_spd: float) -> float:
+	var idx = (target_count - 1 - i) if snake_reverse_follow else i
+	if snake_mode == "Wave Cycles (Full Wave)":
+		var pos_d = move_dist_pos
+		var neg_d = move_dist_neg
+		var t_pause = direction_change_delay
+		var t_span = (pos_d + neg_d) / max(1.0, base_spd)
+		var cycle = 2.0 * t_span + 2.0 * t_pause
+		if cycle <= 0.001:
+			cycle = 1.0
+		var delay_per_gear = (cycle * snake_wave_cycles) / float(max(1, target_count))
+		return float(idx) * delay_per_gear
+	else:
+		return float(idx) * snake_delay
 
 @export_group("Interval Movement & Speed Curve")
 @export var enable_interval_movement: bool = false:
@@ -508,7 +597,9 @@ func _rebuild_gears() -> void:
 	_gear_sprites.clear()
 
 	var target_count = gear_count
-	if group_count > 1:
+	if is_snake_wave:
+		target_count = maxi(1, snake_gear_count)
+	elif group_count > 1:
 		target_count = group_count * max(1, gears_per_group)
 
 	if not has_gear or target_count == 0:
@@ -866,9 +957,9 @@ func _update_movement_cache() -> void:
 func _update_rod_dimensions() -> void:
 	_resolve_nodes()
 
-	# Clear previous zigzag segment rods
+	# Clear previous zigzag segment rods and snake tier rods
 	for child in get_children(true):
-		if child.name.begins_with("ZigZagRod_") or child.is_in_group("zigzag_rod"):
+		if child.name.begins_with("ZigZagRod_") or child.is_in_group("zigzag_rod") or child.name.begins_with("SnakeRod_") or child.is_in_group("snake_rod"):
 			child.queue_free()
 			remove_child(child)
 
@@ -928,6 +1019,100 @@ func _update_rod_dimensions() -> void:
 				seg_rod.add_child(spr)
 
 			add_child(seg_rod, false, Node.INTERNAL_MODE_BACK)
+		return
+
+	if is_snake_wave:
+		var total_tiers = maxi(1, snake_gear_count)
+		var should_have_rods = (has_rod or snake_show_rods)
+
+		if not should_have_rods or not rod_body:
+			if rod_body:
+				rod_body.visible = false
+				rod_body.process_mode = Node.PROCESS_MODE_DISABLED
+				if rod_col:
+					rod_col.disabled = true
+			return
+
+		var rod_len = max(length, _total_span)
+		var rod_center = _move_dir_vec * _center_offset
+		var rod_thick = max(breadth, rod_breadth)
+		var rad_angle = deg_to_rad(move_angle)
+
+		var theme_id = world_theme if world_theme != "" else WorldThemeRegistry.get_current_theme()
+		var r_tex = WorldThemeRegistry.get_gear_rod_texture(theme_id)
+		if r_tex == null and rod_sprite and rod_sprite.texture:
+			r_tex = rod_sprite.texture
+
+		# Primary Rod (Tier 0)
+		rod_body.visible = true
+		rod_body.process_mode = Node.PROCESS_MODE_INHERIT
+		rod_body.position = rod_center
+		rod_body.rotation = rad_angle
+		rod_body.add_to_group("obstacle")
+		rod_body.set_meta("is_lethal", rod_is_lethal)
+
+		if rod_has_collision:
+			rod_body.collision_layer = 1 | 4
+			rod_body.collision_mask = 2
+		else:
+			rod_body.collision_layer = 0
+			rod_body.collision_mask = 0
+
+		if rod_col:
+			rod_col.disabled = not rod_has_collision
+			if not rod_col.shape or not rod_col.shape is RectangleShape2D:
+				rod_col.shape = RectangleShape2D.new()
+			elif not rod_col.shape.resource_local_to_scene:
+				rod_col.shape = rod_col.shape.duplicate()
+			(rod_col.shape as RectangleShape2D).size = Vector2(rod_len, rod_thick)
+
+		if rod_sprite:
+			if r_tex:
+				rod_sprite.texture = r_tex
+			rod_sprite.position = Vector2.ZERO
+			rod_sprite.rotation = PI * 0.5
+			if rod_sprite.texture:
+				var tex_h = float(rod_sprite.texture.get_height())
+				var tex_w = float(rod_sprite.texture.get_width())
+				if tex_h > 0.0: rod_sprite.scale.y = rod_len / tex_h
+				if tex_w > 0.0: rod_sprite.scale.x = rod_thick / tex_w
+
+		# Spawn Rods for Tiers 1 .. total_tiers - 1
+		for i in range(1, total_tiers):
+			var tier_pos = Vector2(float(i) * snake_spacing_x, float(i) * snake_spacing_y) + rod_center
+			var snake_rod := StaticBody2D.new()
+			snake_rod.name = "SnakeRod_%d" % i
+			snake_rod.position = tier_pos
+			snake_rod.rotation = rad_angle
+			snake_rod.add_to_group("obstacle")
+			snake_rod.add_to_group("snake_rod")
+			snake_rod.set_meta("is_lethal", rod_is_lethal)
+
+			if rod_has_collision:
+				snake_rod.collision_layer = 1 | 4
+				snake_rod.collision_mask = 2
+			else:
+				snake_rod.collision_layer = 0
+				snake_rod.collision_mask = 0
+
+			var col := CollisionShape2D.new()
+			var shape := RectangleShape2D.new()
+			shape.size = Vector2(rod_len, rod_thick)
+			col.shape = shape
+			col.disabled = not rod_has_collision
+			snake_rod.add_child(col)
+
+			if r_tex:
+				var spr := Sprite2D.new()
+				spr.texture = r_tex
+				spr.rotation = PI * 0.5
+				var tex_h = float(r_tex.get_height())
+				var tex_w = float(r_tex.get_width())
+				if tex_h > 0.0: spr.scale.y = rod_len / tex_h
+				if tex_w > 0.0: spr.scale.x = rod_thick / tex_w
+				snake_rod.add_child(spr)
+
+			add_child(snake_rod, false, Node.INTERNAL_MODE_BACK)
 		return
 
 	if not rod_body:
@@ -1098,7 +1283,7 @@ func _calculate_offset_scalar(t_act: float) -> float:
 				return pos_d
 		if t_pause > 0.0:
 			var cycle = 2.0 * (t_one + t_pause)
-			var t = fmod(t_act, cycle)
+			var t = fposmod(t_act, cycle)
 			if t < t_one:
 				var s = (1.0 - cos((t / t_one) * PI)) * 0.5
 				return pos_d * s
@@ -1123,7 +1308,7 @@ func _calculate_offset_scalar(t_act: float) -> float:
 				return -neg_d
 		if t_pause > 0.0:
 			var cycle = 2.0 * (t_one + t_pause)
-			var t = fmod(t_act, cycle)
+			var t = fposmod(t_act, cycle)
 			if t < t_one:
 				var s = (1.0 - cos((t / t_one) * PI)) * 0.5
 				return -neg_d * s
@@ -1156,7 +1341,7 @@ func _calculate_offset_scalar(t_act: float) -> float:
 				return -neg_d
 
 		var cycle = 2.0 * t_span + 2.0 * t_pause
-		var t = fmod(t_act, cycle)
+		var t = fposmod(t_act, cycle)
 
 		if t < t_pos:
 			var s = sin((t / max(0.001, t_pos)) * (PI * 0.5))
@@ -1177,6 +1362,33 @@ func _calculate_offset_scalar(t_act: float) -> float:
 func _update_gears_positions(offset_scalar: float) -> void:
 	var count = _gear_bodies.size()
 	if count == 0 or not has_gear:
+		return
+
+	if is_snake_wave:
+		var base_spd = interval_speed if enable_interval_movement else move_speed
+		if loop_reset:
+			var track_start = -_move_dir_vec * move_dist_neg
+			for i in range(count):
+				var body = _gear_bodies[i]
+				if not body:
+					continue
+				var t_offset = _get_snake_gear_time_offset(i, count, base_spd)
+				var prog_offset = (t_offset * base_spd) / max(1.0, _total_span)
+				var gear_prog = fposmod(_progress - prog_offset, 1.0)
+				var travel_offset = _move_dir_vec * (gear_prog * _total_span)
+				var tier_offset = Vector2(float(i) * snake_spacing_x, float(i) * snake_spacing_y)
+				body.position = tier_offset + track_start + travel_offset
+		else:
+			for i in range(count):
+				var body = _gear_bodies[i]
+				if not body:
+					continue
+				var t_offset = _get_snake_gear_time_offset(i, count, base_spd)
+				var gear_t = _motion_accum_time - t_offset
+				var stagger_scalar = _calculate_offset_scalar(gear_t)
+				var travel_offset = _move_dir_vec * stagger_scalar
+				var tier_offset = Vector2(float(i) * snake_spacing_x, float(i) * snake_spacing_y)
+				body.position = tier_offset + travel_offset
 		return
 
 	var has_groups = (group_count > 1 and gears_per_group > 0)
@@ -1363,6 +1575,36 @@ func _draw() -> void:
 				if gear_count > 1:
 					label_str += " | %d Gears" % gear_count
 				draw_string(font, _path_points[0] + Vector2(12, -14), label_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1, 0.95))
+		return
+
+	if is_snake_wave and has_gear and _has_movement:
+		var total_tiers = maxi(1, snake_gear_count)
+		var base_p_neg = -_move_dir_vec * move_dist_neg
+		var base_p_pos = _move_dir_vec * move_dist_pos
+
+		var line_col = Color(0.0, 0.9, 1.0, 0.75)
+		var end_col = Color(1.0, 0.35, 0.35, 0.95)
+		var origin_col = Color(0.2, 1.0, 0.4, 0.95)
+		var perp = _move_dir_vec.orthogonal() * 14.0
+
+		for i in range(total_tiers):
+			var tier_pos = Vector2(float(i) * snake_spacing_x, float(i) * snake_spacing_y)
+			var p_neg = tier_pos + base_p_neg
+			var p_pos = tier_pos + base_p_pos
+
+			_draw_dashed_line(p_neg, p_pos, line_col, 2.0, 10.0)
+			draw_circle(tier_pos, 4.0, origin_col)
+
+			draw_line(p_neg - perp, p_neg + perp, end_col, 3.0)
+			draw_line(p_pos - perp, p_pos + perp, end_col, 3.0)
+
+			if font:
+				var label_str = "Distance: %.0f (-%.0f / +%.0f)" % [_total_span, move_dist_neg, move_dist_pos]
+				draw_string(font, p_pos + Vector2(10, 4), label_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 1, 1, 0.85))
+
+		if font:
+			var head_txt = "Snake Wave: %d Gears (Gap Y: %.0f, Delay: %.2fs)" % [snake_gear_count, snake_spacing_y, snake_delay]
+			draw_string(font, base_p_neg + Vector2(0, -18), head_txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.2, 1.0, 0.6, 0.95))
 		return
 
 	# Draw movement guidelines when gear movement is present

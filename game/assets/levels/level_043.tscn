@@ -198,7 +198,7 @@ tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_ocol5")
 
-[node name="LevelRoot" type="Node2D" unique_id=1309414650]
+[node name="LevelRoot" type="Node2D" unique_id=2131112852]
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=927742863 instance=ExtResource("1_tvgog")]
 z_index = 10
@@ -207,7 +207,7 @@ collision_layer = 2
 collision_mask = 23
 script = ExtResource("2_kfkvi")
 
-[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=1310889725]
+[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=610612431]
 z_index = 150
 position = Vector2(32, 0)
 scale = Vector2(1.5, 1.5)
@@ -229,7 +229,7 @@ script = ExtResource("7_l7o5n")
 spike_count = 8
 wall_distance = 45.0
 
-[node name="Spike_2" type="StaticBody2D" parent="." unique_id=582179741 groups=["obstacle"] instance=ExtResource("6_ie3sd")]
+[node name="Spike_2" type="StaticBody2D" parent="." unique_id=1932283366 groups=["obstacle"] instance=ExtResource("6_ie3sd")]
 z_index = 100
 position = Vector2(1119.0627, 1814.4403)
 collision_layer = 2
@@ -248,6 +248,7 @@ move_dist_neg = 0.0
 move_distance = 470.0
 move_angle = 90.0
 move_direction = "+Y"
+stop_at_end = true
 start_delay = 1.0
 direction_change_delay = 1.0
 delay = 1.0

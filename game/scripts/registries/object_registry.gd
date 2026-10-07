@@ -86,6 +86,36 @@ static var _registry: Dictionary = {
 		},
 		"default_scale": Vector2(1, 1)
 	},
+	"gear_snake": {
+		"id": "gear_snake",
+		"name": "Snake / Wave Moving Gear",
+		"scene_path": "res://game/scenes/Obstacles/MovingGear.tscn",
+		"category": "Obstacles",
+		"default_properties": {
+			"is_snake_wave": true,
+			"snake_gear_count": 12,
+			"snake_spacing_y": 120.0,
+			"snake_spacing_x": 0.0,
+			"snake_delay": 0.2,
+			"snake_mode": "Time Delay (Follow)",
+			"snake_wave_cycles": 1.0,
+			"snake_show_rods": true,
+			"has_rod": true,
+			"has_gear": true,
+			"move_speed": 100.0,
+			"rotation_speed": 2.0,
+			"move_dist_pos": 260.0,
+			"move_dist_neg": 270.0,
+			"move_distance": 530.0,
+			"move_direction": "X",
+			"move_angle": 0.0,
+			"loop_reset": false,
+			"stop_at_end": false,
+			"direction_change_delay": 0.0,
+			"start_delay": 0.0
+		},
+		"default_scale": Vector2(1, 1)
+	},
 	"gear_zigzag": {
 		"id": "gear_zigzag",
 		"name": "ZigZag Track Moving Gear",
