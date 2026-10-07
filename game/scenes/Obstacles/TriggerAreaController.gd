@@ -27,7 +27,8 @@ func _ready() -> void:
 
 func _on_ready() -> void:
 	add_to_group("trigger_area")
-	collision_mask = 3
+	collision_layer = 0
+	collision_mask = 3 # Layer 1 & Layer 2 (Player)
 	update_shape_size()
 
 	if not Engine.is_editor_hint():
@@ -35,6 +36,8 @@ func _on_ready() -> void:
 			body_entered.connect(_on_body_entered)
 		if not body_exited.is_connected(_on_body_exited):
 			body_exited.connect(_on_body_exited)
+		if not area_entered.is_connected(_on_area_entered):
+			area_entered.connect(_on_area_entered)
 
 func update_shape_size() -> void:
 	var col = get_node_or_null("CollisionShape2D") as CollisionShape2D
@@ -49,14 +52,25 @@ func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		update_shape_size()
 		queue_redraw()
-	elif _retrigger_cooldown > 0.0:
-		_retrigger_cooldown = maxf(_retrigger_cooldown - delta, 0.0)
+	else:
+		if _retrigger_cooldown > 0.0:
+			_retrigger_cooldown = maxf(_retrigger_cooldown - delta, 0.0)
+		if not triggered and _retrigger_cooldown <= 0.0:
+			for body in get_overlapping_bodies():
+				if _is_player(body):
+					triggered = true
+					_retrigger_cooldown = 0.25
+					activate_triggers()
+					break
 
-func _is_player(body: Node2D) -> bool:
-	return body is Player \
-		or body.is_in_group("player") \
-		or body.name.begins_with("Player") \
-		or (body is CharacterBody2D and not (body is FallingStoneController) and body.has_method("die"))
+func _is_player(node: Node) -> bool:
+	if not node:
+		return false
+	if node is Player or node.is_in_group("player") or node.name.begins_with("Player"):
+		return true
+	if node is CharacterBody2D and not (node is FallingStoneController) and (node.has_method("die") or node.has_method("apply_knockback")):
+		return true
+	return false
 
 func _on_body_entered(body: Node2D) -> void:
 	if triggered or _retrigger_cooldown > 0.0:
@@ -67,13 +81,25 @@ func _on_body_entered(body: Node2D) -> void:
 		_retrigger_cooldown = 0.25
 		activate_triggers()
 
+func _on_area_entered(area: Area2D) -> void:
+	if triggered or _retrigger_cooldown > 0.0:
+		return
+	var parent := area.get_parent()
+	if _is_player(area) or (parent and _is_player(parent)):
+		triggered = true
+		_retrigger_cooldown = 0.25
+		activate_triggers()
+
 func _on_body_exited(body: Node2D) -> void:
 	if _is_player(body):
 		triggered = false
 
 func activate_triggers() -> void:
 	# Trigger all nodes in "triggerable" group with matching trigger_tag
-	var nodes = get_tree().get_nodes_in_group("triggerable")
+	var tree: SceneTree = get_tree() if is_inside_tree() else Engine.get_main_loop() as SceneTree
+	if not tree:
+		return
+	var nodes := tree.get_nodes_in_group("triggerable")
 	for node in nodes:
 		if node == self:
 			continue

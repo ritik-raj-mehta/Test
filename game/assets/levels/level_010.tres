@@ -226,7 +226,6 @@ properties = {
 script = ExtResource("2_5ubjr")
 level_id = "level_010"
 level_name = "Level 10"
-world_theme = "world_4"
 player_start = Vector2(1000, 1408)
 level_size = Vector2(2000, 3000)
 camera_drag_left_margin = 0.9

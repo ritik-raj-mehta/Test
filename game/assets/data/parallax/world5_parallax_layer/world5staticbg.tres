@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ParallaxLayerData" format=3 uid="uid://c3fmyygyyg4vb"]
+
+[ext_resource type="Script" uid="uid://oyfhexd111du" path="res://game/scripts/data/ParallaxLayerData.gd" id="1_h58bh"]
+[ext_resource type="Texture2D" uid="uid://dcqv2budc05uu" path="res://game/assets/sprites/parallax/world_5/pink6.png" id="2_0215o"]
+
+[resource]
+script = ExtResource("1_h58bh")
+layer_key = &"static_bg"
+texture = ExtResource("2_0215o")
+metadata/_custom_type_script = "uid://oyfhexd111du"

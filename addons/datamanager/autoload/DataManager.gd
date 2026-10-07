@@ -192,7 +192,10 @@ func _ready() -> void:
 
 		profile_repo.reset_to_default()
 		profile_repo.mark_dirty()
-
+		inventory_repo.mutate(func(d: GameModels.InventoryData) -> void:
+			d.equipped.erase("skin")
+			d.owned.erase("skins")
+		)
 		var profile_save := save()
 
 		if not profile_save.success:

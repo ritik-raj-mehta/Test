@@ -56,13 +56,14 @@ properties = {
 [sub_resource type="Resource" id="Resource_vfg3s"]
 script = ExtResource("1_jukxs")
 object_id = "gear_m"
-position = Vector2(744, 1216)
+position = Vector2(741, 1216)
 scale = Vector2(1.5, 1.5)
 properties = {
 "direction_change_delay": 0.0,
 "enable_interval_movement": false,
 "gear_count": 1,
 "gear_spacing": 100.0,
+"group_count": 1,
 "has_gear": true,
 "has_rod": false,
 "interval_speed": 100.0,
@@ -73,6 +74,7 @@ properties = {
 "move_dist_pos": 420.0,
 "move_distance": 420.0,
 "move_speed": 250.0,
+"rod_has_collision": false,
 "rotation_speed": 10.0,
 "start_delay": 0.0
 }
@@ -104,13 +106,14 @@ properties = {
 [sub_resource type="Resource" id="Resource_akia2"]
 script = ExtResource("1_jukxs")
 object_id = "gear_m"
-position = Vector2(939, 1056)
+position = Vector2(936, 1056)
 scale = Vector2(1.5, 1.5)
 properties = {
 "direction_change_delay": 0.0,
 "enable_interval_movement": false,
 "gear_count": 1,
 "gear_spacing": 100.0,
+"group_count": 1,
 "has_gear": true,
 "has_rod": false,
 "interval_speed": 100.0,
@@ -121,6 +124,7 @@ properties = {
 "move_dist_pos": 290.0,
 "move_distance": 290.0,
 "move_speed": 250.0,
+"rod_has_collision": false,
 "rotation_speed": 10.0,
 "start_delay": 0.0
 }
@@ -152,13 +156,14 @@ properties = {
 [sub_resource type="Resource" id="Resource_axaxv"]
 script = ExtResource("1_jukxs")
 object_id = "gear_m"
-position = Vector2(1128, 896)
+position = Vector2(1123, 896)
 scale = Vector2(1.5, 1.5)
 properties = {
 "direction_change_delay": 0.0,
 "enable_interval_movement": false,
 "gear_count": 1,
 "gear_spacing": 100.0,
+"group_count": 1,
 "has_gear": true,
 "has_rod": false,
 "interval_speed": 100.0,
@@ -169,6 +174,7 @@ properties = {
 "move_dist_pos": 165.0,
 "move_distance": 330.0,
 "move_speed": 250.0,
+"rod_has_collision": false,
 "rotation_speed": 10.0,
 "start_delay": 0.0
 }
@@ -316,7 +322,7 @@ properties = {
 script = ExtResource("1_jukxs")
 object_id = "gear_r"
 position = Vector2(633, 37)
-scale = Vector2(5, 5)
+scale = Vector2(4.5, 4.5)
 properties = {
 "has_rod": false,
 "rod_has_collision": false,
@@ -328,7 +334,7 @@ properties = {
 script = ExtResource("1_jukxs")
 object_id = "gear_r"
 position = Vector2(1384, -346)
-scale = Vector2(5, 5)
+scale = Vector2(4.5, 4.5)
 properties = {
 "has_rod": false,
 "rod_has_collision": false,
@@ -340,6 +346,7 @@ properties = {
 script = ExtResource("2_irxiv")
 level_id = "level_011"
 level_name = "Level 11"
+world_theme = "world_2"
 player_start = Vector2(1000, 1408)
 level_size = Vector2(2000, 3000)
 camera_drag_left_margin = 0.9

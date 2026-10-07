@@ -27,6 +27,8 @@ const HOME_OUT_DELAY_SCALE: float = 0.5
 @export var _sfx_button: BaseButton
 @export var _quit_button: BaseButton
 
+@export var _parallax_world: ParallaxWorld
+
 var _overlay: Control      
 var _started: bool = false  
 var _home_tweens: Array[Tween] = []
@@ -121,7 +123,7 @@ func _start_level(data: LevelData) -> void:
 	var player := _setup_game(level, data)
 	if player == null:
 		return
-	_apply_world_theme(data, player)
+	# _apply_world_theme(data, player)
 	_refresh_level_info(data)
 	_enter_tap_to_play()
 
@@ -172,6 +174,10 @@ func _setup_game(level: Node, data: LevelData) -> Player:
 	if player == null or goal == null or camera == null:
 		push_error("GamePlay: level has no Player, Goal, or Camera.")
 		return null
+
+	if _parallax_world:
+		_parallax_world.apply_theme(data.world_theme)
+		_parallax_world.setup(camera, player, _bus)
 
 	var game := Game.new()
 	game.name = "Game"
@@ -226,6 +232,7 @@ func _apply_world_theme(data: LevelData, player: Player) -> void:
 			_background.texture = bg_tex
 		if player.has_method("set_background_texture"):
 			player.call("set_background_texture", bg_tex)
+	# _parallax_world.apply_theme(data.world_theme)
 
 	# Gears, falling stones, goal fruits, etc. pick up the theme.
 	for node in _level_root.find_children("*", "", true, false):

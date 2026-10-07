@@ -55,12 +55,17 @@ const SPRITE_SCALES: Dictionary = {
 
 
 func _ready() -> void:
+	collision_layer = 3 # Layer 1 (Terrain/World) & Layer 2 (Obstacles/Solid)
+	collision_mask = 0
+	if not is_in_group("walls"):
+		add_to_group("walls")
 	set_meta("is_lethal", false)
 	_resolve_nodes()
 	_update_wall()
 
 
 func _resolve_nodes() -> void:
+	collision_layer = 3
 	set_meta("is_lethal", false)
 	if sprite_triangle == null:
 		sprite_triangle = get_node_or_null("Sprite2DTraiangle")

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ParallaxLayerData" format=3 uid="uid://div2lap73tlsh"]
+
+[ext_resource type="Script" uid="uid://oyfhexd111du" path="res://game/scripts/data/ParallaxLayerData.gd" id="1_p4s7i"]
+[ext_resource type="Texture2D" uid="uid://cel53wf0q7iki" path="res://game/assets/sprites/parallax/world_4/purple3.png" id="2_lnmju"]
+
+[resource]
+script = ExtResource("1_p4s7i")
+layer_key = &"layer3"
+texture = ExtResource("2_lnmju")
+position = Vector2(128.33328, 2016.6667)
+metadata/_custom_type_script = "uid://oyfhexd111du"

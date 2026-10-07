@@ -84,6 +84,8 @@ func _on_character_changed(_character_id: String) -> void:
 # ============================================================
 
 func _ready() -> void:
+	if not is_in_group("player"):
+		add_to_group("player")
 	if visual:
 		_normal_scale = visual.scale
 
@@ -216,9 +218,21 @@ func _update_tilt(delta: float) -> void:
 	var k := TILT_SPEED if rising else TILT_FLIP_SPEED
 	visual.rotation = lerp_angle(visual.rotation, target, 1.0 - exp(-k * delta))
 
+func _get_haptics() -> HapticsManager:
+	if not is_inside_tree():
+		return null
+	var registry: Node = get_tree().root.get_node_or_null("ServiceRegistry") if get_tree() and get_tree().root else null
+	if registry and registry.has_method("get_service"):
+		return registry.get_service(&"haptics") as HapticsManager
+	return null
+
+
 func _tap(dir: float) -> void:
 	if is_dead or is_goal_reached or _input_lock > 0.0:
 		return
+	var haptics := _get_haptics()
+	if haptics:
+		haptics.light()
 	move_dir = dir
 	last_move_direction = dir
 	velocity.y = HOP_VELOCITY
@@ -277,6 +291,9 @@ func die() -> void:
 	if is_dead:
 		return
 	is_dead = true
+	var haptics := _get_haptics()
+	if haptics:
+		haptics.medium()
 	_death_sequence_id += 1
 	var current_seq := _death_sequence_id
 
@@ -522,6 +539,10 @@ func apply_directional_boost(direction: Vector2, force: float, duration: float =
 	if is_dead or is_goal_reached:
 		return
 
+	var haptics := _get_haptics()
+	if haptics:
+		haptics.medium()
+
 	rotation = boost_rotation
 	if visual:
 		visual.rotation = 0.0
@@ -550,6 +571,10 @@ func apply_directional_boost(direction: Vector2, force: float, duration: float =
 func apply_booster(data: Resource) -> void:
 	if is_dead or is_goal_reached:
 		return
+
+	var haptics := _get_haptics()
+	if haptics:
+		haptics.medium()
 
 	if data and "boost_velocity" in data:
 		print("PLAYER BOOST APPLIED: ", data.boost_velocity)

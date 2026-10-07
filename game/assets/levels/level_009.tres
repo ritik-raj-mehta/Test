@@ -470,7 +470,6 @@ properties = {
 
 [resource]
 script = ExtResource("2_t7jip")
-world_theme = "world_4"
 player_start = Vector2(1000, 1408)
 level_size = Vector2(2000, 3000)
 camera_drag_left_margin = 0.9

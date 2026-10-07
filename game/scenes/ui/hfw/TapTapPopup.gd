@@ -6,7 +6,7 @@ signal progress_changed(value: float)
 @export var character_id: String = ""
 @export var rays_speed: float = 0.12
 @export var fruit_y_offset: float = 70.0
-@export var tilt_angle: float = 7.5
+@export var tilt_angle: float = 14.0
 @export var fruit_y_offsets: Dictionary = {
 	"zumpa_green": 70.0,
 	"sunny": 150.0,
@@ -16,8 +16,10 @@ signal progress_changed(value: float)
 }
 var _equipped_skin_id: String = ""
 
-# Eating tilt & bite animation state
-var _eat_tilt_right: bool = false
+
+var _streak_bites_remaining: int = 0
+var _character_base_pos: Vector2 = Vector2.ZERO
+var _character_base_pos_set: bool = false
 var _character_tween: Tween = null
 var _fruit_tween: Tween = null
 
@@ -37,6 +39,8 @@ var _fruit_tween: Tween = null
 
 # Fruit eating sprite (created dynamically in the Middle container)
 var _fruit_sprite: TextureRect = null
+const EATING_EFFECT_SCENE := preload("res://game/TrailandAnimations/EatingEffect.tscn")
+var _eating_effect_node: Node2D = null
 
 var _current_progress: int = 0
 var _progress_before: float = 0.0
@@ -49,6 +53,8 @@ var _player_skins: PlayerSkins
 var _unlock_character_id: String = ""
 var _unlock_panel_open: bool = false
 
+@export var character_size: Vector2 = Vector2(700, 700)
+@export var fruit_size: float = 380.0
 # ============================================================
 # EATING STATE  (always active)
 # ============================================================
@@ -62,7 +68,7 @@ const FRUIT_TOTAL_FRAMES: int = 6
 const FRUIT_EATING_PHASES: int = 5
 
 # replace TAPS_PER_PHASE
-const TAPS_PER_CYCLE: int = 20
+const TAPS_PER_CYCLE: int = 55
 # Cached textures for eating/tap/release character faces
 var _first_texture: Texture2D = null
 var _tap_texture: Texture2D = null
@@ -134,6 +140,8 @@ func _initialize_popup() -> void:
 	_unlock_character_id = ""
 	_unlock_panel_open = false
 	_eating_tap_count = 0
+	_streak_bites_remaining = 0
+	_character_base_pos_set = false
 
 	if _unlock_panel:
 		_unlock_panel.visible = false
@@ -276,7 +284,9 @@ func _setup_eating() -> void:
 	if _character:
 		_character.rotation_degrees = 0.0
 		_character.scale = Vector2.ONE
-
+		_character.custom_minimum_size = character_size
+		_character.fit_body()
+		_character_base_pos_set = false
 	# 1st image when panel opens: Frame 0 of char1Eating.png (_first_texture)
 	if _character and _first_texture:
 		_character.set_texture_direct(_first_texture)
@@ -288,6 +298,136 @@ func _setup_eating() -> void:
 	# Create (or recreate) the fruit sprite — always starts at phase 0
 	_create_fruit_sprite()
 	_update_fruit_phase(0)
+	_setup_eating_effect()
+
+
+func _setup_eating_effect() -> void:
+	if _character == null:
+		return
+	if _eating_effect_node and is_instance_valid(_eating_effect_node):
+		return
+	if EATING_EFFECT_SCENE:
+		_eating_effect_node = EATING_EFFECT_SCENE.instantiate() as Node2D
+		if _eating_effect_node:
+			var left_p := _eating_effect_node.get_node_or_null("LeftMouthParticles") as GPUParticles2D
+			var right_p := _eating_effect_node.get_node_or_null("RightMouthParticles") as GPUParticles2D
+			if left_p:
+				left_p.emitting = false
+				left_p.one_shot = true
+			if right_p:
+				right_p.emitting = false
+				right_p.one_shot = true
+			_character.add_child(_eating_effect_node)
+
+
+static var _particle_alpha_ramp: GradientTexture1D = null
+static var _particle_scale_curve: CurveTexture = null
+
+static func _get_particle_alpha_ramp() -> GradientTexture1D:
+	if _particle_alpha_ramp != null:
+		return _particle_alpha_ramp
+	var grad := Gradient.new()
+	grad.offsets = PackedFloat32Array([0.0, 0.55, 1.0])
+	grad.colors = PackedColorArray([
+		Color(1, 1, 1, 1),
+		Color(1, 1, 1, 0.85),
+		Color(1, 1, 1, 0) # Fades smoothly to 0 alpha at the end of lifetime
+	])
+	var tex := GradientTexture1D.new()
+	tex.gradient = grad
+	_particle_alpha_ramp = tex
+	return _particle_alpha_ramp
+
+static func _get_particle_scale_curve() -> CurveTexture:
+	if _particle_scale_curve != null:
+		return _particle_scale_curve
+	var c := Curve.new()
+	c.add_point(Vector2(0.0, 0.8))
+	c.add_point(Vector2(0.2, 1.0))
+	c.add_point(Vector2(0.65, 0.8))
+	c.add_point(Vector2(1.0, 0.0)) # Shrinks smoothly to zero size
+	var tex := CurveTexture.new()
+	tex.curve = c
+	_particle_scale_curve = tex
+	return _particle_scale_curve
+
+
+func _trigger_fruit_eating_effect() -> void:
+	if _character == null:
+		return
+
+	# Only trigger particle effect after the first tap
+	if _eating_tap_count < 1:
+		return
+
+	var theme_id: String = WorldThemeRegistry.get_current_theme()
+	var particle_tex: Texture2D = WorldThemeRegistry.get_fruit_particle_texture(theme_id)
+
+	if _eating_effect_node == null or not is_instance_valid(_eating_effect_node):
+		_setup_eating_effect()
+
+	if _eating_effect_node == null or not is_instance_valid(_eating_effect_node):
+		return
+
+	var left_p := _eating_effect_node.get_node_or_null("LeftMouthParticles") as GPUParticles2D
+	var right_p := _eating_effect_node.get_node_or_null("RightMouthParticles") as GPUParticles2D
+
+	# Do not interrupt ongoing particles — allow current burst to play out fully before starting a new one
+	if (left_p and left_p.emitting) or (right_p and right_p.emitting):
+		return
+
+	var char_w: float = _character.size.x if _character.size.x > 0.0 else 700.0
+	var char_h: float = _character.size.y if _character.size.y > 0.0 else 700.0
+
+	var mouth_y: float = char_h * 0.54
+
+	if left_p:
+		if particle_tex:
+			left_p.texture = particle_tex
+		left_p.position = Vector2(char_w * 0.28, mouth_y)
+		left_p.one_shot = true
+		left_p.lifetime = 0.75
+		left_p.amount = randi_range(3, 8)
+		if left_p.process_material and left_p.process_material is ParticleProcessMaterial:
+			var mat := left_p.process_material.duplicate() as ParticleProcessMaterial
+			mat.direction = Vector3(-0.35, -0.25, 0)
+			mat.initial_velocity_min = 100.0
+			mat.initial_velocity_max = 220.0
+			mat.scale_min = 0.12
+			mat.scale_max = 0.25
+			mat.spread = 28.0
+			mat.gravity = Vector3(0, 600.0, 0)
+			mat.damping_min = 20.0
+			mat.damping_max = 40.0
+			mat.color_ramp = _get_particle_alpha_ramp()
+			mat.scale_curve = _get_particle_scale_curve()
+			left_p.process_material = mat
+		left_p.restart()
+		left_p.emitting = true
+
+	if right_p:
+		if particle_tex:
+			right_p.texture = particle_tex
+		right_p.position = Vector2(char_w * 0.72, mouth_y)
+		right_p.one_shot = true
+		right_p.lifetime = 0.75
+		right_p.amount = randi_range(3, 8)
+		if right_p.process_material and right_p.process_material is ParticleProcessMaterial:
+			var mat := right_p.process_material.duplicate() as ParticleProcessMaterial
+			mat.direction = Vector3(0.35, -0.25, 0)
+			mat.initial_velocity_min = 100.0
+			mat.initial_velocity_max = 220.0
+			mat.scale_min = 0.12
+			mat.scale_max = 0.25
+			mat.spread = 28.0
+			mat.gravity = Vector3(0, 600.0, 0)
+			mat.damping_min = 20.0
+			mat.damping_max = 40.0
+			mat.color_ramp = _get_particle_alpha_ramp()
+			mat.scale_curve = _get_particle_scale_curve()
+			right_p.process_material = mat
+		right_p.restart()
+		right_p.emitting = true
 
 
 func _create_fruit_sprite() -> void:
@@ -317,7 +457,7 @@ func _create_fruit_sprite() -> void:
 	# Wrapper container placed in Middle CenterContainer
 	var wrapper := Control.new()
 	wrapper.name = "FruitWrapper"
-	wrapper.custom_minimum_size = Vector2(200, 200)
+	wrapper.custom_minimum_size =  Vector2(fruit_size, fruit_size)
 	wrapper.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	# Resolve y_offset for current equipped character
@@ -326,8 +466,8 @@ func _create_fruit_sprite() -> void:
 	# Create the fruit TextureRect using AtlasTexture for frame display
 	_fruit_sprite = TextureRect.new()
 	_fruit_sprite.name = "FruitEat"
-	_fruit_sprite.custom_minimum_size = Vector2(200, 200)
-	_fruit_sprite.size = Vector2(200, 200)
+	_fruit_sprite.custom_minimum_size = Vector2(fruit_size, fruit_size)
+	_fruit_sprite.size = Vector2(fruit_size, fruit_size)
 	_fruit_sprite.position = Vector2(0, y_off) # Shifts fruit per-character
 	_fruit_sprite.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_fruit_sprite.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -365,6 +505,7 @@ func _update_fruit_phase(phase_index: int) -> void:
 		frame_width,
 		frame_height
 	)
+
 
 
 ## Returns the current fruit phase (0–5).
@@ -407,54 +548,112 @@ func _on_tap_input(e: InputEvent) -> void:
 			_on_tap_release()
 
 
+enum BiteDirection { LEFT, UPPER_LEFT, TOP, UPPER_RIGHT, RIGHT }
+
+const BITE_ORDER: Array = [
+	BiteDirection.LEFT, BiteDirection.UPPER_LEFT, BiteDirection.TOP,
+	BiteDirection.UPPER_RIGHT, BiteDirection.RIGHT,
+]
+
+# tilt = multiplier of tilt_angle, dir = lunge direction, squash = bite squash/stretch
+const BITE_POSES: Dictionary = {
+	BiteDirection.LEFT: {"tilt": -1.3, "dir": Vector2(-1.0, 0.4), "squash": Vector2(1.14, 0.88)},
+	BiteDirection.UPPER_LEFT: {"tilt": -0.8, "dir": Vector2(-0.8, -0.8), "squash": Vector2(1.06, 1.10)},
+	BiteDirection.TOP: {"tilt": 0.0, "dir": Vector2(0.0, -1.0), "squash": Vector2(0.94, 1.14)},
+	BiteDirection.UPPER_RIGHT: {"tilt": 0.8, "dir": Vector2(0.8, -0.8), "squash": Vector2(1.06, 1.10)},
+	BiteDirection.RIGHT: {"tilt": 1.3, "dir": Vector2(1.0, 0.4), "squash": Vector2(1.14, 0.88)},
+}
+
+var _current_bite_dir: BiteDirection = BiteDirection.TOP
+var _sweep_step: int = 1
+
+
+# 60% sweep to the neighbouring direction (left → upper-left → top → ...),
+# 40% random jump. Never repeats the same direction.
+func _pick_next_bite() -> void:
+	var idx: int = BITE_ORDER.find(_current_bite_dir)
+	if randf() < 0.6:
+		var next: int = idx + _sweep_step
+		if next < 0 or next >= BITE_ORDER.size():
+			_sweep_step = -_sweep_step
+			next = idx + _sweep_step
+		idx = next
+	else:
+		var n: int = randi_range(0, BITE_ORDER.size() - 2)
+		idx = n if n < idx else n + 1
+	_current_bite_dir = BITE_ORDER[idx]
+	_streak_bites_remaining = randi_range(1, 3)
+
+
 func _animate_eat_press() -> void:
 	if _character == null:
 		return
 
-	# Alternate head tilt angle left (-tilt_angle) and right (+tilt_angle)
-	_eat_tilt_right = not _eat_tilt_right
-	var target_tilt: float = tilt_angle if _eat_tilt_right else -tilt_angle
+	if not _character_base_pos_set:
+		_character_base_pos = _character.position
+		_character_base_pos_set = true
+		_character.pivot_offset = _character.size / 2.0 if _character.size.x > 0.0 else Vector2(100, 100)
 
-	if _character.size.x > 0 and _character.size.y > 0:
-		_character.pivot_offset = _character.size / 2.0
-	else:
-		_character.pivot_offset = Vector2(100, 100)
+	if _streak_bites_remaining <= 0:
+		_pick_next_bite()
+	_streak_bites_remaining -= 1
 
-	if _character_tween and _character_tween.is_running():
+	var pose: Dictionary = BITE_POSES[_current_bite_dir]
+	var tilt: float = pose.tilt * tilt_angle * randf_range(0.9, 1.15)
+	var offset: Vector2 = pose.dir * randf_range(14.0, 22.0)
+	var squash: Vector2 = pose.squash
+
+	if _character_tween and _character_tween.is_valid():
 		_character_tween.kill()
 
+	# Step 1: fast bite lunge. Step 2: softer chew rebound (held while finger is down).
 	_character_tween = create_tween().set_parallel(true)
 	_character_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_character_tween.tween_property(_character, "rotation_degrees", tilt, 0.06)
+	_character_tween.tween_property(_character, "scale", squash, 0.05)
+	_character_tween.tween_property(_character, "position", _character_base_pos + offset, 0.06)
 
-	# Head tilt and bite squash scale impulse
-	_character_tween.tween_property(_character, "rotation_degrees", target_tilt, 0.07)
-	_character_tween.tween_property(_character, "scale", Vector2(1.12, 0.9), 0.06)
+	_character_tween.chain().tween_property(_character, "rotation_degrees", tilt * 0.55, 0.08)
+	_character_tween.tween_property(_character, "scale", Vector2.ONE.lerp(squash, 0.3), 0.08)
+	_character_tween.tween_property(_character, "position", _character_base_pos + offset * 0.4, 0.08)
 
-	# Fruit bite punch pulse
+	# Fruit: squash + small kick away from the bite side, then settle.
 	if _fruit_sprite and is_instance_valid(_fruit_sprite):
-		_fruit_sprite.pivot_offset = Vector2(100, 100)
-		if _fruit_tween and _fruit_tween.is_running():
+		_fruit_sprite.pivot_offset = _fruit_sprite.size / 2.0
+		if _fruit_tween and _fruit_tween.is_valid():
 			_fruit_tween.kill()
-
-		_fruit_tween = create_tween()
+		var s: float = 0.86 + randf_range(-0.03, 0.03)
+		_fruit_tween = create_tween().set_parallel(true)
 		_fruit_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		_fruit_tween.tween_property(_fruit_sprite, "scale", Vector2(0.85, 0.85), 0.05)
-		_fruit_tween.tween_property(_fruit_sprite, "scale", Vector2.ONE, 0.1)
+		_fruit_tween.tween_property(_fruit_sprite, "scale", Vector2(s, s), 0.05)
+		_fruit_tween.tween_property(_fruit_sprite, "rotation_degrees", -pose.dir.x * 5.0, 0.05)
+		_fruit_tween.chain().tween_property(_fruit_sprite, "scale", Vector2.ONE, 0.1)
+		_fruit_tween.tween_property(_fruit_sprite, "rotation_degrees", 0.0, 0.1)
 
 
 func _animate_eat_release() -> void:
 	if _character == null:
 		return
 
-	if _character_tween and _character_tween.is_running():
+	if _character_tween and _character_tween.is_valid():
 		_character_tween.kill()
 
+	# Settle back upright with a slight overshoot (the "swallow" beat).
 	_character_tween = create_tween().set_parallel(true)
 	_character_tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_character_tween.tween_property(_character, "rotation_degrees", 0.0, 0.14)
+	_character_tween.tween_property(_character, "scale", Vector2.ONE, 0.14)
+	if _character_base_pos_set:
+		_character_tween.tween_property(_character, "position", _character_base_pos, 0.14)
 
-	# Return rotation back upright (0.0°) and restore normal scale (1.0, 1.0)
-	_character_tween.tween_property(_character, "rotation_degrees", 0.0, 0.12)
-	_character_tween.tween_property(_character, "scale", Vector2.ONE, 0.12)
+	# Make sure the fruit isn't left mid-kick if released early.
+	if _fruit_sprite and is_instance_valid(_fruit_sprite):
+		if _fruit_tween and _fruit_tween.is_valid():
+			_fruit_tween.kill()
+		_fruit_tween = create_tween().set_parallel(true)
+		_fruit_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		_fruit_tween.tween_property(_fruit_sprite, "scale", Vector2.ONE, 0.08)
+		_fruit_tween.tween_property(_fruit_sprite, "rotation_degrees", 0.0, 0.08)
 
 
 func _on_tap_press() -> void:
@@ -467,9 +666,10 @@ func _on_tap_press() -> void:
 
 	# ── REALISTIC EATING ANIMATION: Head tilt + bite squash + fruit pulse ──
 	_animate_eat_press()
+	_trigger_fruit_eating_effect()
 
 	if _haptics:
-		_haptics.light()
+		_haptics.medium()
 
 	# ── FRUIT EATING (always) ──
 	_eating_tap_count += 1

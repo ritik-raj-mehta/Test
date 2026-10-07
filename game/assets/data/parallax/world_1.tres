@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ParallaxTheme" format=3 uid="uid://cvb0r0vcs30qn"]
+
+[ext_resource type="Script" uid="uid://oyfhexd111du" path="res://game/scripts/data/ParallaxLayerData.gd" id="1_83343"]
+[ext_resource type="Script" uid="uid://bjvova0ae7oef" path="res://game/scripts/data/ParallaxTheme.gd" id="1_d1hf8"]
+[ext_resource type="Resource" uid="uid://bwknnv7230vx8" path="res://game/assets/data/parallax/world1_parallax_layer/world1layer1.tres" id="2_rubbm"]
+[ext_resource type="Resource" uid="uid://bg3tn4lkxsv4q" path="res://game/assets/data/parallax/world1_parallax_layer/world1layer2.tres" id="3_6u4om"]
+[ext_resource type="Resource" uid="uid://bef8mci2yfqs7" path="res://game/assets/data/parallax/world1_parallax_layer/world1layer3.tres" id="4_3lnos"]
+[ext_resource type="Resource" uid="uid://c01gqw31pb4nv" path="res://game/assets/data/parallax/world1_parallax_layer/world1layer4.tres" id="5_dmsmi"]
+[ext_resource type="Resource" uid="uid://4nnkpfhjmymo" path="res://game/assets/data/parallax/world1_parallax_layer/world1layer5.tres" id="6_68geb"]
+[ext_resource type="Resource" uid="uid://bs1xuavwdea1t" path="res://game/assets/data/parallax/world1_parallax_layer/world1layer6.tres" id="7_i2xto"]
+[ext_resource type="Resource" uid="uid://b2uayhnujdjyk" path="res://game/assets/data/parallax/world1_parallax_layer/world1layer7.tres" id="8_a1b5o"]
+[ext_resource type="Resource" uid="uid://dixaxjt06vjw7" path="res://game/assets/data/parallax/world1_parallax_layer/world1layer8.tres" id="9_bwavm"]
+[ext_resource type="Resource" uid="uid://br4ps5sruy83h" path="res://game/assets/data/parallax/world1_parallax_layer/world1staticbg.tres" id="10_hkiaf"]
+
+[resource]
+script = ExtResource("1_d1hf8")
+parallax_data = Array[ExtResource("1_83343")]([ExtResource("2_rubbm"), ExtResource("3_6u4om"), ExtResource("4_3lnos"), ExtResource("5_dmsmi"), ExtResource("6_68geb"), ExtResource("7_i2xto"), ExtResource("8_a1b5o"), ExtResource("9_bwavm"), ExtResource("10_hkiaf")])
+metadata/_custom_type_script = "uid://bjvova0ae7oef"

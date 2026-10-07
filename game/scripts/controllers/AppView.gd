@@ -63,8 +63,6 @@ func _bind_tap(area: Control, callback: Callable) -> void:
 	)
 
 func _click() -> void:
-	if _haptics:
-		_haptics.light()
 	if _audio and ResourceLoader.exists(UIConfig.CLICK_SFX_PATH):
 		_audio.play_sfx(load(UIConfig.CLICK_SFX_PATH) as AudioStream)
 

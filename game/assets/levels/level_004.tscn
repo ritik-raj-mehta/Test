@@ -1,12 +1,12 @@
-[gd_scene format=4]
+[gd_scene format=4 uid="uid://bw4xc7nnrv2u7"]
 
-[ext_resource type="PackedScene" path="res://game/scenes/gameplay/Player.tscn" id="1_qping"]
-[ext_resource type="Script" path="res://game/scenes/gameplay/Player.gd" id="2_f600a"]
-[ext_resource type="Texture2D" path="res://game/assets/sprites/atlases/tiles/Tile4.png" id="3_y6rml"]
-[ext_resource type="PackedScene" path="res://game/scenes/Obstacles/Goal.tscn" id="4_5og2g"]
-[ext_resource type="Script" path="res://game/scenes/Obstacles/Goal.gd" id="5_y8i45"]
-[ext_resource type="PackedScene" path="res://game/scenes/Obstacles/Spike.tscn" id="6_qmw5k"]
-[ext_resource type="Script" path="res://game/scenes/Obstacles/SpikeController.gd" id="7_hnmlp"]
+[ext_resource type="PackedScene" uid="uid://b5jwaurrnmkce" path="res://game/scenes/gameplay/Player.tscn" id="1_qping"]
+[ext_resource type="Script" uid="uid://bua50daqrujd6" path="res://game/scenes/gameplay/Player.gd" id="2_f600a"]
+[ext_resource type="Texture2D" uid="uid://c1tdiylrydb82" path="res://game/assets/sprites/atlases/tiles/Tile4.png" id="3_y6rml"]
+[ext_resource type="PackedScene" uid="uid://h0y0h6owdl37" path="res://game/scenes/Obstacles/Goal.tscn" id="4_5og2g"]
+[ext_resource type="Script" uid="uid://ukvwkll4agq6" path="res://game/scenes/Obstacles/Goal.gd" id="5_y8i45"]
+[ext_resource type="PackedScene" uid="uid://dyudu3n1v0tqd" path="res://game/scenes/Obstacles/Spike.tscn" id="6_qmw5k"]
+[ext_resource type="Script" uid="uid://1lwe8eaaf45s" path="res://game/scenes/Obstacles/SpikeController.gd" id="7_hnmlp"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ay4hv"]
 texture = ExtResource("3_y6rml")
@@ -197,7 +197,7 @@ tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_ay4hv")
 
-[node name="LevelRoot" type="Node2D" unique_id=1719366601]
+[node name="LevelRoot" type="Node2D" unique_id=600198540]
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=927742863 instance=ExtResource("1_qping")]
 z_index = 10
@@ -206,7 +206,7 @@ collision_layer = 2
 collision_mask = 23
 script = ExtResource("2_f600a")
 
-[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=1595936576]
+[node name="WorldTileMap" type="TileMapLayer" parent="." unique_id=2101912791]
 z_index = 150
 position = Vector2(40, 0)
 scale = Vector2(1.5, 1.5)
@@ -228,7 +228,7 @@ script = ExtResource("7_hnmlp")
 spike_count = 8
 wall_distance = 45.0
 
-[node name="Spike_2" type="StaticBody2D" parent="." unique_id=638116466 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_2" type="StaticBody2D" parent="." unique_id=270230081 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(1118.2915, 1814.2081)
 collision_layer = 2
@@ -237,7 +237,7 @@ script = ExtResource("7_hnmlp")
 spike_count = 8
 wall_distance = 45.0
 
-[node name="Spike_3" type="StaticBody2D" parent="." unique_id=698812365 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_3" type="StaticBody2D" parent="." unique_id=858193926 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(845.6943, -458.89407)
 rotation = 4.712389
@@ -247,7 +247,7 @@ script = ExtResource("7_hnmlp")
 spike_count = 3
 wall_distance = 43.0
 
-[node name="Spike_4" type="StaticBody2D" parent="." unique_id=947557992 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_4" type="StaticBody2D" parent="." unique_id=1755425148 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(1153.1483, 558.4615)
 rotation = 1.5707964
@@ -257,7 +257,7 @@ script = ExtResource("7_hnmlp")
 spike_count = 3
 wall_distance = 43.0
 
-[node name="Spike_5" type="StaticBody2D" parent="." unique_id=427324845 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_5" type="StaticBody2D" parent="." unique_id=1392172757 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(1155, 1038.2404)
 rotation = 1.5707964
@@ -266,7 +266,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_6" type="StaticBody2D" parent="." unique_id=563808077 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_6" type="StaticBody2D" parent="." unique_id=1654622026 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(886.6838, 999.91907)
 collision_layer = 2
@@ -274,7 +274,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_7" type="StaticBody2D" parent="." unique_id=76704426 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_7" type="StaticBody2D" parent="." unique_id=625054571 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(845.2562, 1267.5674)
 rotation = 4.712389
@@ -283,7 +283,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_8" type="StaticBody2D" parent="." unique_id=1426027275 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_8" type="StaticBody2D" parent="." unique_id=369085549 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(1112.7856, 1304.8153)
 rotation = 3.1415927
@@ -292,7 +292,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_9" type="StaticBody2D" parent="." unique_id=1990876851 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_9" type="StaticBody2D" parent="." unique_id=1137883187 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(1113.6489, 201.4928)
 rotation = 3.1415927
@@ -301,7 +301,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_10" type="StaticBody2D" parent="." unique_id=1408529701 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_10" type="StaticBody2D" parent="." unique_id=566668961 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(885.6882, -105.504745)
 collision_layer = 2
@@ -309,7 +309,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_11" type="StaticBody2D" parent="." unique_id=1289970027 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_11" type="StaticBody2D" parent="." unique_id=1426753882 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(1153.6261, -65.71379)
 rotation = 1.5707964
@@ -318,7 +318,7 @@ collision_mask = 0
 script = ExtResource("7_hnmlp")
 spike_count = 6
 
-[node name="Spike_12" type="StaticBody2D" parent="." unique_id=45761549 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
+[node name="Spike_12" type="StaticBody2D" parent="." unique_id=1766556304 groups=["obstacle"] instance=ExtResource("6_qmw5k")]
 z_index = 100
 position = Vector2(847.6755, 163.55655)
 rotation = 4.712389

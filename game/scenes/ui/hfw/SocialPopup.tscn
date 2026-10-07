@@ -4,9 +4,9 @@
 [ext_resource type="Texture2D" uid="uid://dfge57xjxnq56" path="res://game/assets/sprites/single/ui/Popup/social_popup.png" id="2_4vp4u"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_02382"]
 [ext_resource type="Texture2D" uid="uid://4v4o4e6cabdj" path="res://game/assets/sprites/single/ui/Popup/button.png" id="4_1nyej"]
+[ext_resource type="Texture2D" uid="uid://bl8guoepgiy3p" path="res://game/assets/sprites/single/ui/Popup/gamewise_icon.png" id="5_1nyej"]
 [ext_resource type="Texture2D" uid="uid://dqaa6yow5xem8" path="res://game/assets/sprites/single/ui/Reff/Policy_reff.png" id="5_4vp4u"]
-[ext_resource type="Texture2D" uid="uid://cqh6tvu2qvyca" path="res://game/assets/sprites/single/ui/Popup/facebook_icon.png" id="5_55io7"]
-[ext_resource type="Texture2D" uid="uid://diofn2hijm77n" path="res://game/assets/sprites/single/ui/Popup/youtube_icon.png" id="6_shyri"]
+[ext_resource type="Texture2D" uid="uid://r71hgm5crjps" path="res://game/assets/sprites/single/ui/Popup/linkedin_icon.png" id="6_55io7"]
 [ext_resource type="Texture2D" uid="uid://deskot1no3r2o" path="res://game/assets/sprites/single/ui/Popup/instagram_icon.png" id="7_142cw"]
 [ext_resource type="Texture2D" uid="uid://by3nc3na6ekj3" path="res://game/assets/sprites/single/ui/Popup/dicord_icon.png" id="8_g3qsr"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="9_1nyej"]
@@ -23,8 +23,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4vp4u")
-facebook_button = NodePath("Holder/Window/TextureRect/HBoxContainer/FacebookButton")
-youtube_button = NodePath("Holder/Window/TextureRect/HBoxContainer/YoutubeButton")
+facebook_button = NodePath("Holder/Window/TextureRect/HBoxContainer/GamewiseButton")
+youtube_button = NodePath("Holder/Window/TextureRect/HBoxContainer/LinkedInButton")
 instagram_button = NodePath("Holder/Window/TextureRect/HBoxContainer/InstagramButton")
 discord_button = NodePath("Holder/Window/TextureRect/HBoxContainer/DiscordButton")
 back_button = NodePath("Holder/Window/BackButton")
@@ -111,47 +111,47 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 35
 
-[node name="FacebookButton" type="TextureButton" parent="Holder/Window/TextureRect/HBoxContainer" unique_id=29329468]
+[node name="GamewiseButton" type="TextureButton" parent="Holder/Window/TextureRect/HBoxContainer" unique_id=29329468]
 layout_mode = 2
 texture_normal = ExtResource("4_1nyej")
 texture_pressed = ExtResource("4_1nyej")
 
-[node name="Icon" type="TextureRect" parent="Holder/Window/TextureRect/HBoxContainer/FacebookButton" unique_id=1791092421]
+[node name="Icon" type="TextureRect" parent="Holder/Window/TextureRect/HBoxContainer/GamewiseButton" unique_id=1791092421]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -45.0
-offset_top = -45.0
-offset_right = 45.0
-offset_bottom = 45.0
+offset_left = -45.5
+offset_top = -49.5
+offset_right = 44.5
+offset_bottom = 40.5
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("5_55io7")
+texture = ExtResource("5_1nyej")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="YoutubeButton" type="TextureButton" parent="Holder/Window/TextureRect/HBoxContainer" unique_id=126781256]
+[node name="LinkedInButton" type="TextureButton" parent="Holder/Window/TextureRect/HBoxContainer" unique_id=126781256]
 layout_mode = 2
 texture_normal = ExtResource("4_1nyej")
 texture_pressed = ExtResource("4_1nyej")
 
-[node name="Icon" type="TextureRect" parent="Holder/Window/TextureRect/HBoxContainer/YoutubeButton" unique_id=1234662557]
+[node name="Icon" type="TextureRect" parent="Holder/Window/TextureRect/HBoxContainer/LinkedInButton" unique_id=1234662557]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -40.0
-offset_top = -40.0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = -35.5
+offset_top = -39.5
+offset_right = 34.5
+offset_bottom = 30.5
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("6_shyri")
+texture = ExtResource("6_55io7")
 expand_mode = 1
 stretch_mode = 4
 
@@ -167,10 +167,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -35.0
-offset_top = -35.0
-offset_right = 35.0
-offset_bottom = 35.0
+offset_left = -35.5
+offset_top = -39.5
+offset_right = 34.5
+offset_bottom = 30.5
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("7_142cw")
@@ -189,10 +189,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -37.5
-offset_top = -30.0
-offset_right = 37.5
-offset_bottom = 30.0
+offset_left = -38.5
+offset_top = -34.5
+offset_right = 36.5
+offset_bottom = 25.5
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("8_g3qsr")

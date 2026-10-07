@@ -222,7 +222,7 @@ object_id = "booster"
 position = Vector2(1000, 160)
 properties = {
 "custom_force": 0.0,
-"force_tier": 2,
+"force_tier": 4,
 "invulnerability_duration": 0.6
 }
 
@@ -341,6 +341,7 @@ properties = {
 script = ExtResource("2_8pct1")
 level_id = "level_021"
 level_name = "Level 21"
+world_theme = "world_2"
 player_start = Vector2(1000, 1408)
 level_size = Vector2(2000, 3000)
 camera_drag_left_margin = 0.9

@@ -16,7 +16,7 @@ func _ready() -> void:
 
 ## Short tap — button presses, UI confirmations.
 func light() -> void:
-	_vibrate(20)
+	_vibrate(10)
 
 ## Medium pulse — level complete, reward claimed.
 func medium() -> void:

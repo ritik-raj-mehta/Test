@@ -168,6 +168,7 @@ properties = {
 script = ExtResource("2_uwvv8")
 level_id = "level_021"
 level_name = "Level 21"
+world_theme = "world_3"
 player_start = Vector2(1000, 1408)
 level_size = Vector2(2000, 3000)
 camera_drag_left_margin = 0.9

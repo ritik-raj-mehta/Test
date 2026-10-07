@@ -6,7 +6,7 @@ var profile_data: GameModels.ProfileData
 var profile_repo: BaseRepository
 
 
-const REQUIRED_TAPS: int = 40
+const REQUIRED_TAPS: int = 200
 
 
 func initialize(save: SaveManager) -> void:

@@ -110,11 +110,15 @@ var zone_bot_margin_spin: SpinBox
 var zone_h_enabled_check: CheckBox
 var zone_v_enabled_check: CheckBox
 
-# Booster Force Inspector Additions
+# Booster Force & Angle Inspector Additions
 var prop_booster_tier_row: HBoxContainer
 var booster_tier_opt: OptionButton
 var prop_booster_force_row: HBoxContainer
 var booster_custom_force_spin: SpinBox
+var prop_booster_angle_row: HBoxContainer
+var booster_angle_spin: SpinBox
+var prop_booster_angles_str_row: HBoxContainer
+var booster_angles_edit: LineEdit
 
 # Wall Obstacle Inspector Additions
 var prop_wall_type_row: HBoxContainer
@@ -126,6 +130,8 @@ var wall_flip_v_check: CheckBox
 # ZigZag Track Inspector Additions
 var prop_zigzag_box: VBoxContainer
 var is_zigzag_check: CheckBox
+var zigzag_pattern_opt: OptionButton
+var point_delays_edit: LineEdit
 var zigzag_width_spin: SpinBox
 var zigzag_height_spin: SpinBox
 var zigzag_angle_spin: SpinBox
@@ -152,6 +158,8 @@ var prop_stone_angle_row: HBoxContainer
 var stone_angle_spin: SpinBox
 var prop_stone_force_row: HBoxContainer
 var stone_force_spin: SpinBox
+var prop_stop_at_end_row: HBoxContainer
+var stop_at_end_check: CheckBox
 var _is_updating_inspector: bool = false
 
 
@@ -344,6 +352,39 @@ func setup_dynamic_inspector_fields() -> void:
 	parent_vbox.move_child(prop_booster_force_row, target_index)
 	target_index += 1
 
+	# Booster Angle Row
+	prop_booster_angle_row = HBoxContainer.new()
+	prop_booster_angle_row.visible = false
+	var lbl_ba = Label.new()
+	lbl_ba.text = "Booster Angle (°):"
+	lbl_ba.custom_minimum_size = Vector2(105, 0)
+	booster_angle_spin = SpinBox.new()
+	booster_angle_spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	booster_angle_spin.min_value = -360.0
+	booster_angle_spin.max_value = 360.0
+	booster_angle_spin.step = 5.0
+	booster_angle_spin.suffix = "°"
+	prop_booster_angle_row.add_child(lbl_ba)
+	prop_booster_angle_row.add_child(booster_angle_spin)
+	parent_vbox.add_child(prop_booster_angle_row)
+	parent_vbox.move_child(prop_booster_angle_row, target_index)
+	target_index += 1
+
+	# Booster Angles (Custom Individual) Row
+	prop_booster_angles_str_row = HBoxContainer.new()
+	prop_booster_angles_str_row.visible = false
+	var lbl_bas = Label.new()
+	lbl_bas.text = "Custom Angles:"
+	lbl_bas.custom_minimum_size = Vector2(105, 0)
+	booster_angles_edit = LineEdit.new()
+	booster_angles_edit.placeholder_text = "e.g. 0, 45, 90, 180"
+	booster_angles_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	prop_booster_angles_str_row.add_child(lbl_bas)
+	prop_booster_angles_str_row.add_child(booster_angles_edit)
+	parent_vbox.add_child(prop_booster_angles_str_row)
+	parent_vbox.move_child(prop_booster_angles_str_row, target_index)
+	target_index += 1
+
 	# Wall Preset Selection Row
 	prop_wall_type_row = HBoxContainer.new()
 	prop_wall_type_row.visible = false
@@ -390,6 +431,19 @@ func setup_dynamic_inspector_fields() -> void:
 	is_zigzag_check = CheckBox.new()
 	is_zigzag_check.text = "Enable ZigZag Path"
 	prop_zigzag_box.add_child(is_zigzag_check)
+
+	var hbox_zz_pat = HBoxContainer.new()
+	var lbl_zz_pat = Label.new()
+	lbl_zz_pat.text = "Track Pattern:"
+	lbl_zz_pat.custom_minimum_size = Vector2(90, 0)
+	zigzag_pattern_opt = OptionButton.new()
+	zigzag_pattern_opt.add_item("🪜 Stepped (Orthogonal)", 0)
+	zigzag_pattern_opt.add_item("📐 Diagonal", 1)
+	zigzag_pattern_opt.add_item("✏️ Custom", 2)
+	zigzag_pattern_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_zz_pat.add_child(lbl_zz_pat)
+	hbox_zz_pat.add_child(zigzag_pattern_opt)
+	prop_zigzag_box.add_child(hbox_zz_pat)
 
 	var hbox_zz_dim = HBoxContainer.new()
 	zigzag_width_spin = SpinBox.new()
@@ -451,7 +505,7 @@ func setup_dynamic_inspector_fields() -> void:
 
 	var hbox_zz_p = HBoxContainer.new()
 	var lbl_zz_p = Label.new()
-	lbl_zz_p.text = "Node Pause Time:"
+	lbl_zz_p.text = "Default Pause (s):"
 	lbl_zz_p.custom_minimum_size = Vector2(110, 0)
 	node_pause_time_spin = SpinBox.new()
 	node_pause_time_spin.min_value = 0.0
@@ -462,6 +516,17 @@ func setup_dynamic_inspector_fields() -> void:
 	hbox_zz_p.add_child(lbl_zz_p)
 	hbox_zz_p.add_child(node_pause_time_spin)
 	prop_zigzag_box.add_child(hbox_zz_p)
+
+	var hbox_zz_delays = HBoxContainer.new()
+	var lbl_zz_delays = Label.new()
+	lbl_zz_delays.text = "Point Delays (s):"
+	lbl_zz_delays.custom_minimum_size = Vector2(110, 0)
+	point_delays_edit = LineEdit.new()
+	point_delays_edit.placeholder_text = "e.g. 0.5, 1.0, 0.2, 1.5"
+	point_delays_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_zz_delays.add_child(lbl_zz_delays)
+	hbox_zz_delays.add_child(point_delays_edit)
+	prop_zigzag_box.add_child(hbox_zz_delays)
 
 	parent_vbox.add_child(prop_zigzag_box)
 	parent_vbox.move_child(prop_zigzag_box, target_index)
@@ -624,6 +689,20 @@ func setup_dynamic_inspector_fields() -> void:
 	prop_stone_force_row.add_child(stone_force_spin)
 	parent_vbox.add_child(prop_stone_force_row)
 	parent_vbox.move_child(prop_stone_force_row, target_index)
+	target_index += 1
+
+	# Stop at End Row
+	prop_stop_at_end_row = HBoxContainer.new()
+	prop_stop_at_end_row.visible = false
+	var lbl_sae = Label.new()
+	lbl_sae.text = "Stop at End:"
+	lbl_sae.custom_minimum_size = Vector2(100, 0)
+	stop_at_end_check = CheckBox.new()
+	stop_at_end_check.text = "Stop at Final Point"
+	prop_stop_at_end_row.add_child(lbl_sae)
+	prop_stop_at_end_row.add_child(stop_at_end_check)
+	parent_vbox.add_child(prop_stop_at_end_row)
+	parent_vbox.move_child(prop_stop_at_end_row, target_index)
 	target_index += 1
 
 func setup_grid_options() -> void:
@@ -1054,6 +1133,8 @@ func connect_signals() -> void:
 
 	if booster_tier_opt: booster_tier_opt.item_selected.connect(func(_idx): apply_inspector_changes())
 	if booster_custom_force_spin: booster_custom_force_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if booster_angle_spin: booster_angle_spin.value_changed.connect(func(_v): apply_inspector_changes())
+	if booster_angles_edit: booster_angles_edit.text_changed.connect(func(_t): apply_inspector_changes())
 
 	if wall_type_opt: wall_type_opt.item_selected.connect(func(_idx): apply_inspector_changes())
 	if wall_flip_h_check: wall_flip_h_check.toggled.connect(func(_t): apply_inspector_changes())
@@ -1495,6 +1576,8 @@ func on_object_selected(obj) -> void:
 		if prop_zone_margins_row: prop_zone_margins_row.visible = false
 		if prop_booster_tier_row: prop_booster_tier_row.visible = false
 		if prop_booster_force_row: prop_booster_force_row.visible = false
+		if prop_booster_angle_row: prop_booster_angle_row.visible = false
+		if prop_booster_angles_str_row: prop_booster_angles_str_row.visible = false
 		if prop_wall_type_row: prop_wall_type_row.visible = false
 		if prop_wall_flips_row: prop_wall_flips_row.visible = false
 		apply_btn.disabled = true
@@ -1641,10 +1724,31 @@ func update_inspector_values(obj) -> void:
 			var dist_lbl = prop_gear_spacing_row.get_node_or_null("Lbl")
 			if dist_lbl: dist_lbl.text = "Wall Distance: "
 			if gear_spacing_spin: gear_spacing_spin.value = float(obj.properties.get("wall_distance", obj.properties.get("spacing", 46.0)))
+	elif obj.object_id == "booster" or obj.properties.has("booster_count"):
+		if prop_loop_reset_row:
+			prop_loop_reset_row.visible = true
+			if loop_reset_check: loop_reset_check.button_pressed = bool(obj.properties.get("loop_reset", true))
+		if prop_gear_count_row:
+			prop_gear_count_row.visible = true
+			var count_lbl = prop_gear_count_row.get_node_or_null("Lbl")
+			if count_lbl: count_lbl.text = "Booster Count: "
+			if gear_count_spin: gear_count_spin.value = int(obj.properties.get("booster_count", 1))
+		if prop_gear_spacing_row:
+			prop_gear_spacing_row.visible = true
+			var dist_lbl = prop_gear_spacing_row.get_node_or_null("Lbl")
+			if dist_lbl: dist_lbl.text = "Booster Spacing: "
+			if gear_spacing_spin: gear_spacing_spin.value = float(obj.properties.get("booster_spacing", 120.0))
+		if prop_group_count_row: prop_group_count_row.visible = false
+		if prop_gears_per_group_row: prop_gears_per_group_row.visible = false
+		if prop_group_spacing_row: prop_group_spacing_row.visible = false
+		if prop_group_stagger_row: prop_group_stagger_row.visible = false
 	elif obj.object_id in ["gear_with_rod", "gear_m"] or obj.properties.has("gear_count") or obj.properties.has("loop_reset"):
 		if prop_loop_reset_row:
 			prop_loop_reset_row.visible = (obj.object_id == "gear_with_rod" or obj.properties.has("loop_reset"))
 			if loop_reset_check: loop_reset_check.button_pressed = bool(obj.properties.get("loop_reset", true))
+		if prop_stop_at_end_row:
+			prop_stop_at_end_row.visible = true
+			if stop_at_end_check: stop_at_end_check.button_pressed = bool(obj.properties.get("stop_at_end", false))
 		if prop_gear_count_row:
 			prop_gear_count_row.visible = true
 			var count_lbl = prop_gear_count_row.get_node_or_null("Lbl")
@@ -1674,6 +1778,10 @@ func update_inspector_values(obj) -> void:
 			if group_stagger_spin: group_stagger_spin.value = float(obj.properties.get("group_phase_stagger", 0.0))
 	else:
 		if prop_loop_reset_row: prop_loop_reset_row.visible = false
+		if prop_stop_at_end_row:
+			prop_stop_at_end_row.visible = (obj.object_id in ["gear_zigzag"] or obj.properties.has("stop_at_end"))
+			if stop_at_end_check and prop_stop_at_end_row.visible:
+				stop_at_end_check.button_pressed = bool(obj.properties.get("stop_at_end", false))
 		if prop_gear_count_row: prop_gear_count_row.visible = false
 		if prop_gear_spacing_row: prop_gear_spacing_row.visible = false
 		if prop_group_count_row: prop_group_count_row.visible = false
@@ -1696,7 +1804,7 @@ func update_inspector_values(obj) -> void:
 		if prop_interval_time_row: prop_interval_time_row.visible = false
 		if prop_interval_speed_row: prop_interval_speed_row.visible = false
 
-	if obj.object_id in ["gear_m", "gear_with_rod", "gear_r", "gear_rod", "gear_zigzag"] or obj.properties.has("has_rod") or obj.properties.has("start_delay") or obj.properties.has("rod_has_collision"):
+	if obj.object_id in ["gear_m", "gear_with_rod", "gear_r", "gear_rod", "gear_zigzag"] or obj.properties.has("has_rod") or (obj.properties.has("start_delay") and obj.object_id != "booster") or obj.properties.has("rod_has_collision"):
 		if prop_has_rod_row:
 			prop_has_rod_row.visible = true
 			if has_rod_check:
@@ -1709,12 +1817,19 @@ func update_inspector_values(obj) -> void:
 			prop_start_delay_row.visible = true
 			if start_delay_spin:
 				start_delay_spin.value = float(obj.properties.get("start_delay", 0.0))
+	elif obj.object_id == "booster" or obj.properties.has("start_delay"):
+		if prop_has_rod_row: prop_has_rod_row.visible = false
+		if prop_rod_has_collision_row: prop_rod_has_collision_row.visible = false
+		if prop_start_delay_row:
+			prop_start_delay_row.visible = true
+			if start_delay_spin:
+				start_delay_spin.value = float(obj.properties.get("start_delay", 0.0))
 	else:
 		if prop_has_rod_row: prop_has_rod_row.visible = false
 		if prop_rod_has_collision_row: prop_rod_has_collision_row.visible = false
 		if prop_start_delay_row: prop_start_delay_row.visible = false
 
-	if obj.object_id in ["gear_m", "gear_with_rod"] or obj.properties.has("direction_change_delay") or obj.properties.has("delay"):
+	if obj.object_id in ["gear_m", "gear_with_rod", "booster"] or obj.properties.has("direction_change_delay") or obj.properties.has("delay"):
 		if prop_move_delay_row:
 			prop_move_delay_row.visible = true
 			if move_delay_spin: move_delay_spin.value = float(obj.properties.get("direction_change_delay", obj.properties.get("delay", 0.0)))
@@ -1830,15 +1945,21 @@ func update_inspector_values(obj) -> void:
 		if obj.object_id == "booster" or obj.properties.has("force_tier"):
 			prop_booster_tier_row.visible = true
 			prop_booster_force_row.visible = true
+			if prop_booster_angle_row: prop_booster_angle_row.visible = true
+			if prop_booster_angles_str_row: prop_booster_angles_str_row.visible = true
 			var tier = int(obj.properties.get("force_tier", 2))
 			for i in range(booster_tier_opt.item_count):
 				if booster_tier_opt.get_item_id(i) == tier:
 					booster_tier_opt.select(i)
 					break
 			booster_custom_force_spin.value = float(obj.properties.get("custom_force", 0.0))
+			if booster_angle_spin: booster_angle_spin.value = float(obj.properties.get("booster_angle", 0.0))
+			if booster_angles_edit: booster_angles_edit.text = str(obj.properties.get("booster_angles_str", ""))
 		else:
 			prop_booster_tier_row.visible = false
 			prop_booster_force_row.visible = false
+			if prop_booster_angle_row: prop_booster_angle_row.visible = false
+			if prop_booster_angles_str_row: prop_booster_angles_str_row.visible = false
 
 	if prop_wall_type_row and prop_wall_flips_row:
 		if obj.object_id == "wall" or obj.properties.has("wall_type"):
@@ -1859,14 +1980,26 @@ func update_inspector_values(obj) -> void:
 		if obj.object_id == "gear_zigzag" or obj.properties.has("is_zigzag") or obj.properties.has("zigzag_width"):
 			prop_zigzag_box.visible = true
 			is_zigzag_check.button_pressed = bool(obj.properties.get("is_zigzag", true))
+			var pat_str = str(obj.properties.get("zigzag_pattern", "Stepped (Orthogonal)")).to_upper()
+			if zigzag_pattern_opt:
+				if "STEP" in pat_str or "ORTHO" in pat_str:
+					zigzag_pattern_opt.select(0)
+				elif "DIAG" in pat_str:
+					zigzag_pattern_opt.select(1)
+				elif "CUST" in pat_str:
+					zigzag_pattern_opt.select(2)
+				else:
+					zigzag_pattern_opt.select(0)
 			zigzag_width_spin.value = float(obj.properties.get("zigzag_width", 400.0))
 			zigzag_height_spin.value = float(obj.properties.get("zigzag_height", 180.0))
 			zigzag_angle_spin.value = float(obj.properties.get("zigzag_angle", 45.0))
 			zigzag_count_spin.value = int(obj.properties.get("zigzag_count", 4))
 			zigzag_start_bottom_check.button_pressed = bool(obj.properties.get("zigzag_start_from_bottom", false))
 			flip_zigzag_check.button_pressed = bool(obj.properties.get("flip_zigzag", false))
-			enable_node_pause_check.button_pressed = bool(obj.properties.get("enable_node_pause", false))
+			enable_node_pause_check.button_pressed = bool(obj.properties.get("enable_node_pause", true))
 			node_pause_time_spin.value = float(obj.properties.get("node_pause_time", 0.5))
+			if point_delays_edit:
+				point_delays_edit.text = str(obj.properties.get("point_delays_str", ""))
 		else:
 			prop_zigzag_box.visible = false
 
@@ -1920,11 +2053,15 @@ func apply_inspector_changes() -> void:
 	if prop_gear_count_row and prop_gear_count_row.visible:
 		if obj.object_id == "spike" or obj.properties.has("spike_count"):
 			obj.properties["spike_count"] = int(gear_count_spin.value)
+		elif obj.object_id == "booster" or obj.properties.has("booster_count"):
+			obj.properties["booster_count"] = int(gear_count_spin.value)
 		else:
 			obj.properties["gear_count"] = int(gear_count_spin.value)
 	if prop_gear_spacing_row and prop_gear_spacing_row.visible:
 		if obj.object_id == "spike" or obj.properties.has("wall_distance"):
 			obj.properties["wall_distance"] = gear_spacing_spin.value
+		elif obj.object_id == "booster" or obj.properties.has("booster_spacing"):
+			obj.properties["booster_spacing"] = gear_spacing_spin.value
 		else:
 			obj.properties["gear_spacing"] = gear_spacing_spin.value
 	if prop_move_delay_row and prop_move_delay_row.visible:
@@ -1975,6 +2112,9 @@ func apply_inspector_changes() -> void:
 		if prop_breadth_row and prop_breadth_row.visible:
 			obj.properties["rod_breadth"] = breadth_spin.value
 
+	if prop_stop_at_end_row and prop_stop_at_end_row.visible:
+		obj.properties["stop_at_end"] = stop_at_end_check.button_pressed
+
 	if prop_trigger_tag_row.visible:
 		obj.properties["trigger_tag"] = trigger_tag_edit.text
 	if prop_fall_speed_row.visible:
@@ -2006,6 +2146,10 @@ func apply_inspector_changes() -> void:
 		obj.properties["force_tier"] = booster_tier_opt.get_selected_id()
 	if prop_booster_force_row and prop_booster_force_row.visible:
 		obj.properties["custom_force"] = booster_custom_force_spin.value
+	if prop_booster_angle_row and prop_booster_angle_row.visible:
+		obj.properties["booster_angle"] = booster_angle_spin.value
+	if prop_booster_angles_str_row and prop_booster_angles_str_row.visible:
+		obj.properties["booster_angles_str"] = booster_angles_edit.text
 
 	if prop_wall_type_row and prop_wall_type_row.visible:
 		obj.properties["wall_type"] = wall_type_opt.get_selected_id()
@@ -2015,6 +2159,9 @@ func apply_inspector_changes() -> void:
 
 	if prop_zigzag_box and prop_zigzag_box.visible:
 		obj.properties["is_zigzag"] = is_zigzag_check.button_pressed
+		if zigzag_pattern_opt:
+			var patterns = ["Stepped (Orthogonal)", "Diagonal", "Custom"]
+			obj.properties["zigzag_pattern"] = patterns[zigzag_pattern_opt.selected] if zigzag_pattern_opt.selected < patterns.size() else "Stepped (Orthogonal)"
 		obj.properties["zigzag_width"] = zigzag_width_spin.value
 		obj.properties["zigzag_height"] = zigzag_height_spin.value
 		obj.properties["zigzag_angle"] = zigzag_angle_spin.value
@@ -2023,6 +2170,8 @@ func apply_inspector_changes() -> void:
 		obj.properties["flip_zigzag"] = flip_zigzag_check.button_pressed
 		obj.properties["enable_node_pause"] = enable_node_pause_check.button_pressed
 		obj.properties["node_pause_time"] = node_pause_time_spin.value
+		if point_delays_edit:
+			obj.properties["point_delays_str"] = point_delays_edit.text
 
 	canvas.refresh_canvas()
 

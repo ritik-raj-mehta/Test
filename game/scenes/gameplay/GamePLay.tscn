@@ -7,6 +7,9 @@
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="3_mnhq6"]
 [ext_resource type="Texture2D" uid="uid://2bryvs4apk41" path="res://game/assets/sprites/single/ui/Button/exit_btn.png" id="4_nnc12"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="5_mnhq6"]
+[ext_resource type="Script" uid="uid://cjfjbmossxm72" path="res://game/scenes/gameplay/ParallaxWorld.gd" id="6_1ijqi"]
+[ext_resource type="Script" uid="uid://crlpxuy51qrr" path="res://game/scenes/gameplay/VerticalParallaxController.gd" id="7_b11a5"]
+[ext_resource type="Script" uid="uid://bolt8snyko14e" path="res://game/scenes/gameplay/ParallaxLayer.gd" id="9_v41ao"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nnc12"]
 atlas = ExtResource("3_8wg2k")
@@ -60,7 +63,7 @@ region = Rect2(1347, 437, 208, 212)
 atlas = ExtResource("3_mnhq6")
 region = Rect2(1347, 437, 208, 212)
 
-[node name="GamePlay" type="Control" unique_id=134252221 node_paths=PackedStringArray("_level_root", "_background", "_home_layer", "_level_pill", "_level_label", "_tap_label", "_tap_area", "_settings_button", "_levels_button", "_skins_button", "_pause_button", "_pause_menu_items", "_music_button", "_sfx_button", "_quit_button")]
+[node name="GamePlay" type="Control" unique_id=134252221 node_paths=PackedStringArray("_level_root", "_background", "_home_layer", "_level_pill", "_level_label", "_tap_label", "_tap_area", "_settings_button", "_levels_button", "_skins_button", "_pause_button", "_pause_menu_items", "_music_button", "_sfx_button", "_quit_button", "_parallax_world")]
 process_mode = 1
 layout_mode = 3
 anchors_preset = 15
@@ -80,21 +83,23 @@ _tap_area = NodePath("HomeLayer/TapArea")
 _settings_button = NodePath("HomeLayer/Margin/Column/TopBar/RightSlot/SettingsButton")
 _levels_button = NodePath("HomeLayer/Margin/Column/TopBar/LeftSlot/LevelsButton")
 _skins_button = NodePath("HomeLayer/Margin/Column/MiddleBar/LeftSlot/SkinButton")
-_pause_button = NodePath("CanvasLayer/PauseButton")
-_pause_menu_items = [NodePath("CanvasLayer/PauseButton/PauseMenu/SoundButton"), NodePath("CanvasLayer/PauseButton/PauseMenu/MusicButton"), NodePath("CanvasLayer/PauseButton/PauseMenu/ExitButton")]
+_pause_button = NodePath("PauseLayer/PauseButton")
+_pause_menu_items = [NodePath("PauseLayer/PauseButton/PauseMenu/SoundButton"), NodePath("PauseLayer/PauseButton/PauseMenu/MusicButton"), NodePath("PauseLayer/PauseButton/PauseMenu/ExitButton")]
 _cross_texture = ExtResource("2_8wg2k")
 _sound_on_texture = SubResource("AtlasTexture_nnc12")
 _sound_off_texture = SubResource("AtlasTexture_a4v14")
 _music_on_texture = SubResource("AtlasTexture_1ijqi")
 _music_off_texture = SubResource("AtlasTexture_b11a5")
-_music_button = NodePath("CanvasLayer/PauseButton/PauseMenu/MusicButton")
-_sfx_button = NodePath("CanvasLayer/PauseButton/PauseMenu/SoundButton")
-_quit_button = NodePath("CanvasLayer/PauseButton/PauseMenu/ExitButton")
+_music_button = NodePath("PauseLayer/PauseButton/PauseMenu/MusicButton")
+_sfx_button = NodePath("PauseLayer/PauseButton/PauseMenu/SoundButton")
+_quit_button = NodePath("PauseLayer/PauseButton/PauseMenu/ExitButton")
+_parallax_world = NodePath("ParallaxWorld")
 
 [node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=277800120]
 layer = -10
 
 [node name="TextureRect" type="TextureRect" parent="BackgroundLayer" unique_id=1153565442]
+z_index = -10
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -104,10 +109,10 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 6
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=939350984]
+[node name="PauseLayer" type="CanvasLayer" parent="." unique_id=939350984]
 layer = 98
 
-[node name="PauseButton" type="TextureButton" parent="CanvasLayer" unique_id=1125165733]
+[node name="PauseButton" type="TextureButton" parent="PauseLayer" unique_id=1125165733]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -121,7 +126,7 @@ texture_pressed = ExtResource("2_rw06r")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="PauseMenu" type="Control" parent="CanvasLayer/PauseButton" unique_id=1185397604]
+[node name="PauseMenu" type="Control" parent="PauseLayer/PauseButton" unique_id=1185397604]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -132,7 +137,7 @@ offset_bottom = 510.0
 grow_horizontal = 0
 mouse_filter = 2
 
-[node name="SoundButton" type="TextureButton" parent="CanvasLayer/PauseButton/PauseMenu" unique_id=1390042694]
+[node name="SoundButton" type="TextureButton" parent="PauseLayer/PauseButton/PauseMenu" unique_id=1390042694]
 custom_minimum_size = Vector2(120, 120)
 layout_mode = 0
 offset_right = 120.0
@@ -142,7 +147,7 @@ texture_pressed = SubResource("AtlasTexture_xn7jg")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="MusicButton" type="TextureButton" parent="CanvasLayer/PauseButton/PauseMenu" unique_id=1761909559]
+[node name="MusicButton" type="TextureButton" parent="PauseLayer/PauseButton/PauseMenu" unique_id=1761909559]
 custom_minimum_size = Vector2(120, 120)
 layout_mode = 0
 offset_top = 130.0
@@ -153,7 +158,7 @@ texture_pressed = SubResource("AtlasTexture_ir2fh")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="ExitButton" type="TextureButton" parent="CanvasLayer/PauseButton/PauseMenu" unique_id=2146900456]
+[node name="ExitButton" type="TextureButton" parent="PauseLayer/PauseButton/PauseMenu" unique_id=2146900456]
 custom_minimum_size = Vector2(120, 120)
 layout_mode = 0
 offset_top = 260.0
@@ -163,6 +168,80 @@ texture_normal = ExtResource("4_nnc12")
 texture_pressed = ExtResource("4_nnc12")
 ignore_texture_size = true
 stretch_mode = 5
+
+[node name="ParallaxWorld" type="Node2D" parent="." unique_id=450229723 node_paths=PackedStringArray("_controller", "static_bg")]
+position = Vector2(721, 1097)
+script = ExtResource("6_1ijqi")
+_controller = NodePath("background")
+static_bg = NodePath("../BackgroundLayer/TextureRect")
+
+[node name="background" type="Node2D" parent="ParallaxWorld" unique_id=1814421790 node_paths=PackedStringArray("layers")]
+z_index = -5
+position = Vector2(200, -200)
+scale = Vector2(0.6, 0.6)
+script = ExtResource("7_b11a5")
+layers = [NodePath("9"), NodePath("8"), NodePath("7"), NodePath("6"), NodePath("5"), NodePath("4"), NodePath("3"), NodePath("2"), NodePath("1")]
+
+[node name="9" type="Sprite2D" parent="ParallaxWorld/background" unique_id=451278759]
+visible = false
+position = Vector2(118.33335, -3463.3333)
+script = ExtResource("9_v41ao")
+parallax_factor = 0.65
+layer_key = &"static_bg"
+
+[node name="8" type="Sprite2D" parent="ParallaxWorld/background" unique_id=564688682]
+position = Vector2(118.33335, -3699.9998)
+script = ExtResource("9_v41ao")
+parallax_factor = 0.65
+layer_key = &"layer6"
+
+[node name="7" type="Sprite2D" parent="ParallaxWorld/background" unique_id=496676775]
+position = Vector2(118.33329, -2081.6667)
+script = ExtResource("9_v41ao")
+parallax_factor = 0.65
+layer_key = &"layer6"
+
+[node name="6" type="Sprite2D" parent="ParallaxWorld/background" unique_id=2127719009]
+position = Vector2(153.33328, -889.99994)
+script = ExtResource("9_v41ao")
+parallax_factor = 0.65
+layer_key = &"layer6"
+
+[node name="5" type="Sprite2D" parent="ParallaxWorld/background" unique_id=623637037]
+position = Vector2(170.00002, 2233.3333)
+script = ExtResource("9_v41ao")
+parallax_factor = 0.6
+layer_key = &"layer5"
+
+[node name="4" type="Sprite2D" parent="ParallaxWorld/background" unique_id=396345603]
+z_index = 1
+position = Vector2(115.000015, 2375)
+script = ExtResource("9_v41ao")
+parallax_factor = 0.45
+layer_key = &"layer4"
+
+[node name="3" type="Sprite2D" parent="ParallaxWorld/background" unique_id=334873527]
+z_index = 2
+position = Vector2(99.99995, 2351.6665)
+script = ExtResource("9_v41ao")
+parallax_factor = 0.3
+layer_key = &"layer3"
+
+[node name="2" type="Sprite2D" parent="ParallaxWorld/background" unique_id=539640442]
+z_index = 3
+position = Vector2(113.333305, 2638.3333)
+script = ExtResource("9_v41ao")
+parallax_factor = 0.15
+layer_key = &"layer2"
+
+[node name="1" type="Sprite2D" parent="ParallaxWorld/background" unique_id=110106120]
+z_index = 4
+texture_filter = 3
+texture_repeat = 2
+position = Vector2(123.33335, 2769.9998)
+script = ExtResource("9_v41ao")
+parallax_factor = 0.05
+layer_key = &"layer1"
 
 [node name="LevelRoot" type="Node2D" parent="." unique_id=987654321]
 
@@ -295,12 +374,3 @@ theme_override_font_sizes/font_size = 76
 text = "Tap to Play"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="Control" type="Control" parent="." unique_id=1715492494]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2

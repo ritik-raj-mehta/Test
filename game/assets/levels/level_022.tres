@@ -310,6 +310,7 @@ properties = {
 script = ExtResource("2_mvde1")
 level_id = "level_022"
 level_name = "Level 22"
+world_theme = "world_3"
 player_start = Vector2(1000, 1408)
 level_size = Vector2(2000, 3000)
 camera_drag_left_margin = 0.9

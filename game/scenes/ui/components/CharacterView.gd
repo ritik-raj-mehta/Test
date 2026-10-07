@@ -60,3 +60,10 @@ func set_texture_direct(tex: Texture2D) -> void:
 
 func bounce() -> void:
 	UIAnim.bounce(self)
+
+func fit_body() -> void:
+	if _body == null:
+		return
+	_body.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_body.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_body.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

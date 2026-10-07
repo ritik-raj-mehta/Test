@@ -130,7 +130,6 @@ properties = {
 script = ExtResource("2_l7oga")
 level_id = "level_003"
 level_name = "Level 3"
-world_theme = "world_4"
 player_start = Vector2(1000, 1408)
 level_size = Vector2(2000, 3000)
 camera_drag_left_margin = 0.9

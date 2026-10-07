@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ParallaxLayerData" format=3 uid="uid://de0tsc6dr8grv"]
+
+[ext_resource type="Script" uid="uid://oyfhexd111du" path="res://game/scripts/data/ParallaxLayerData.gd" id="1_o0yat"]
+
+[resource]
+script = ExtResource("1_o0yat")
+layer_key = &"layer5"
+position = Vector2(30.00003, 2358.3335)
+metadata/_custom_type_script = "uid://oyfhexd111du"

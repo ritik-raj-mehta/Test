@@ -123,6 +123,14 @@ class_name MovingGearController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
+@export var stop_at_end: bool = false: # true = gear moves to endpoint/destination and stops; false = loop/ping-pong continuously
+	set(v):
+		stop_at_end = v
+		_has_reached_end = false
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
 @export var start_delay: float = 0.0:
 	set(v):
 		start_delay = max(0.0, v)
@@ -276,6 +284,13 @@ class_name MovingGearController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
+@export_enum("Stepped (Orthogonal)", "Diagonal", "Custom") var zigzag_pattern: String = "Stepped (Orthogonal)":
+	set(v):
+		zigzag_pattern = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
 @export var zigzag_width: float = 400.0:
 	set(v):
 		zigzag_width = max(10.0, v)
@@ -290,7 +305,7 @@ class_name MovingGearController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
-@export var zigzag_height: float = 180.0:
+@export var zigzag_height: float = 180.0: # Vertical step height between tiers in stepped track
 	set(v):
 		zigzag_height = max(10.0, v)
 		_update_movement_cache()
@@ -299,7 +314,7 @@ class_name MovingGearController
 
 @export var zigzag_count: int = 4:
 	set(v):
-		zigzag_count = clampi(v, 1, 20)
+		zigzag_count = clampi(v, 1, 30)
 		_update_movement_cache()
 		if Engine.is_editor_hint():
 			queue_redraw()
@@ -325,16 +340,31 @@ class_name MovingGearController
 		if Engine.is_editor_hint():
 			queue_redraw()
 
-@export var enable_node_pause: bool = false:
+@export var enable_node_pause: bool = true: # Pause duration at track points
 	set(v):
 		enable_node_pause = v
 		_update_movement_cache()
 		if Engine.is_editor_hint():
 			queue_redraw()
 
-@export var node_pause_time: float = 0.5: # Pause duration in seconds at each vertex/node of the zigzag track
+@export var node_pause_time: float = 0.5: # Default pause duration in seconds at each point/node
 	set(v):
 		node_pause_time = max(0.0, v)
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var point_delays: Array = []: # Specific delays [d0, d1, d2, ...] per point index
+	set(v):
+		point_delays = v
+		_update_movement_cache()
+		if Engine.is_editor_hint():
+			queue_redraw()
+
+@export var point_delays_str: String = "": # Comma-separated point delays, e.g. "0.5, 1.0, 0.2, 1.5"
+	set(v):
+		point_delays_str = v
+		_parse_point_delays_str()
 		_update_movement_cache()
 		if Engine.is_editor_hint():
 			queue_redraw()
@@ -371,6 +401,7 @@ var _center_offset: float = 0.0
 var _amplitude: float = 0.0
 var _total_span: float = 0.0
 var _has_movement: bool = false
+var _has_reached_end: bool = false
 var _elapsed_time: float = 0.0
 var _motion_accum_time: float = 0.0
 var _progress: float = 0.0
@@ -550,6 +581,27 @@ func _sync_direction_enum() -> void:
 		"X":
 			move_angle = 0.0
 
+func _parse_point_delays_str() -> void:
+	if point_delays_str.strip_edges() == "":
+		return
+	var parts = point_delays_str.split(",")
+	var new_delays: Array = []
+	for p in parts:
+		var s = p.strip_edges()
+		if s.is_valid_float():
+			new_delays.append(maxf(0.0, s.to_float()))
+	if not new_delays.is_empty():
+		point_delays = new_delays
+
+
+func get_point_delay(idx: int) -> float:
+	if idx >= 0 and idx < point_delays.size() and point_delays[idx] != null:
+		return maxf(0.0, float(point_delays[idx]))
+	if enable_node_pause:
+		return node_pause_time
+	return 0.0
+
+
 func _rebuild_path_points() -> void:
 	_path_points.clear()
 	_segment_lengths.clear()
@@ -560,19 +612,38 @@ func _rebuild_path_points() -> void:
 			_path_points.append(Vector2(pt))
 	elif is_zigzag:
 		var half_w = zigzag_width * 0.5
-		var rad_ang = deg_to_rad(clampf(zigzag_angle, 5.0, 85.0))
-		var step_h = half_w * tan(rad_ang)
-
-		# Build continuous diagonal zigzag nodes: Left -> Center -> Right -> Center -> Left ...
 		var dir_mult = -1.0 if flip_zigzag else 1.0
-		for i in range(zigzag_count * 2 + 1):
-			var level_y = float(i) * step_h
-			var step_type = i % 4
-			match step_type:
-				0: _path_points.append(Vector2(-half_w * dir_mult, level_y)) # Start Wall Node
-				1: _path_points.append(Vector2(0.0, level_y))               # Center Node
-				2: _path_points.append(Vector2(half_w * dir_mult, level_y))  # Opposite Wall Node
-				3: _path_points.append(Vector2(0.0, level_y))               # Center Node
+
+		if zigzag_pattern == "Diagonal":
+			var rad_ang = deg_to_rad(clampf(zigzag_angle, 5.0, 85.0))
+			var step_h = half_w * tan(rad_ang)
+
+			# Build continuous diagonal zigzag nodes: Left -> Center -> Right -> Center -> Left ...
+			for i in range(zigzag_count * 2 + 1):
+				var level_y = float(i) * step_h
+				var step_type = i % 4
+				match step_type:
+					0: _path_points.append(Vector2(-half_w * dir_mult, level_y)) # Start Wall Node
+					1: _path_points.append(Vector2(0.0, level_y))               # Center Node
+					2: _path_points.append(Vector2(half_w * dir_mult, level_y))  # Opposite Wall Node
+					3: _path_points.append(Vector2(0.0, level_y))               # Center Node
+		else:
+			# "Stepped (Orthogonal)" - Stepped ladder/zigzag track matching the reference image:
+			# Traverses horizontal across, then vertical up/down to next tier, then horizontal across, etc.
+			var step_h = zigzag_height
+			var curr_x = -half_w * dir_mult
+			var curr_y = 0.0
+			_path_points.append(Vector2(curr_x, curr_y))
+
+			for i in range(zigzag_count):
+				# 1. Horizontal cross to other side
+				curr_x = -curr_x
+				_path_points.append(Vector2(curr_x, curr_y))
+
+				# 2. Vertical rise/drop to next tier (if not last step)
+				if i < zigzag_count - 1:
+					curr_y += step_h
+					_path_points.append(Vector2(curr_x, curr_y))
 
 		if zigzag_start_from_bottom:
 			_path_points.reverse()
@@ -593,7 +664,9 @@ func _get_position_at_path_distance(dist_val: float) -> Vector2:
 		return _path_points[0]
 
 	var d = dist_val
-	if loop_reset:
+	if stop_at_end:
+		d = clampf(d, 0.0, _total_path_length)
+	elif loop_reset:
 		d = fposmod(d, _total_path_length)
 	else:
 		var cycle = _total_path_length * 2.0
@@ -616,7 +689,36 @@ func _get_position_at_path_distance(dist_val: float) -> Vector2:
 			return _path_points[i].lerp(_path_points[i + 1], t)
 		accum += seg_len
 
-	return _path_points[0]
+	return _path_points[count - 1]
+
+
+func _get_path_total_forward_time() -> float:
+	var count = _path_points.size()
+	if count < 2 or _total_path_length <= 0.001:
+		return 0.0
+	var base_spd = max(1.0, interval_speed if enable_interval_movement else move_speed)
+	var num_segs = _segment_lengths.size()
+	var forward_duration: float = 0.0
+	for i in range(num_segs):
+		var travel_t = _segment_lengths[i] / base_spd
+		var pause_at_node = get_point_delay(i)
+		forward_duration += pause_at_node + travel_t
+	var end_pause = get_point_delay(count - 1)
+	forward_duration += end_pause
+	return forward_duration
+
+
+func _get_linear_forward_time() -> float:
+	var base_spd = max(1.0, interval_speed if enable_interval_movement else move_speed)
+	var pos_d = move_dist_pos
+	var neg_d = move_dist_neg
+	var t_pause = direction_change_delay
+	if pos_d > 0.0 and neg_d <= 0.001:
+		return pos_d / base_spd
+	elif neg_d > 0.0 and pos_d <= 0.001:
+		return neg_d / base_spd
+	else:
+		return (pos_d / base_spd) + t_pause + ((pos_d + neg_d) / base_spd)
 
 
 func _get_position_at_path_time(t_val: float) -> Vector2:
@@ -630,53 +732,102 @@ func _get_position_at_path_time(t_val: float) -> Vector2:
 	if num_segs == 0:
 		return _path_points[0]
 
-	var pause_dur = node_pause_time if enable_node_pause else 0.0
-	if pause_dur <= 0.0:
-		var base_spd = interval_speed if enable_interval_movement else move_speed
-		var dist_val = t_val * base_spd
-		return _get_position_at_path_distance(dist_val)
-
 	var base_spd = max(1.0, interval_speed if enable_interval_movement else move_speed)
 
+	# Calculate travel times per segment
 	var seg_times: Array[float] = []
-	var total_cycle_time: float = 0.0
-	for seg_len in _segment_lengths:
-		var travel_t = seg_len / base_spd
+	var forward_duration: float = 0.0
+	for i in range(num_segs):
+		var travel_t = _segment_lengths[i] / base_spd
 		seg_times.append(travel_t)
-		total_cycle_time += travel_t + pause_dur
+		var pause_at_node = get_point_delay(i)
+		forward_duration += pause_at_node + travel_t
+	var end_pause = get_point_delay(count - 1)
+	forward_duration += end_pause
+
+	if forward_duration <= 0.001:
+		return _path_points[0]
 
 	var t_cur = t_val
-	if loop_reset:
-		t_cur = fmod(t_cur, total_cycle_time)
+	if stop_at_end:
+		t_cur = clampf(t_cur, 0.0, forward_duration)
+		return _sample_forward_path(t_cur, seg_times)
+	elif loop_reset:
+		t_cur = fmod(t_cur, forward_duration)
 		if t_cur < 0.0:
-			t_cur += total_cycle_time
+			t_cur += forward_duration
+		return _sample_forward_path(t_cur, seg_times)
 	else:
-		var double_cycle = total_cycle_time * 2.0
-		var t_mod = fmod(t_cur, double_cycle)
-		if t_mod < 0.0: t_mod += double_cycle
-		if t_mod > total_cycle_time:
-			t_cur = double_cycle - t_mod
+		# Ping-pong cycle: Forward + Backward
+		var backward_duration: float = 0.0
+		for i in range(num_segs - 1, -1, -1):
+			var travel_t = seg_times[i]
+			var pause_at_node = get_point_delay(i + 1)
+			backward_duration += pause_at_node + travel_t
+		var start_pause = get_point_delay(0)
+		backward_duration += start_pause
+
+		var full_cycle = forward_duration + backward_duration
+		if full_cycle <= 0.001:
+			return _path_points[0]
+
+		var t_mod = fmod(t_cur, full_cycle)
+		if t_mod < 0.0:
+			t_mod += full_cycle
+
+		if t_mod <= forward_duration:
+			return _sample_forward_path(t_mod, seg_times)
 		else:
-			t_cur = t_mod
+			var t_back = t_mod - forward_duration
+			return _sample_backward_path(t_back, seg_times)
 
-	var accum_t = 0.0
+
+func _sample_forward_path(t_pos: float, seg_times: Array[float]) -> Vector2:
+	var num_segs = seg_times.size()
+	var accum: float = 0.0
+
 	for i in range(num_segs):
+		var pause_t = get_point_delay(i)
+		# 1. Paused at Point i
+		if t_pos < accum + pause_t:
+			return _path_points[i]
+		accum += pause_t
+
+		# 2. Moving along Segment i to Point i+1
 		var travel_t = seg_times[i]
-		if t_cur < accum_t + travel_t:
-			var ratio = (t_cur - accum_t) / max(0.0001, travel_t)
+		if t_pos < accum + travel_t:
+			var ratio = (t_pos - accum) / maxf(0.0001, travel_t)
 			return _path_points[i].lerp(_path_points[i + 1], clampf(ratio, 0.0, 1.0))
+		accum += travel_t
 
-		accum_t += travel_t
+	# 3. Paused at end point
+	return _path_points[_path_points.size() - 1]
 
-		if t_cur <= accum_t + pause_dur or i == num_segs - 1:
+
+func _sample_backward_path(t_pos: float, seg_times: Array[float]) -> Vector2:
+	var num_segs = seg_times.size()
+	var accum: float = 0.0
+
+	for i in range(num_segs - 1, -1, -1):
+		var pause_t = get_point_delay(i + 1)
+		# 1. Paused at Point i+1
+		if t_pos < accum + pause_t:
 			return _path_points[i + 1]
+		accum += pause_t
 
-		accum_t += pause_dur
+		# 2. Moving backward along Segment i to Point i
+		var travel_t = seg_times[i]
+		if t_pos < accum + travel_t:
+			var ratio = (t_pos - accum) / maxf(0.0001, travel_t)
+			return _path_points[i + 1].lerp(_path_points[i], clampf(ratio, 0.0, 1.0))
+		accum += travel_t
 
+	# 3. Paused at start point 0
 	return _path_points[0]
 
 
 func _update_movement_cache() -> void:
+	_has_reached_end = false
 	_rebuild_path_points()
 
 	if is_zigzag or not custom_waypoints.is_empty():
@@ -875,6 +1026,13 @@ func _physics_process(delta: float) -> void:
 	if not _has_movement and not (has_gear and rotation_speed != 0.0):
 		return
 
+	if _has_reached_end:
+		if has_gear and rotation_speed != 0.0:
+			for spr in _gear_sprites:
+				if spr:
+					spr.rotation += rotation_speed * delta
+		return
+
 	_elapsed_time += delta
 	var t_raw = max(0.0, _elapsed_time - start_delay)
 	var spd_factor = _get_effective_speed_factor(t_raw)
@@ -895,17 +1053,32 @@ func _physics_process(delta: float) -> void:
 		_motion_accum_time += spd_factor * delta
 
 		if is_zigzag or not custom_waypoints.is_empty():
+			if stop_at_end:
+				var max_t = _get_path_total_forward_time()
+				if _motion_accum_time >= max_t:
+					_motion_accum_time = max_t
+					_has_reached_end = true
 			_update_gears_positions(0.0)
 			return
 
 		if loop_reset:
 			# Continuous wrap-around along the rod track (respawns cleanly at origin in loop)
 			_progress += (base_spd / max(1.0, _total_span)) * spd_factor * delta
-			if _progress >= 1.0:
-				_progress = fmod(_progress, 1.0)
+			if stop_at_end:
+				if _progress >= 1.0:
+					_progress = 1.0
+					_has_reached_end = true
+			else:
+				if _progress >= 1.0:
+					_progress = fmod(_progress, 1.0)
 			_update_gears_positions(0.0)
 		else:
 			# Ping-pong oscillation with endpoint delays
+			if stop_at_end:
+				var end_t = _get_linear_forward_time()
+				if _motion_accum_time >= end_t:
+					_motion_accum_time = end_t
+					_has_reached_end = true
 			var offset_scalar = _calculate_offset_scalar(_motion_accum_time)
 			_update_gears_positions(offset_scalar)
 
@@ -917,6 +1090,12 @@ func _calculate_offset_scalar(t_act: float) -> float:
 
 	if pos_d > 0.0 and neg_d <= 0.001:
 		var t_one = pos_d / max(1.0, base_spd)
+		if stop_at_end:
+			if t_act < t_one:
+				var s = (1.0 - cos((t_act / max(0.001, t_one)) * PI)) * 0.5
+				return pos_d * s
+			else:
+				return pos_d
 		if t_pause > 0.0:
 			var cycle = 2.0 * (t_one + t_pause)
 			var t = fmod(t_act, cycle)
@@ -936,6 +1115,12 @@ func _calculate_offset_scalar(t_act: float) -> float:
 
 	elif neg_d > 0.0 and pos_d <= 0.001:
 		var t_one = neg_d / max(1.0, base_spd)
+		if stop_at_end:
+			if t_act < t_one:
+				var s = (1.0 - cos((t_act / max(0.001, t_one)) * PI)) * 0.5
+				return -neg_d * s
+			else:
+				return -neg_d
 		if t_pause > 0.0:
 			var cycle = 2.0 * (t_one + t_pause)
 			var t = fmod(t_act, cycle)
@@ -957,6 +1142,19 @@ func _calculate_offset_scalar(t_act: float) -> float:
 		var t_pos = pos_d / max(1.0, base_spd)
 		var t_neg = neg_d / max(1.0, base_spd)
 		var t_span = (pos_d + neg_d) / max(1.0, base_spd)
+		if stop_at_end:
+			if t_act < t_pos:
+				var s = sin((t_act / max(0.001, t_pos)) * (PI * 0.5))
+				return pos_d * s
+			elif t_act < t_pos + t_pause:
+				return pos_d
+			elif t_act < t_pos + t_pause + t_span:
+				var u = t_act - (t_pos + t_pause)
+				var s = (1.0 - cos((u / max(0.001, t_span)) * PI)) * 0.5
+				return pos_d - (pos_d + neg_d) * s
+			else:
+				return -neg_d
+
 		var cycle = 2.0 * t_span + 2.0 * t_pause
 		var t = fmod(t_act, cycle)
 
@@ -1050,7 +1248,11 @@ func _update_gears_positions(offset_scalar: float) -> void:
 				base_dist = float(g) * group_spacing + float(k) * gear_spacing
 			else:
 				base_dist = float(i) * effective_spacing
-			var gear_prog = fposmod(_progress + (base_dist / max(1.0, _total_span)), 1.0)
+			var gear_prog: float = 0.0
+			if stop_at_end:
+				gear_prog = clampf(_progress + (base_dist / max(1.0, _total_span)), 0.0, 1.0)
+			else:
+				gear_prog = fposmod(_progress + (base_dist / max(1.0, _total_span)), 1.0)
 			var travel_offset = gear_prog * _total_span
 			body.position = track_start + (_move_dir_vec * travel_offset)
 	else:
@@ -1139,15 +1341,28 @@ func _draw() -> void:
 				_draw_dashed_line(p1, p2, line_col, 2.5, 12.0)
 
 			for i in range(count):
-				draw_circle(_path_points[i], 6.0, node_col)
+				var pt = _path_points[i]
+				draw_circle(pt, 6.5, node_col)
+				draw_arc(pt, 10.0, 0.0, TAU, 16, Color(1.0, 0.5, 0.1, 0.8), 2.0)
+				if font:
+					var p_del = get_point_delay(i)
+					var p_txt = "P%d" % i
+					if p_del > 0.0:
+						p_txt += " (%.1fs)" % p_del
+					draw_string(font, pt + Vector2(10, 4), p_txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 1.0, 0.4, 0.95))
 
 			if font:
-				var label_str = "ZigZag Path: %.0f px (%d nodes)" % [_total_path_length, count]
-				if loop_reset:
+				var pattern_name = zigzag_pattern if is_zigzag else "Custom Waypoints"
+				var label_str = "%s: %.0f px (%d Points)" % [pattern_name, _total_path_length, count]
+				if stop_at_end:
+					label_str += " [Stop at End]"
+				elif loop_reset:
 					label_str += " [Loop Mode]"
+				else:
+					label_str += " [Ping-Pong]"
 				if gear_count > 1:
 					label_str += " | %d Gears" % gear_count
-				draw_string(font, _path_points[0] + Vector2(12, -10), label_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1, 0.95))
+				draw_string(font, _path_points[0] + Vector2(12, -14), label_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1, 0.95))
 		return
 
 	# Draw movement guidelines when gear movement is present
@@ -1182,7 +1397,9 @@ func _draw() -> void:
 
 		if font:
 			var label_str = "Distance: %.0f (-%.0f / +%.0f)" % [_total_span, move_dist_neg, move_dist_pos]
-			if loop_reset:
+			if stop_at_end:
+				label_str += " [Stop at End]"
+			elif loop_reset:
 				label_str += " [Loop Mode]"
 			elif direction_change_delay > 0.0 or start_delay > 0.0:
 				label_str += " | Delay: %.1fs" % [direction_change_delay + start_delay]

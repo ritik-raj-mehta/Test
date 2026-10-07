@@ -31,6 +31,7 @@ static var _registry: Dictionary = {
 			"move_direction": "X",
 			"direction_change_delay": 0.0,
 			"start_delay": 0.0,
+			"stop_at_end": false,
 			"gear_count": 1,
 			"gear_spacing": 100.0,
 			"group_count": 1,
@@ -71,6 +72,7 @@ static var _registry: Dictionary = {
 			"move_angle": 0.0,
 			"move_direction": "+X",
 			"loop_reset": true,
+			"stop_at_end": false,
 			"start_delay": 0.0,
 			"direction_change_delay": 0.0,
 			"rod_breadth": 8.0,
@@ -91,13 +93,20 @@ static var _registry: Dictionary = {
 		"category": "Obstacles",
 		"default_properties": {
 			"is_zigzag": true,
+			"zigzag_pattern": "Stepped (Orthogonal)",
 			"zigzag_width": 400.0,
 			"zigzag_height": 180.0,
 			"zigzag_count": 4,
+			"flip_zigzag": false,
+			"zigzag_start_from_bottom": false,
+			"enable_node_pause": true,
+			"node_pause_time": 0.5,
+			"point_delays_str": "",
 			"has_rod": true,
 			"move_speed": 150.0,
 			"rotation_speed": 2.0,
-			"loop_reset": true,
+			"loop_reset": false,
+			"stop_at_end": false,
 			"gear_count": 1,
 			"gear_spacing": 0.0,
 			"show_track_rods": true
@@ -152,7 +161,7 @@ static var _registry: Dictionary = {
 		"name": "Falling Stone",
 		"scene_path": "res://game/scenes/Obstacles/FallingStone.tscn",
 		"category": "Obstacles",
-		"default_properties": {"is_lethal": false, "trigger_tag": "trap_1", "fall_speed": 1200.0, "rotation_speed": 6.0, "knockback_force": 650.0, "initial_launch_angle": 90.0, "initial_launch_force": 1200.0},
+		"default_properties": {"is_lethal": false, "trigger_tag": "trap_1", "fall_speed": 1200.0, "rotation_speed": 6.0, "knockback_force": 650.0, "initial_launch_angle": 90.0, "initial_launch_force": 1200.0, "rest_lifetime": 2.0, "trigger_cooldown": 0.6},
 		"default_scale": Vector2(1, 1)
 	},
 	"falling_stone_spike": {
@@ -160,7 +169,7 @@ static var _registry: Dictionary = {
 		"name": "Falling Stone Spike",
 		"scene_path": "res://game/scenes/Obstacles/FallingStone.tscn",
 		"category": "Obstacles",
-		"default_properties": {"is_lethal": true, "trigger_tag": "trap_1", "fall_speed": 1200.0, "rotation_speed": 6.0, "initial_launch_angle": 90.0, "initial_launch_force": 1200.0},
+		"default_properties": {"is_lethal": true, "trigger_tag": "trap_1", "fall_speed": 1200.0, "rotation_speed": 6.0, "initial_launch_angle": 90.0, "initial_launch_force": 1200.0, "rest_lifetime": 2.0, "trigger_cooldown": 0.6},
 		"default_scale": Vector2(1, 1)
 	},
 	"trigger_area": {
@@ -226,7 +235,24 @@ static var _registry: Dictionary = {
 		"name": "Booster",
 		"scene_path": "res://game/scenes/Obstacles/Booster.tscn",
 		"category": "Obstacles",
-		"default_properties": {"force_tier": 2, "custom_force": 0.0, "invulnerability_duration": 0.6},
+		"default_properties": {
+			"force_tier": 2,
+			"custom_force": 0.0,
+			"invulnerability_duration": 0.6,
+			"booster_count": 1,
+			"booster_spacing": 120.0,
+			"booster_angle": 0.0,
+			"booster_angles_str": "",
+			"move_speed": 0.0,
+			"move_distance": 200.0,
+			"move_dist_pos": 200.0,
+			"move_dist_neg": 0.0,
+			"move_angle": 0.0,
+			"move_direction": "X",
+			"loop_reset": true,
+			"start_delay": 0.0,
+			"direction_change_delay": 0.0
+		},
 		"default_scale": Vector2(1, 1)
 	},
 	"wall": {

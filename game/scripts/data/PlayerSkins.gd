@@ -17,7 +17,13 @@ func equipped_id() -> String:
 	if inv == null:
 		return SkinCatalog.DEFAULT_ID
 	var id := str(inv.equipped.get(SLOT, ""))
-	return id if SkinCatalog.has_skin(id) else SkinCatalog.DEFAULT_ID
+	if id.is_empty() or not SkinCatalog.has_skin(id) or not is_owned(id):
+		if inv.equipped.get(SLOT, "") != SkinCatalog.DEFAULT_ID and _save and _save.inventory:
+			_save.inventory.mutate(func(d: GameModels.InventoryData) -> void:
+				d.equipped[SLOT] = SkinCatalog.DEFAULT_ID
+			)
+		return SkinCatalog.DEFAULT_ID
+	return id
 
 func equipped_skin() -> Dictionary:
 	return SkinCatalog.at(SkinCatalog.index_of(equipped_id()))
@@ -37,6 +43,10 @@ func equip(id: String) -> bool:
 	_save.inventory.mutate(func(d: GameModels.InventoryData) -> void:
 		d.equipped[SLOT] = id
 	)
+	if _save.profile:
+		_save.profile.mutate(func(d: GameModels.ProfileData) -> void:
+			d.current_character_id = id
+		)
 	_save.save_game()
 	return true
 
@@ -66,6 +76,21 @@ func unlock(id: String) -> bool:
 		return true
 	return grant(id)
 
+func reset_to_default() -> void:
+	if _save == null:
+		return
+	if _save.inventory:
+		_save.inventory.mutate(func(d: GameModels.InventoryData) -> void:
+			d.equipped[SLOT] = SkinCatalog.DEFAULT_ID
+			d.owned[CATEGORY] = []
+		)
+	if _save.profile:
+		_save.profile.mutate(func(d: GameModels.ProfileData) -> void:
+			d.current_character_id = SkinCatalog.DEFAULT_ID
+			d.character_progress = {}
+		)
+	_save.save_game()
+
 func get_next_locked_skin() -> String:
 	for s in SkinCatalog.SKINS:
 		if not is_owned(s["id"]):
@@ -75,6 +100,8 @@ func get_next_locked_skin() -> String:
 static func resolve_equipped(save: SaveManager, progress: PlayerProgress) -> String:
 	var skins := PlayerSkins.new(save)
 	var id: String = skins.equipped_id()
+	if id == SkinCatalog.DEFAULT_ID:
+		return SkinCatalog.DEFAULT_ID
 	if skins.is_owned(id):
 		return id
 	if progress and progress.is_character_unlocked(id):
