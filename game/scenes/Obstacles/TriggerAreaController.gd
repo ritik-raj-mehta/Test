@@ -60,7 +60,7 @@ func _physics_process(delta: float) -> void:
 				if _is_player(body):
 					triggered = true
 					_retrigger_cooldown = 0.25
-					activate_triggers()
+					activate_triggers.call_deferred()
 					break
 
 func _is_player(node: Node) -> bool:
@@ -79,7 +79,7 @@ func _on_body_entered(body: Node2D) -> void:
 	if _is_player(body):
 		triggered = true
 		_retrigger_cooldown = 0.25
-		activate_triggers()
+		activate_triggers.call_deferred()
 
 func _on_area_entered(area: Area2D) -> void:
 	if triggered or _retrigger_cooldown > 0.0:
@@ -88,7 +88,7 @@ func _on_area_entered(area: Area2D) -> void:
 	if _is_player(area) or (parent and _is_player(parent)):
 		triggered = true
 		_retrigger_cooldown = 0.25
-		activate_triggers()
+		activate_triggers.call_deferred()
 
 func _on_body_exited(body: Node2D) -> void:
 	if _is_player(body):

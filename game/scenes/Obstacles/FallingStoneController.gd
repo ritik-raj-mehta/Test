@@ -122,12 +122,12 @@ func _on_ready() -> void:
 		if is_in_editor():
 			visible = true
 			if col_shape:
-				col_shape.disabled = false
+				col_shape.set_deferred("disabled", false)
 		else:
 			# In gameplay, hide stone and disable collisions until player crosses the trigger area
 			visible = false
 			if col_shape:
-				col_shape.disabled = true
+				col_shape.set_deferred("disabled", true)
 
 		set_physics_process(false)
 
@@ -189,7 +189,7 @@ func _update_type_and_visuals() -> void:
 		col_shape.position = Vector2.ZERO
 		if not col_shape.shape or not col_shape.shape is CircleShape2D:
 			col_shape.shape = CircleShape2D.new()
-		elif not col_shape.shape.resource_local_to_scene:
+		elif not is_clone and not col_shape.shape.resource_local_to_scene:
 			col_shape.shape = col_shape.shape.duplicate()
 
 		var target_radius: float = 25.0
@@ -442,7 +442,7 @@ func trigger() -> void:
 	# If the main stone is currently active on screen (falling, rolling, resting, or fading),
 	# do not hide or teleport it! Spawn a new independent stone so each stone finishes its natural lifecycle.
 	if is_falling or is_resting or is_fading:
-		_spawn_clone_stone()
+		_spawn_clone_stone.call_deferred()
 		return
 
 	_launch_stone()
@@ -617,12 +617,12 @@ func reset() -> void:
 	if is_in_editor():
 		visible = true
 		if col_shape:
-			col_shape.disabled = false
+			col_shape.set_deferred("disabled", false)
 	else:
 		# In gameplay, hide stone and disable collisions on reset
 		visible = false
 		if col_shape:
-			col_shape.disabled = true
+			col_shape.set_deferred("disabled", true)
 	set_physics_process(false)
 
 
