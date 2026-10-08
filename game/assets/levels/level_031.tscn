@@ -3,12 +3,12 @@
 [ext_resource type="PackedScene" uid="uid://b5jwaurrnmkce" path="res://game/scenes/gameplay/Player.tscn" id="1_o002q"]
 [ext_resource type="Script" uid="uid://bua50daqrujd6" path="res://game/scenes/gameplay/Player.gd" id="2_oh0qb"]
 [ext_resource type="Texture2D" uid="uid://c1tdiylrydb82" path="res://game/assets/sprites/atlases/tiles/Tile4.png" id="3_amc4n"]
-[ext_resource type="PackedScene" uid="uid://h0y0h6owdl37" path="res://game/scenes/Obstacles/Goal.tscn" id="4_fcwrt"]
-[ext_resource type="Script" uid="uid://ukvwkll4agq6" path="res://game/scenes/Obstacles/Goal.gd" id="5_cntri"]
-[ext_resource type="PackedScene" uid="uid://b3knrufe3ektk" path="res://game/scenes/Obstacles/MovingGear.tscn" id="6_n0dv5"]
-[ext_resource type="Script" uid="uid://crfvv2de4toyd" path="res://game/scenes/Obstacles/MovingGearController.gd" id="7_gm48x"]
-[ext_resource type="PackedScene" uid="uid://crnkj6vj54nyg" path="res://game/scenes/Obstacles/Booster.tscn" id="8_qgkrq"]
-[ext_resource type="Script" uid="uid://c3vxpxcrxiiv3" path="res://game/scenes/Obstacles/BoosterController.gd" id="9_x2r1l"]
+[ext_resource type="PackedScene" uid="uid://h0y0h6owdl37" path="res://game/scenes/obstacles/Goal.tscn" id="4_fcwrt"]
+[ext_resource type="Script" uid="uid://ukvwkll4agq6" path="res://game/scenes/obstacles/Goal.gd" id="5_cntri"]
+[ext_resource type="PackedScene" uid="uid://b3knrufe3ektk" path="res://game/scenes/obstacles/MovingGear.tscn" id="6_n0dv5"]
+[ext_resource type="Script" uid="uid://crfvv2de4toyd" path="res://game/scenes/obstacles/MovingGearController.gd" id="7_gm48x"]
+[ext_resource type="PackedScene" uid="uid://crnkj6vj54nyg" path="res://game/scenes/obstacles/Booster.tscn" id="8_qgkrq"]
+[ext_resource type="Script" uid="uid://c3vxpxcrxiiv3" path="res://game/scenes/obstacles/BoosterController.gd" id="9_x2r1l"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ay4hv"]
 texture = ExtResource("3_amc4n")

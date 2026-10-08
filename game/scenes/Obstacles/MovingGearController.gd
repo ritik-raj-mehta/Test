@@ -511,6 +511,8 @@ func _ready() -> void:
 	_resolve_nodes()
 	_auto_detect_mode_if_needed()
 	_update_all()
+	if not Engine.is_editor_hint():
+		set_physics_process(_has_movement or (has_gear and rotation_speed != 0.0))
 
 func update_components() -> void:
 	_resolve_nodes()

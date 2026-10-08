@@ -39,7 +39,7 @@ var _fruit_tween: Tween = null
 
 # Fruit eating sprite (created dynamically in the Middle container)
 var _fruit_sprite: TextureRect = null
-const EATING_EFFECT_SCENE := preload("res://game/TrailandAnimations/EatingEffect.tscn")
+const EATING_EFFECT_SCENE := preload("res://game/scenes/gameplay/effects/EatingEffect.tscn")
 var _eating_effect_node: Node2D = null
 
 var _current_progress: int = 0

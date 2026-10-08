@@ -2531,7 +2531,7 @@ func on_play_pressed() -> void:
 		var tscn_p = current_level_path.get_basename() + ".tscn"
 		LevelManager.bake_level_to_tscn(current_level, tscn_p)
 
-	var scene_path: String = ScenePaths.GAMEPLAY if ResourceLoader.exists(ScenePaths.GAMEPLAY) else "res://game/scenes/gameplay/GamePLay.tscn"
+	var scene_path: String = ScenePaths.GAMEPLAY if ResourceLoader.exists(ScenePaths.GAMEPLAY) else "res://game/scenes/gameplay/GamePlay.tscn"
 	if Engine.is_editor_hint() and Engine.has_singleton("EditorInterface"):
 		var editor_iface = Engine.get_singleton("EditorInterface")
 		if editor_iface and editor_iface.has_method("play_custom_scene"):

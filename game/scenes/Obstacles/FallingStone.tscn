@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://0303ujequuf2"]
 
-[ext_resource type="Script" uid="uid://dpoarnd4yls01" path="res://game/scenes/Obstacles/FallingStoneController.gd" id="1_xq7nf"]
+[ext_resource type="Script" uid="uid://dpoarnd4yls01" path="res://game/scenes/obstacles/FallingStoneController.gd" id="1_xq7nf"]
 [ext_resource type="Texture2D" uid="uid://dityb51lxihht" path="res://game/assets/sprites/obstacles/Stone1.png" id="2_jscu6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jscu6"]

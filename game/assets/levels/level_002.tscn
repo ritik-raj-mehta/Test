@@ -3,10 +3,10 @@
 [ext_resource type="PackedScene" uid="uid://b5jwaurrnmkce" path="res://game/scenes/gameplay/Player.tscn" id="1_hs5ts"]
 [ext_resource type="Script" uid="uid://bua50daqrujd6" path="res://game/scenes/gameplay/Player.gd" id="2_5hlqj"]
 [ext_resource type="Texture2D" uid="uid://bxj4hlvcf2mtu" path="res://game/assets/sprites/atlases/tiles/Tile1.png" id="3_vx6ju"]
-[ext_resource type="PackedScene" uid="uid://h0y0h6owdl37" path="res://game/scenes/Obstacles/Goal.tscn" id="4_5yb71"]
-[ext_resource type="Script" uid="uid://ukvwkll4agq6" path="res://game/scenes/Obstacles/Goal.gd" id="5_ur2ay"]
-[ext_resource type="PackedScene" uid="uid://dyudu3n1v0tqd" path="res://game/scenes/Obstacles/Spike.tscn" id="6_3k3nu"]
-[ext_resource type="Script" uid="uid://1lwe8eaaf45s" path="res://game/scenes/Obstacles/SpikeController.gd" id="7_65mrm"]
+[ext_resource type="PackedScene" uid="uid://h0y0h6owdl37" path="res://game/scenes/obstacles/Goal.tscn" id="4_5yb71"]
+[ext_resource type="Script" uid="uid://ukvwkll4agq6" path="res://game/scenes/obstacles/Goal.gd" id="5_ur2ay"]
+[ext_resource type="PackedScene" uid="uid://dyudu3n1v0tqd" path="res://game/scenes/obstacles/Spike.tscn" id="6_3k3nu"]
+[ext_resource type="Script" uid="uid://1lwe8eaaf45s" path="res://game/scenes/obstacles/SpikeController.gd" id="7_65mrm"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hmubi"]
 texture = ExtResource("3_vx6ju")

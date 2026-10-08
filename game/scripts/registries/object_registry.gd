@@ -9,7 +9,7 @@ static var _registry: Dictionary = {
 	"gear_r": {
 		"id": "gear_r",
 		"name": "Rotating Gear",
-		"scene_path": "res://game/scenes/Obstacles/MovingGear.tscn",
+		"scene_path": "res://game/scenes/obstacles/MovingGear.tscn",
 		"category": "Obstacles",
 		"default_properties": {"rotation_speed": 2.0},
 		"default_scale": Vector2(1, 1)
@@ -17,7 +17,7 @@ static var _registry: Dictionary = {
 	"gear_m": {
 		"id": "gear_m",
 		"name": "Moving & Rotating Gear",
-		"scene_path": "res://game/scenes/Obstacles/MovingGear.tscn",
+		"scene_path": "res://game/scenes/obstacles/MovingGear.tscn",
 		"category": "Obstacles",
 		"default_properties": {
 			"has_rod": false,
@@ -44,7 +44,7 @@ static var _registry: Dictionary = {
 	"gear_rod": {
 		"id": "gear_rod",
 		"name": "Gear Rod",
-		"scene_path": "res://game/scenes/Obstacles/MovingGear.tscn",
+		"scene_path": "res://game/scenes/obstacles/MovingGear.tscn",
 		"category": "Obstacles",
 		"default_properties": {
 			"has_rod": true,
@@ -61,7 +61,7 @@ static var _registry: Dictionary = {
 	"gear_with_rod": {
 		"id": "gear_with_rod",
 		"name": "Moving Gear with Rod",
-		"scene_path": "res://game/scenes/Obstacles/MovingGear.tscn",
+		"scene_path": "res://game/scenes/obstacles/MovingGear.tscn",
 		"category": "Obstacles",
 		"default_properties": {
 			"has_rod": true,
@@ -89,7 +89,7 @@ static var _registry: Dictionary = {
 	"gear_snake": {
 		"id": "gear_snake",
 		"name": "Snake / Wave Moving Gear",
-		"scene_path": "res://game/scenes/Obstacles/MovingGear.tscn",
+		"scene_path": "res://game/scenes/obstacles/MovingGear.tscn",
 		"category": "Obstacles",
 		"default_properties": {
 			"is_snake_wave": true,
@@ -119,7 +119,7 @@ static var _registry: Dictionary = {
 	"gear_zigzag": {
 		"id": "gear_zigzag",
 		"name": "ZigZag Track Moving Gear",
-		"scene_path": "res://game/scenes/Obstacles/MovingGear.tscn",
+		"scene_path": "res://game/scenes/obstacles/MovingGear.tscn",
 		"category": "Obstacles",
 		"default_properties": {
 			"is_zigzag": true,
@@ -146,7 +146,7 @@ static var _registry: Dictionary = {
 	"gear_path": {
 		"id": "gear_path",
 		"name": "Path / Shape Moving Gear",
-		"scene_path": "res://game/scenes/Obstacles/PathMovingGear.tscn",
+		"scene_path": "res://game/scenes/obstacles/PathMovingGear.tscn",
 		"category": "Obstacles",
 		"default_properties": {
 			"path_shape": "Diamond",
@@ -167,7 +167,7 @@ static var _registry: Dictionary = {
 	"spike": {
 		"id": "spike",
 		"name": "Spike Trap",
-		"scene_path": "res://game/scenes/Obstacles/Spike.tscn",
+		"scene_path": "res://game/scenes/obstacles/Spike.tscn",
 		"category": "Obstacles",
 		"default_properties": {
 			"spike_count": 1,
@@ -181,7 +181,7 @@ static var _registry: Dictionary = {
 	"goal": {
 		"id": "goal",
 		"name": "Goal",
-		"scene_path": "res://game/scenes/Obstacles/Goal.tscn",
+		"scene_path": "res://game/scenes/obstacles/Goal.tscn",
 		"category": "Triggers",
 		"default_properties": {},
 		"default_scale": Vector2(1, 1)
@@ -189,7 +189,7 @@ static var _registry: Dictionary = {
 	"falling_stone": {
 		"id": "falling_stone",
 		"name": "Falling Stone",
-		"scene_path": "res://game/scenes/Obstacles/FallingStone.tscn",
+		"scene_path": "res://game/scenes/obstacles/FallingStone.tscn",
 		"category": "Obstacles",
 		"default_properties": {"is_lethal": false, "trigger_tag": "trap_1", "fall_speed": 1200.0, "rotation_speed": 6.0, "knockback_force": 650.0, "initial_launch_angle": 90.0, "initial_launch_force": 1200.0, "rest_lifetime": 2.0, "trigger_cooldown": 0.6},
 		"default_scale": Vector2(1, 1)
@@ -197,7 +197,7 @@ static var _registry: Dictionary = {
 	"falling_stone_spike": {
 		"id": "falling_stone_spike",
 		"name": "Falling Stone Spike",
-		"scene_path": "res://game/scenes/Obstacles/FallingStone.tscn",
+		"scene_path": "res://game/scenes/obstacles/FallingStone.tscn",
 		"category": "Obstacles",
 		"default_properties": {"is_lethal": true, "trigger_tag": "trap_1", "fall_speed": 1200.0, "rotation_speed": 6.0, "initial_launch_angle": 90.0, "initial_launch_force": 1200.0, "rest_lifetime": 2.0, "trigger_cooldown": 0.6},
 		"default_scale": Vector2(1, 1)
@@ -205,7 +205,7 @@ static var _registry: Dictionary = {
 	"trigger_area": {
 		"id": "trigger_area",
 		"name": "Trigger Area",
-		"scene_path": "res://game/scenes/Obstacles/TriggerArea.tscn",
+		"scene_path": "res://game/scenes/obstacles/TriggerArea.tscn",
 		"category": "Triggers",
 		"default_properties": {"trigger_tag": "trap_1", "area_width": 200.0, "area_height": 150.0},
 		"default_scale": Vector2(1, 1)
@@ -263,7 +263,7 @@ static var _registry: Dictionary = {
 	"booster": {
 		"id": "booster",
 		"name": "Booster",
-		"scene_path": "res://game/scenes/Obstacles/Booster.tscn",
+		"scene_path": "res://game/scenes/obstacles/Booster.tscn",
 		"category": "Obstacles",
 		"default_properties": {
 			"force_tier": 2,
@@ -288,7 +288,7 @@ static var _registry: Dictionary = {
 	"wall": {
 		"id": "wall",
 		"name": "Wall Obstacle",
-		"scene_path": "res://game/scenes/Obstacles/Walls.tscn",
+		"scene_path": "res://game/scenes/obstacles/Walls.tscn",
 		"category": "Obstacles",
 		"default_properties": {
 			"is_lethal": false,
@@ -330,7 +330,7 @@ static var _fallback_objects: Dictionary = {
 	"falling_stone_trap": {
 		"id": "falling_stone",
 		"name": "Falling Stone",
-		"scene_path": "res://game/scenes/Obstacles/FallingStone.tscn",
+		"scene_path": "res://game/scenes/obstacles/FallingStone.tscn",
 		"category": "Obstacles",
 		"default_properties": {"is_lethal": false, "trigger_tag": "trap_1", "fall_speed": 600.0},
 		"default_scale": Vector2(1, 1)
@@ -361,16 +361,16 @@ static func has_object(id: String) -> bool:
 
 static func resolve_scene_path(path: String) -> String:
 	if path.ends_with("GearRod.tscn") or path.ends_with("GearRode.tscn") or path.ends_with("MovingGearWithRod.tscn") or path.ends_with("RotatingGear.tscn"):
-		return "res://game/scenes/Obstacles/MovingGear.tscn"
+		return "res://game/scenes/obstacles/MovingGear.tscn"
 	if path.ends_with("FallingStoneSpike.tscn") or path.ends_with("FallingStoneTrap.tscn"):
-		return "res://game/scenes/Obstacles/FallingStone.tscn"
+		return "res://game/scenes/obstacles/FallingStone.tscn"
 	if ResourceLoader.exists(path):
 		return path
 	var goal_fix = path.replace("win_area_node.tscn", "Goal.tscn").replace("win_area.tscn", "Goal.tscn")
 	if ResourceLoader.exists(goal_fix):
 		return goal_fix
 	# Fallback checks for migrated folders
-	var legacy_to_game = path.replace("res://Obstacle/", "res://game/scenes/Obstacles/").replace("res://Scenes/", "res://game/scenes/Obstacles/").replace("res://Walls/", "res://game/scenes/Obstacles/")
+	var legacy_to_game = path.replace("res://Obstacle/", "res://game/scenes/obstacles/").replace("res://Scenes/", "res://game/scenes/obstacles/").replace("res://Walls/", "res://game/scenes/obstacles/")
 	if ResourceLoader.exists(legacy_to_game):
 		return legacy_to_game
 	var gameplay_fallback = path.replace("res://Scenes/", "res://game/scenes/gameplay/")

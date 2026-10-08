@@ -5,7 +5,7 @@ extends RefCounted
 const LOADING:  String = "res://game/scenes/loading/Loading.tscn"
 const SKINS:    String = "res://game/scenes/Skins/Skins.tscn"
 const WORLDS:   String = "res://game/scenes/Worlds/Worlds.tscn"
-const GAMEPLAY: String = "res://game/scenes/gameplay/GamePLay.tscn"
+const GAMEPLAY: String = "res://game/scenes/gameplay/GamePlay.tscn"
 const LEVEL_EDITOR: String = "res://addons/zumpa_level_editor/level_editor.tscn"
 const GOAL_SCENE_PATH: String = "res://game/scenes/obstacles/Goal.tscn"
 

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c3q0w6ny7xv41"]
 
-[ext_resource type="Script" uid="uid://dwafmn5yik1gw" path="res://game/scenes/Obstacles/PathMovingGearController.gd" id="1_controller"]
+[ext_resource type="Script" uid="uid://dwafmn5yik1gw" path="res://game/scenes/obstacles/PathMovingGearController.gd" id="1_controller"]
 [ext_resource type="Texture2D" uid="uid://kdag31e4fj6o" path="res://game/assets/sprites/obstacles/Gear1.png" id="2_gear_tex"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gear"]

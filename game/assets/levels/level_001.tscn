@@ -3,8 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://b5jwaurrnmkce" path="res://game/scenes/gameplay/Player.tscn" id="1_5bgxr"]
 [ext_resource type="Script" uid="uid://bua50daqrujd6" path="res://game/scenes/gameplay/Player.gd" id="2_va16f"]
 [ext_resource type="Texture2D" uid="uid://bxj4hlvcf2mtu" path="res://game/assets/sprites/atlases/tiles/Tile1.png" id="3_sf1hi"]
-[ext_resource type="PackedScene" uid="uid://h0y0h6owdl37" path="res://game/scenes/Obstacles/Goal.tscn" id="4_7rn54"]
-[ext_resource type="Script" uid="uid://ukvwkll4agq6" path="res://game/scenes/Obstacles/Goal.gd" id="5_jguw2"]
+[ext_resource type="PackedScene" uid="uid://h0y0h6owdl37" path="res://game/scenes/obstacles/Goal.tscn" id="4_7rn54"]
+[ext_resource type="Script" uid="uid://ukvwkll4agq6" path="res://game/scenes/obstacles/Goal.gd" id="5_jguw2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hojak"]
 texture = ExtResource("3_sf1hi")

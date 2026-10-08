@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://crnkj6vj54nyg"]
 
-[ext_resource type="Script" uid="uid://c3vxpxcrxiiv3" path="res://game/scenes/Obstacles/BoosterController.gd" id="1_pk5ym"]
+[ext_resource type="Script" uid="uid://c3vxpxcrxiiv3" path="res://game/scenes/obstacles/BoosterController.gd" id="1_pk5ym"]
 [ext_resource type="Texture2D" uid="uid://dqu4v6h40xdfy" path="res://game/assets/sprites/obstacles/Booster.png" id="2_boost_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6q0s8"]

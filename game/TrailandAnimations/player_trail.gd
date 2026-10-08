@@ -1,5 +1,4 @@
 extends Line2D
-class_name Trails
 
 var queue: Array[Vector2] = []
 var active: bool = true

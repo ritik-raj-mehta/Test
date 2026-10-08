@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d3m78k2q1a5fc"]
 
-[ext_resource type="Script" uid="uid://dh35s4x0jdq58" path="res://game/scenes/Obstacles/TriggerAreaController.gd" id="1_7f7b7"]
+[ext_resource type="Script" uid="uid://dh35s4x0jdq58" path="res://game/scenes/obstacles/TriggerAreaController.gd" id="1_7f7b7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qg70d"]
 size = Vector2(200, 150)

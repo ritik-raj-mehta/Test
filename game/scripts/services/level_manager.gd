@@ -5,14 +5,36 @@ extends RefCounted
 static var current_level_data: LevelData = null
 static var active_level_path: String = "res://game/assets/levels/level_001.tres"
 
+static func _get_save_manager() -> SaveManager:
+	var main_loop := Engine.get_main_loop()
+	if main_loop is SceneTree and main_loop.root:
+		var registry: Node = main_loop.root.get_node_or_null("ServiceRegistry")
+		if registry and registry.has_method("get_service"):
+			return registry.get_service(&"save") as SaveManager
+	return null
+
 static func set_active_level_path(path: String) -> void:
 	active_level_path = path
-	var f := FileAccess.open("user://active_level_path.txt", FileAccess.WRITE)
-	if f:
-		f.store_string(path)
-		f.close()
+	var save := _get_save_manager()
+	if save:
+		save.set_value("active_level_path", path)
+		save.save_game()
+	else:
+		var f := FileAccess.open("user://active_level_path.txt", FileAccess.WRITE)
+		if f:
+			f.store_string(path)
+			f.close()
 
 static func get_active_level_path() -> String:
+	var save := _get_save_manager()
+	if save:
+		var val = save.get_value("active_level_path", "")
+		if val != null and str(val) != "":
+			var saved_str: String = str(val)
+			if ResourceLoader.exists(saved_str) or FileAccess.file_exists(saved_str):
+				active_level_path = saved_str
+				return saved_str
+
 	if FileAccess.file_exists("user://active_level_path.txt"):
 		var f := FileAccess.open("user://active_level_path.txt", FileAccess.READ)
 		if f:

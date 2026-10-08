@@ -26,17 +26,12 @@ func apply_theme(world_theme: String) -> void:
 		return
 
 	for layer in _controller.layers:
-		layer.set_layer_texture(null)
-		layer.set_layer_position(art.position_for(layer.layer_key))
-		
-
-	for layer in _controller.layers:
-		if layer == null or layer.layer_key == &"":
+		if layer == null:
+			continue
+		if layer.layer_key == &"":
+			layer.set_layer_texture(null)
 			continue
 		var tex := art.texture_for(layer.layer_key)
-		if tex == null:
-			push_warning("ParallaxWorld: '%s' has no texture for key '%s'." % [world_theme, layer.layer_key])
-			continue
 		layer.set_layer_texture(tex)
 		layer.set_layer_position(art.position_for(layer.layer_key))
 

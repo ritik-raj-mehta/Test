@@ -1,5 +1,5 @@
-extends CharacterBody2D
 class_name Player
+extends PlayerController
 
 
 # ============================================================
@@ -60,20 +60,25 @@ var _input_lock: float = 0.0
 @export var goal_side_angle: float = 35.0  # degrees below horizontal
 var _approach_offset := Vector2.ZERO
 # ============================================================
-# SIGNALS
+# SIGNALS & DEPENDENCY INJECTION
 # ============================================================
 
-var _bus: GameBus   # use Node if GameBus has no class_name
-
-func setup(bus: GameBus) -> void:
-	_bus = bus
-	_bus.tap_locked.connect(func(locked: bool) -> void:
-		_tap_lock = locked
-	)
-	if not _bus.character_changed.is_connected(_on_character_changed):
-		_bus.character_changed.connect(_on_character_changed)
+func _on_ready() -> void:
+	if _bus:
+		setup(_bus)
 	refresh_skin()
 
+func setup(bus: Node) -> void:
+	_bus = bus
+	if _bus:
+		if _bus.has_signal("tap_locked") and not _bus.tap_locked.is_connected(_on_tap_locked):
+			_bus.tap_locked.connect(_on_tap_locked)
+		if _bus.has_signal("character_changed") and not _bus.character_changed.is_connected(_on_character_changed):
+			_bus.character_changed.connect(_on_character_changed)
+	refresh_skin()
+
+func _on_tap_locked(locked: bool) -> void:
+	_tap_lock = locked
 
 func _on_character_changed(_character_id: String) -> void:
 	refresh_skin()
@@ -84,6 +89,7 @@ func _on_character_changed(_character_id: String) -> void:
 # ============================================================
 
 func _ready() -> void:
+	super._ready()
 	if not is_in_group("player"):
 		add_to_group("player")
 	if visual:

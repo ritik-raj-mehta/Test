@@ -17,11 +17,10 @@ const SOUND_BOOSTER := &"player_booster"
 const SOUND_LEVEL_COMPLETE := &"level_complete"
 const SOUND_TAP_PRESS := &"tap_press"
 const SOUND_EATING := &"eating"
-const SOUND_CLICK := &"sound_clcik"
+const SOUND_CLICK := &"sound_click"
 
 # Cached AudioStream instances
 static var _streams: Dictionary = {}
-
 
 static func get_stream(sound_id: StringName) -> AudioStream:
 	if _streams.has(sound_id):
@@ -47,24 +46,18 @@ static func get_stream(sound_id: StringName) -> AudioStream:
 		return stream
 	return null
 
-
-## Helper to resolve AudioManager from SceneTree or ServiceRegistry
+## Helper to resolve AudioManager from ServiceRegistry
 static func get_audio(node: Node) -> AudioManager:
 	if node == null or not node.is_inside_tree():
 		return null
 	var tree := node.get_tree()
 	if tree and tree.root:
-		if tree.root.has_node("GameService"):
-			var gs = tree.root.get_node("GameService")
-			if gs and "audio" in gs and gs.audio:
-				return gs.audio as AudioManager
 		var registry: Node = tree.root.get_node_or_null("ServiceRegistry")
 		if registry and registry.has_method("get_service"):
 			var a = registry.get_service(&"audio")
 			if a:
 				return a as AudioManager
 	return null
-
 
 ## Centralized method to play any sound effect with fine-tuned pitch & volume
 static func play_sound(node: Node, sound_id: StringName) -> void:
@@ -105,7 +98,6 @@ static func play_sound(node: Node, sound_id: StringName) -> void:
 
 	audio.play_sfx(stream, vol_db, pitch)
 
-
 ## Centralized method to start background music
 static func play_bgm(node: Node) -> void:
 	var audio := get_audio(node)
@@ -117,15 +109,18 @@ static func play_bgm(node: Node) -> void:
 	audio.set_music_enabled(_saved_flag(node, "music_enabled"))
 	audio.play_music(stream, -3.0)
 
-
 static func _saved_flag(node: Node, flag: String) -> bool:
-	var registry: Node = node.get_tree().root.get_node_or_null("ServiceRegistry")
-	if registry and registry.has_method("get_service"):
-		var save := registry.get_service(&"save") as SaveManager
-		if save and save.settings_data:
-			return bool(save.settings_data.get(flag))
+	if node == null or not node.is_inside_tree():
+		return true
+	var tree := node.get_tree()
+	if tree and tree.root:
+		var registry: Node = tree.root.get_node_or_null("ServiceRegistry")
+		if registry and registry.has_method("get_service"):
+			var save := registry.get_service(&"save") as SaveManager
+			if save and save.settings_data:
+				return bool(save.settings_data.get(flag))
 	return true
 
 static func preload_all() -> void:
-	for id in [SOUND_BGM, SOUND_JUMP, SOUND_DEATH, SOUND_BOOSTER, SOUND_LEVEL_COMPLETE, SOUND_TAP_PRESS, SOUND_EATING,SOUND_CLICK]:
+	for id in [SOUND_BGM, SOUND_JUMP, SOUND_DEATH, SOUND_BOOSTER, SOUND_LEVEL_COMPLETE, SOUND_TAP_PRESS, SOUND_EATING, SOUND_CLICK]:
 		get_stream(id)

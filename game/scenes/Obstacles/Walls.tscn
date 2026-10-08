@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cslldjhdxkl26"]
 
-[ext_resource type="Script" uid="uid://bx3ohfhpbs1bx" path="res://game/scenes/Obstacles/Walls.gd" id="1_qr6um"]
+[ext_resource type="Script" uid="uid://bx3ohfhpbs1bx" path="res://game/scenes/obstacles/Walls.gd" id="1_qr6um"]
 [ext_resource type="Texture2D" uid="uid://csd3i3i1i80wx" path="res://game/assets/sprites/obstacles/Trianglewall2.png" id="2_jabov"]
 [ext_resource type="Texture2D" uid="uid://c5kdpgrglyana" path="res://game/assets/sprites/obstacles/CompanyLogoWall3.png" id="3_jabov"]
 [ext_resource type="Shape2D" uid="uid://mex60wtqotc2" path="res://game/assets/resources/RightAngledTriangle.tres" id="4_7oxvu"]

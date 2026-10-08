@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dw1tbdikujs75"]
+
+[ext_resource type="Script" path="res://game/scripts/controllers/effects/PlayerTrail.gd" id="1_dahur"]
+
+[sub_resource type="Curve" id="Curve_ntjbb"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.99999994, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_dahur"]
+offsets = PackedFloat32Array(0, 0.9073482, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.9098039, 1, 1, 1, 0.6156863)
+
+[node name="Trail" type="Line2D" unique_id=1853944517]
+points = PackedVector2Array(416, 245)
+width = 40.0
+width_curve = SubResource("Curve_ntjbb")
+gradient = SubResource("Gradient_dahur")
+script = ExtResource("1_dahur")
