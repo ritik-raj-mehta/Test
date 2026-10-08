@@ -1,26 +1,21 @@
 [gd_scene format=3 uid="uid://b7n223sg3y2ku"]
 
-[ext_resource type="Script" uid="uid://bw56hn8xcx1ub" path="res://game/scenes/ui/hfw/CreditsPopup.gd" id="1_ko75o"]
 [ext_resource type="Texture2D" uid="uid://c6tojp8wakcrg" path="res://game/assets/sprites/single/ui/popup.png" id="2_jypeg"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_be6ya"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="4_dtsci"]
 [ext_resource type="Texture2D" uid="uid://dqfpjs37l872m" path="res://game/assets/sprites/single/ui/blueBtn.png" id="4_jypeg"]
-[ext_resource type="Texture2D" uid="uid://cl4e627sd7g88" path="res://game/assets/sprites/single/ui/Reff/Urgent_reff.png" id="6_be6ya"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uvm4r"]
 atlas = ExtResource("4_dtsci")
 region = Rect2(2375, 187, 170, 173)
 
-[node name="UpdatePopup" type="Control" unique_id=1513163033 node_paths=PackedStringArray("_content", "_back_button")]
+[node name="UpdatePopup" type="Control" unique_id=1513163033]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_ko75o")
-_content = NodePath("Holder/Window")
-_back_button = NodePath("Holder/Window/BackButton")
 
 [node name="Backdrop" type="ColorRect" parent="." unique_id=2109479275]
 layout_mode = 1
@@ -159,15 +154,3 @@ texture_normal = SubResource("AtlasTexture_uvm4r")
 texture_pressed = SubResource("AtlasTexture_uvm4r")
 ignore_texture_size = true
 stretch_mode = 5
-
-[node name="TextureRect" type="TextureRect" parent="." unique_id=999334523]
-visible = false
-self_modulate = Color(1, 1, 1, 0.4627451)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("6_be6ya")
-expand_mode = 1

@@ -10,7 +10,9 @@ static func apply(settings: GameModels.SettingsData, audio: AudioManager, haptic
 	if settings == null:
 		return
 	if audio:
-		audio.set_music_volume(settings.music_volume if settings.music_enabled else MUTED_LINEAR)
-		audio.set_sfx_volume(settings.sfx_volume if settings.sfx_enabled else MUTED_LINEAR)
+		audio.set_music_enabled(settings.music_enabled)
+		audio.set_sfx_enabled(settings.sfx_enabled)
+		audio.set_music_volume(settings.music_volume)
+		audio.set_sfx_volume(settings.sfx_volume)
 	if haptics:
 		haptics.set_enabled(settings.haptics_enabled)

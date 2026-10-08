@@ -322,6 +322,10 @@ static func unregister_object(id: String) -> void:
 static func get_all_entries() -> Dictionary:
 	return _registry
 
+static func preload_all() -> void:
+	for id in _registry.keys():
+		get_packed_scene(str(id))
+
 static var _fallback_objects: Dictionary = {
 	"falling_stone_trap": {
 		"id": "falling_stone",

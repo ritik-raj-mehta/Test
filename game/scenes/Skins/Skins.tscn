@@ -1,36 +1,15 @@
 [gd_scene format=3 uid="uid://cbp1iudqmyyi1"]
 
-[ext_resource type="Texture2D" uid="uid://crarc7ywgq8un" path="res://game/assets/sprites/single/ui/BGs/backgrounds.png" id="2_qyhv8"]
 [ext_resource type="Texture2D" uid="uid://dtll8bitldi3m" path="res://game/assets/sprites/single/ui/back.png" id="3_ocs36"]
-[ext_resource type="Script" uid="uid://tbcmcffak44o" path="res://game/scenes/Skins/Skins.gd" id="3_scr"]
+[ext_resource type="Script" uid="uid://bjtw3fk8xf5lh" path="res://game/scenes/Skins/Skins.gd" id="3_scr"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="4_c7mn2"]
 [ext_resource type="PackedScene" uid="uid://bifh6tn11towv" path="res://game/scenes/ui/components/CharacterSkin(1).tscn" id="6_hs8q2"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="6_hywlw"]
 [ext_resource type="PackedScene" uid="uid://dm40ba5fbtwmj" path="res://game/scenes/ui/components/CharacterSkin(2).tscn" id="7_fs46r"]
-[ext_resource type="Script" uid="uid://q6vw7qml2sq6" path="res://game/scenes/Skins/SkinCarousel.gd" id="8_car"]
+[ext_resource type="Script" uid="uid://dj5g1o4jl0qts" path="res://game/scenes/Skins/SkinCarousel.gd" id="8_car"]
 [ext_resource type="PackedScene" uid="uid://rpn37gt2ukl3" path="res://game/scenes/ui/components/CharacterSkin(3).tscn" id="8_vls40"]
-[ext_resource type="PackedScene" uid="uid://cedncu07phqsj" path="res://game/scenes/ui/components/CharacterSkin(4).tscn" id="9_diwqi"]
-[ext_resource type="PackedScene" uid="uid://d2v7qbu1wb74s" path="res://game/scenes/ui/components/CharacterSkin(5).tscn" id="10_fkiww"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5fjcl"]
-atlas = ExtResource("2_qyhv8")
-region = Rect2(90, 142, 1100, 1940)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yl6ys"]
-atlas = ExtResource("2_qyhv8")
-region = Rect2(2692, 142, 1100, 1940)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_547ig"]
-atlas = ExtResource("2_qyhv8")
-region = Rect2(1391, 142, 1100, 1940)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_y1m8c"]
-atlas = ExtResource("2_qyhv8")
-region = Rect2(3993, 142, 1100, 1940)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_en1yf"]
-atlas = ExtResource("2_qyhv8")
-region = Rect2(5294, 142, 1100, 1940)
+[ext_resource type="PackedScene" uid="uid://cedncu07phqsj" path="res://game/scenes/ui/components/CharacterSkin(4).tscn" id="9_6r0gt"]
+[ext_resource type="PackedScene" uid="uid://d2v7qbu1wb74s" path="res://game/scenes/ui/components/CharacterSkin(5).tscn" id="10_qyhv8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rtnyd"]
 atlas = ExtResource("6_hywlw")
@@ -62,7 +41,6 @@ _prev_button = NodePath("Margin/Column/Middle/Stage/Row/PrevButton")
 _next_button = NodePath("Margin/Column/Middle/Stage/Row/NextButton")
 _back_button = NodePath("Margin/Column/HBoxContainer/BackButton")
 background = NodePath("Background")
-_blur_bg_list = Array[Texture]([SubResource("AtlasTexture_5fjcl"), SubResource("AtlasTexture_yl6ys"), SubResource("AtlasTexture_547ig"), SubResource("AtlasTexture_y1m8c"), SubResource("AtlasTexture_en1yf")])
 
 [node name="Background" type="TextureRect" parent="." unique_id=1920039283]
 layout_mode = 1
@@ -178,7 +156,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 script = ExtResource("8_car")
-prefabs = Array[PackedScene]([ExtResource("6_hs8q2"), ExtResource("7_fs46r"), ExtResource("8_vls40"), ExtResource("9_diwqi"), ExtResource("10_fkiww")])
+prefabs = Array[PackedScene]([ExtResource("6_hs8q2"), ExtResource("7_fs46r"), ExtResource("8_vls40"), ExtResource("9_6r0gt"), ExtResource("10_qyhv8")])
 spacing = 380.0
 
 [node name="NextButton" type="TextureButton" parent="Margin/Column/Middle/Stage/Row" unique_id=723955327]

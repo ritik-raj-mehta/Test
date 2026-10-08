@@ -120,7 +120,6 @@ properties = {
 
 [resource]
 script = ExtResource("2_l7oga")
-world_theme = "world_3"
 player_start = Vector2(1000, 1600)
 level_size = Vector2(2000, 3000)
 camera_drag_left_margin = 0.9

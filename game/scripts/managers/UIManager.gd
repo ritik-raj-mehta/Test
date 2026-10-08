@@ -58,7 +58,9 @@ func push(screen: Control) -> void:
 
 func _auto_inject_screen(screen: Control) -> void:
 	if screen is UIController:
-		screen.inject_services(ServiceRegistry)
+		var reg: Node = get_tree().root.get_node_or_null("ServiceRegistry") if get_tree() and get_tree().root else null
+		if reg:
+			screen.inject_services(reg)
 
 # ── Pop ───────────────────────────────────────────────────────────────────
 

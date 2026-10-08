@@ -215,7 +215,25 @@ static func get_fruit_eat_texture(theme_id: String) -> Texture2D:
 	return get_asset_texture(theme_id, "fruit_eat_texture", "res://game/assets/sprites/single/ui/Fruits/ApplePhases.png")
 
 static func get_fruit_particle_texture(theme_id: String) -> Texture2D:
-	return get_asset_texture(theme_id, "fruit_particle_texture", "res://game/TrailandAnimations/Pixel Apple Cube Sprite.png")
+	return get_asset_texture(theme_id, "fruit_particle_texture", "res://game/assets/sprites/single/ui/Fruits/Apple.png")
+
+static func prewarm_theme(theme_id: String) -> void:
+	var target_id := theme_id if (theme_id != "" and _themes.has(theme_id)) else _current_theme_id
+	set_current_theme(target_id)
+	create_tileset_for_theme(target_id)
+	get_background_texture(target_id)
+	get_gear_texture(target_id)
+	get_gear_rod_texture(target_id)
+	get_circular_border_texture(target_id)
+	get_falling_stone_texture(target_id)
+	get_falling_stone_spike_texture(target_id)
+	get_fruit_texture(target_id)
+	get_fruit_cry_texture(target_id)
+	get_fruit_eat_texture(target_id)
+	get_fruit_particle_texture(target_id)
+	var parallax_path := "res://game/assets/data/parallax/" + target_id + ".tres"
+	if ResourceLoader.exists(parallax_path):
+		var _art = load(parallax_path)
 
 static func create_tileset_for_theme(theme_id: String) -> TileSet:
 	if _tileset_cache.has(theme_id):

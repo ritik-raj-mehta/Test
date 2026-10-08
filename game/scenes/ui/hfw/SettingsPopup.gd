@@ -10,6 +10,7 @@ extends AppView
 @export var _window: Control #= %Window
 @export var _sfx_toggle: BaseButton #= %SfxToggle
 @export var _music_toggle: BaseButton #= %MusicToggle
+@export var _haptics_toggle: BaseButton #= %HapticsToggle
 @export var _terms_button: BaseButton #= %TermsButton
 @export var _credits_button: BaseButton #= %CreditsButton
 @export var _privacy_button: BaseButton #= %PrivacyButton
@@ -23,6 +24,7 @@ func _on_ready() -> void:
 	# _setup_toggle(_music_toggle, s.music_enabled if s else true, _on_music_toggled)
 	_setup_toggle(_sfx_toggle, _is_sfx_on(), _on_sfx_toggled)
 	_setup_toggle(_music_toggle, _is_music_on(), _on_music_toggled)
+	_setup_toggle(_haptics_toggle, _is_haptics_on(), _on_haptics_toggled)
 	_on_press(_terms_button, func() -> void: OS.shell_open(UIConfig.TERMS_URL))
 	_on_press(_credits_button, func() -> void: _open_popup(ScenePaths.CREDITS))
 	_on_press(_privacy_button, func() -> void: OS.shell_open(UIConfig.PRIVACY_URL))
@@ -62,6 +64,11 @@ func _on_music_toggled(on: bool) -> void:
 	_set_music(on)
 	if on:
 		_click()
+
+func _on_haptics_toggled(on: bool) -> void:
+	_set_haptics(on)
+	if on and _haptics:
+		_haptics.light()
 
 # func _update_settings(mutator: Callable) -> void:
 # 	if _save == null:

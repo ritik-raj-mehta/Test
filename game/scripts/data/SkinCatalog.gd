@@ -14,52 +14,46 @@ const SKINS: Array = [
 	{
 		"id": "zumpa_green",
 		"name": "Zumpa",
-		"texture":
-			"res://game/assets/sprites/single/ui/Characters/char1.png",
-		"eating_texture":
-			"res://game/assets/sprites/single/ui/Characters/char1Eating.png",
-		"goal_texture":"res://game/assets/sprites/single/ui/Characters/char1goal.png",
-		"jump_texture":"res://game/assets/sprites/single/ui/Characters/char1Jump.png"
+		"texture":"res://game/assets/sprites/single/ui/Characters/char1.png",
+		"eating_texture":"res://game/assets/sprites/single/ui/Characters/Eating/char1Eating.png",
+		"goal_texture":"res://game/assets/sprites/single/ui/Characters/Goal/char1goal.png",
+		"jump_texture":"res://game/assets/sprites/single/ui/Characters/Jumping/char1Jump.png"
 	},
 
 	{
 		"id": "sunny",
 		"name": "Sunny",
-		"texture":
-			"res://game/assets/sprites/single/ui/Characters/char2.png",
-		"eating_texture":"res://game/assets/sprites/single/ui/Characters/char2Eating .png",
-		"goal_texture":"res://game/assets/sprites/single/ui/Characters/char2goal.png",
-		"jump_texture":"res://game/assets/sprites/single/ui/Characters/char2Jump.png"
+		"texture":"res://game/assets/sprites/single/ui/Characters/char2.png",
+		"eating_texture":"res://game/assets/sprites/single/ui/Characters/Eating/char2Eating .png",
+		"goal_texture":"res://game/assets/sprites/single/ui/Characters/Goal/char2goal.png",
+		"jump_texture":"res://game/assets/sprites/single/ui/Characters/Jumping/char2Jump.png"
 	},
 
 	{
 		"id": "berry",
 		"name": "Berry",
-		"texture":
-			"res://game/assets/sprites/single/ui/Characters/char3.png",
-		"eating_texture":"res://game/assets/sprites/single/ui/Characters/char3Eating.png",
-		"goal_texture":"res://game/assets/sprites/single/ui/Characters/char3goal.png",
-		"jump_texture":"res://game/assets/sprites/single/ui/Characters/char3Jump.png"
+		"texture":"res://game/assets/sprites/single/ui/Characters/char3.png",
+		"eating_texture":"res://game/assets/sprites/single/ui/Characters/Eating/char3Eating.png",
+		"goal_texture":"res://game/assets/sprites/single/ui/Characters/Goal/char3goal.png",
+		"jump_texture":"res://game/assets/sprites/single/ui/Characters/Jumping/char3Jump.png",
 	},
 
 	{
 		"id": "skyblue",
 		"name": "Sky",
-		"texture":
-			"res://game/assets/sprites/single/ui/Characters/char4.png",
-		"eating_texture":"res://game/assets/sprites/single/ui/Characters/char4Eating.png",
-		"goal_texture":"res://game/assets/sprites/single/ui/Characters/char4goal.png",
-		"jump_texture":"res://game/assets/sprites/single/ui/Characters/char4Jump.png"
+		"texture":"res://game/assets/sprites/single/ui/Characters/char4.png",
+		"eating_texture":"res://game/assets/sprites/single/ui/Characters/Eating/char4Eating.png",
+		"goal_texture":"res://game/assets/sprites/single/ui/Characters/Goal/char4goal.png",
+		"jump_texture":"res://game/assets/sprites/single/ui/Characters/Jumping/char4Jump.png"
 	},
 
 	{
 		"id": "grape",
 		"name": "Grape",
-		"texture":
-			"res://game/assets/sprites/single/ui/Characters/char5.png",
-		"eating_texture":"res://game/assets/sprites/single/ui/Characters/char5Eating.png",
-		"goal_texture":"res://game/assets/sprites/single/ui/Characters/char5goal.png",
-		"jump_texture":"res://game/assets/sprites/single/ui/Characters/char5Jump.png"
+		"texture":"res://game/assets/sprites/single/ui/Characters/char5.png",		
+		"eating_texture":"res://game/assets/sprites/single/ui/Characters/Eating/char5Eating.png",
+		"goal_texture":"res://game/assets/sprites/single/ui/Characters/Goal/char5goal.png",
+		"jump_texture":"res://game/assets/sprites/single/ui/Characters/Jumping/char5Jump.png"
 	}
 ]
 

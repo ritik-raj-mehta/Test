@@ -318,23 +318,39 @@ properties = {
 [sub_resource type="Resource" id="Resource_ymp4a"]
 script = ExtResource("1_6q68g")
 object_id = "booster"
-position = Vector2(744, -1504)
-rotation = 50.0
+position = Vector2(712, -1472)
+rotation = 60.0
 properties = {
+"booster_angle": 0.0,
+"booster_angles_str": "",
+"booster_count": 1,
+"booster_spacing": 120.0,
 "custom_force": 0.0,
+"direction_change_delay": 0.0,
 "force_tier": 3,
-"invulnerability_duration": 0.6
+"invulnerability_duration": 0.6,
+"loop_reset": true,
+"start_delay": 0.0,
+"stop_at_end": false
 }
 
 [sub_resource type="Resource" id="Resource_e0nx8"]
 script = ExtResource("1_6q68g")
 object_id = "booster"
-position = Vector2(1256, -1504)
-rotation = -50.0
+position = Vector2(1288, -1472)
+rotation = -60.0
 properties = {
+"booster_angle": 0.0,
+"booster_angles_str": "",
+"booster_count": 1,
+"booster_spacing": 120.0,
 "custom_force": 0.0,
+"direction_change_delay": 0.0,
 "force_tier": 3,
-"invulnerability_duration": 0.6
+"invulnerability_duration": 0.6,
+"loop_reset": true,
+"start_delay": 0.0,
+"stop_at_end": false
 }
 
 [resource]

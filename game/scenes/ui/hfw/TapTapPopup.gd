@@ -77,6 +77,43 @@ var _equipped_skin_data: Dictionary = {}
 
 # True when all characters have been unlocked → hide progress bar
 var _no_more_unlocks: bool = false
+var _progress_enabled: bool = false
+
+
+func _get_current_level_number() -> int:
+	if _save == null:
+		return 1
+	return int(_save.get_value(UIConfig.SELECTED_LEVEL_KEY, _save.get_level()))
+
+
+func _level_credit_path() -> Array:
+	var lvl: int = _get_current_level_number()
+	return ["taptap_credited", "level_%d" % lvl]
+
+
+func _refresh_progress_mode() -> void:
+	_no_more_unlocks = (
+		_player_progress.is_all_characters_completed()
+		if _player_progress else false
+	)
+
+	var credited: bool = (
+		_save != null
+		and bool(_save.get_custom_data(_level_credit_path(), false))
+	)
+	_progress_enabled = not _no_more_unlocks and not credited
+
+	if _progress_bar:
+		_progress_bar.visible = _progress_enabled
+
+	if _progress_enabled:
+		_apply_next_badge(_progress_bar)
+		_load_progress()
+	elif _player_progress and not _no_more_unlocks:
+		# Already-credited level: don't animate progress in the result popup.
+		_current_progress = _player_progress.get_current_progress()
+		_progress_before = _progress_ratio()
+		_progress_after = _progress_before
 
 
 func inject_services(registry: Node) -> void:
@@ -153,20 +190,7 @@ func _initialize_popup() -> void:
 		push_error("TapTapPopup: PlayerProgress is not available.")
 	else:
 		character_id = _player_progress.get_current_character_id()
-
-		# Check if all characters are already unlocked
-		_no_more_unlocks = _player_progress.is_all_characters_completed()
-
-		if _no_more_unlocks:
-			# No character to unlock — hide progress bar
-			if _progress_bar:
-				_progress_bar.visible = false
-		else:
-			# Progress/badge = progression character
-			if _progress_bar:
-				_progress_bar.visible = true
-			_apply_next_badge(_progress_bar)
-			_load_progress()
+		_refresh_progress_mode()
 
 	# ── EATING SETUP (always) ──
 	_setup_eating()
@@ -203,18 +227,7 @@ func prepare_for_open() -> void:
 	if _taptap_content:
 		_taptap_content.visible = true
 	character_id = _player_progress.get_current_character_id()
-
-	# Check if all characters are already unlocked
-	_no_more_unlocks = _player_progress.is_all_characters_completed()
-
-	if _no_more_unlocks:
-		if _progress_bar:
-			_progress_bar.visible = false
-	else:
-		if _progress_bar:
-			_progress_bar.visible = true
-		_apply_next_badge(_progress_bar)
-		_load_progress()
+	_refresh_progress_mode()
 
 	# ── EATING SETUP (always) ──
 	_setup_eating()
@@ -360,7 +373,7 @@ func _trigger_fruit_eating_effect() -> void:
 	if _eating_tap_count < 1:
 		return
 
-	var theme_id: String = WorldThemeRegistry.get_current_theme()
+	var theme_id: String = _get_active_theme_id()
 	var particle_tex: Texture2D = WorldThemeRegistry.get_fruit_particle_texture(theme_id)
 
 	if _eating_effect_node == null or not is_instance_valid(_eating_effect_node):
@@ -430,11 +443,23 @@ func _trigger_fruit_eating_effect() -> void:
 		right_p.emitting = true
 
 
+func _get_active_theme_id() -> String:
+	if LevelManager.current_level_data and LevelManager.current_level_data.world_theme != "":
+		WorldThemeRegistry.set_current_theme(LevelManager.current_level_data.world_theme)
+		return LevelManager.current_level_data.world_theme
+	return WorldThemeRegistry.get_current_theme()
+
+
 func _create_fruit_sprite() -> void:
 	# Get the fruit eat texture from the current world theme
-	var theme_id: String = WorldThemeRegistry.get_current_theme()
+	var theme_id: String = _get_active_theme_id()
 	var fruit_tex: Texture2D = WorldThemeRegistry.get_fruit_eat_texture(theme_id)
-
+	print("========== TAP TAP FRUIT ==========")
+	print("CURRENT WORLD/THEME: ", theme_id)
+	print("FRUIT TEXTURE: ", fruit_tex)
+	if fruit_tex:
+		print("FRUIT PATH: ", fruit_tex.resource_path)
+	print("===================================")
 	if fruit_tex == null:
 		push_error("TapTapPopup: Fruit eat texture not found for theme: " + theme_id)
 		return
@@ -671,13 +696,16 @@ func _on_tap_press() -> void:
 	if _haptics:
 		_haptics.medium()
 
+	SoundRegistry.play_sound(self, SoundRegistry.SOUND_TAP_PRESS)
+	SoundRegistry.play_sound(self, SoundRegistry.SOUND_EATING)
+
 	# ── FRUIT EATING (always) ──
 	_eating_tap_count += 1
 	var phase := _fruit_phase_from_taps()
 	_update_fruit_phase(phase)
 
-	# ── CHARACTER PROGRESSION (only when there are characters to unlock) ──
-	if not _no_more_unlocks:
+	# ── CHARACTER PROGRESSION (only when this level can earn progress) ──
+	if _progress_enabled:
 		_advance_character_progress()
 
 
@@ -704,6 +732,11 @@ func _advance_character_progress() -> void:
 		return
 
 	_current_progress = _player_progress.add_progress(1)
+
+	# Credit this level on the first counted tap. The flag is saved with the
+	# same save_game() call below, so a tap-free run does not consume the level.
+	if _save:
+		_save.set_custom_data(_level_credit_path(), true)
 
 	var progress := _progress_ratio()
 
@@ -760,20 +793,7 @@ func _on_character_changed(new_character_id: String) -> void:
 
 	character_id = new_character_id
 
-	# Re-check unlock status
-	_no_more_unlocks = (
-		_player_progress.is_all_characters_completed()
-		if _player_progress else false
-	)
-
-	if _no_more_unlocks:
-		if _progress_bar:
-			_progress_bar.visible = false
-	else:
-		if _progress_bar:
-			_progress_bar.visible = true
-		_apply_next_badge(_progress_bar)
-		_load_progress()
+	_refresh_progress_mode()
 
 	# Re-setup eating (reset fruit, reload textures)
 	_setup_eating()

@@ -46,6 +46,7 @@ func initialize_game(
 	camera.initialize(player, lvl_data)
 
 	_connect_bus()
+	SoundRegistry.play_bgm(self)
 
 
 func _connect_bus() -> void:
@@ -78,6 +79,8 @@ func _on_goal_reached(goal_player: Node2D, reached_goal: Node2D) -> void:
 	if is_level_completed:
 		return
 	is_level_completed = true
+
+	SoundRegistry.play_sound(self, SoundRegistry.SOUND_LEVEL_COMPLETE)
 
 	if goal_player.has_method("slow_down_at_goal"):
 		goal_player.slow_down_at_goal(reached_goal)

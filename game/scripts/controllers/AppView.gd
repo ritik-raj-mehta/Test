@@ -34,6 +34,7 @@ func inject_services(registry: Node) -> void:
 		registry.get_service(&"audio") as AudioManager
 	)
 	super.inject_services(registry)  # ui/audio/game → triggers _on_ready()
+	_auto_wire_clicks(self)          # click sound for any button _on_ready() didn't wire
 
 func inject_extras(save: SaveManager, scene: SceneManager, haptics: HapticsManager, logger: Node, bus: Node, game: GameManager, audio: AudioManager) -> void:
 	_save = save
@@ -48,10 +49,20 @@ func inject_extras(save: SaveManager, scene: SceneManager, haptics: HapticsManag
 
 ## Wires a button: haptic + click sound, then your callback.
 func _on_press(button: BaseButton, callback: Callable) -> void:
+	button.set_meta(&"click_wired", true)
 	button.pressed.connect(func() -> void:
 		_click()
 		callback.call()
 	)
+
+## Adds the click sound to every BaseButton not already wired through _on_press().
+## Opt a button out with: button.set_meta(&"no_click", true)
+func _auto_wire_clicks(node: Node) -> void:
+	for c in node.get_children():
+		if c is BaseButton and not c.has_meta(&"click_wired") and not c.has_meta(&"no_click"):
+			c.set_meta(&"click_wired", true)
+			c.pressed.connect(_click)
+		_auto_wire_clicks(c)
 
 ## Makes any Control (e.g. a full-screen "TapArea") react to mouse click / touch.
 func _bind_tap(area: Control, callback: Callable) -> void:
@@ -63,8 +74,7 @@ func _bind_tap(area: Control, callback: Callable) -> void:
 	)
 
 func _click() -> void:
-	if _audio and ResourceLoader.exists(UIConfig.CLICK_SFX_PATH):
-		_audio.play_sfx(load(UIConfig.CLICK_SFX_PATH) as AudioStream)
+	SoundRegistry.play_sound(self, SoundRegistry.SOUND_CLICK)
 
 func _go(scene_path: String) -> void:
 	if _scene:
@@ -126,11 +136,17 @@ func _is_sfx_on() -> bool:
 func _is_music_on() -> bool:
 	return _save == null or _save.settings_data == null or _save.settings_data.music_enabled
 
+func _is_haptics_on() -> bool:
+	return _save == null or _save.settings_data == null or _save.settings_data.haptics_enabled
+
 func _set_sfx(on: bool) -> void:
 	_update_settings(func(d: GameModels.SettingsData) -> void: d.sfx_enabled = on)
 
 func _set_music(on: bool) -> void:
 	_update_settings(func(d: GameModels.SettingsData) -> void: d.music_enabled = on)
+
+func _set_haptics(on: bool) -> void:
+	_update_settings(func(d: GameModels.SettingsData) -> void: d.haptics_enabled = on)
 
 func _update_settings(mutator: Callable) -> void:
 	if _save == null:

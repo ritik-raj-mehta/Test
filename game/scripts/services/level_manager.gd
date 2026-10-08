@@ -28,6 +28,7 @@ static func load_level_data(path: String) -> LevelData:
 		var res = ResourceLoader.load(path)
 		if res is LevelData:
 			current_level_data = res
+			WorldThemeRegistry.set_current_theme(res.world_theme)
 			set_active_level_path(path)
 			return res
 
@@ -36,6 +37,7 @@ static func load_level_data(path: String) -> LevelData:
 		var res = ResourceLoader.load(path)
 		if res is LevelData:
 			current_level_data = res
+			WorldThemeRegistry.set_current_theme(res.world_theme)
 			set_active_level_path(path)
 			return res
 

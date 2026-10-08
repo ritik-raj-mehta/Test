@@ -26,11 +26,22 @@ func _on_privacy_accepted() -> void:
 
 func _run() -> void:
 	_bar.value = 0.0
+	var level_idx := _save.get_level() if _save else 1
+	var min_duration := UIConfig.LOADING_MIN_SECONDS
+	
 	var t := create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	t.tween_property(_bar, "value", 0.9, UIConfig.LOADING_MIN_SECONDS)
+	t.tween_property(_bar, "value", 0.9, min_duration)
 	await t.finished
+
 	if _scene == null:
 		return
+
+	# Preload Gameplay shell and pre-warm level, theme and assets
 	await _scene.preload_scene(ScenePaths.GAMEPLAY)
+	LevelLauncher.prewarm_level(level_idx)
+
 	_bar.value = 1.0
-	LevelLauncher.start(_save.get_level() if _save else 1, _scene, _save, _bus, _logger)
+	await get_tree().process_frame
+
+	# Instantly launch gameplay with zero hitching
+	LevelLauncher.start(level_idx, _scene, _save, _bus, _logger)

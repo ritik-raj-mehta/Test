@@ -1,13 +1,33 @@
 @tool
 class_name LevelLoader
 
+static var _player_prefab_cache: PackedScene = null
+static var _goal_prefab_cache: PackedScene = null
+
 static func get_player_prefab() -> PackedScene:
+	if _player_prefab_cache:
+		return _player_prefab_cache
 	var path := "res://game/scenes/gameplay/Player.tscn"
 	if ResourceLoader.exists(path):
-		return load(path)
+		_player_prefab_cache = load(path)
+		return _player_prefab_cache
 	if ResourceLoader.exists("res://Scenes/Player.tscn"):
-		return load("res://Scenes/Player.tscn")
+		_player_prefab_cache = load("res://Scenes/Player.tscn")
+		return _player_prefab_cache
 	return null
+
+static func get_goal_prefab() -> PackedScene:
+	if _goal_prefab_cache:
+		return _goal_prefab_cache
+	var path := "res://game/scenes/obstacles/Goal.tscn"
+	if ResourceLoader.exists(path):
+		_goal_prefab_cache = load(path) as PackedScene
+		return _goal_prefab_cache
+	return null
+
+static func prewarm_prefabs() -> void:
+	get_player_prefab()
+	get_goal_prefab()
 
 static func load_level(level_data: LevelData, container: Node) -> CharacterBody2D:
 	if not level_data or not container:

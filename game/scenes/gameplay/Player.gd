@@ -5,10 +5,10 @@ class_name Player
 # ============================================================
 # MOVEMENT
 # ============================================================
-const SIDE_SPEED := 380.0
-const TAP_KICK := 160.0
+const SIDE_SPEED := 240.0
+const TAP_KICK := 100.0
 const HOP_VELOCITY := -660.0
-const HOP_VELOCITY_WALL := -300.0
+const HOP_VELOCITY_WALL := -200.0
 const GRAVITY := 1500.0
 const STEER_LERP := 12.0
 const DECELERATION := 900.0
@@ -233,6 +233,7 @@ func _tap(dir: float) -> void:
 	var haptics := _get_haptics()
 	if haptics:
 		haptics.light()
+	SoundRegistry.play_sound(self, SoundRegistry.SOUND_JUMP)
 	move_dir = dir
 	last_move_direction = dir
 	velocity.y = HOP_VELOCITY
@@ -290,10 +291,13 @@ func _clear_motion_state() -> void:
 func die() -> void:
 	if is_dead:
 		return
+	print("DEATH START: ", Time.get_ticks_msec())
 	is_dead = true
 	var haptics := _get_haptics()
 	if haptics:
 		haptics.medium()
+	SoundRegistry.play_sound(self, SoundRegistry.SOUND_DEATH)
+	print("DEATH START: ", Time.get_ticks_msec())
 	_death_sequence_id += 1
 	var current_seq := _death_sequence_id
 
@@ -542,6 +546,7 @@ func apply_directional_boost(direction: Vector2, force: float, duration: float =
 	var haptics := _get_haptics()
 	if haptics:
 		haptics.medium()
+	SoundRegistry.play_sound(self, SoundRegistry.SOUND_BOOSTER)
 
 	rotation = boost_rotation
 	if visual:
@@ -575,6 +580,7 @@ func apply_booster(data: Resource) -> void:
 	var haptics := _get_haptics()
 	if haptics:
 		haptics.medium()
+	SoundRegistry.play_sound(self, SoundRegistry.SOUND_BOOSTER)
 
 	if data and "boost_velocity" in data:
 		print("PLAYER BOOST APPLIED: ", data.boost_velocity)

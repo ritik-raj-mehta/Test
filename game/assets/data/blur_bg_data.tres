@@ -5,25 +5,25 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5fjcl"]
 atlas = ExtResource("2_g0vfe")
-region = Rect2(90, 142, 1100, 1940)
+region = Rect2(75, 39, 1080, 1920)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yl6ys"]
 atlas = ExtResource("2_g0vfe")
-region = Rect2(2692, 142, 1100, 1940)
+region = Rect2(2677, 39, 1080, 1920)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_547ig"]
 atlas = ExtResource("2_g0vfe")
-region = Rect2(1391, 142, 1100, 1940)
+region = Rect2(1376, 39, 1080, 1920)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y1m8c"]
 atlas = ExtResource("2_g0vfe")
-region = Rect2(3993, 142, 1100, 1940)
+region = Rect2(3978, 39, 1080, 1920)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_en1yf"]
 atlas = ExtResource("2_g0vfe")
-region = Rect2(5294, 142, 1100, 1940)
+region = Rect2(5279, 39, 1080, 1920)
 
 [resource]
 script = ExtResource("1_1adw2")
-world_textures = Array[Texture]([SubResource("AtlasTexture_5fjcl"), SubResource("AtlasTexture_yl6ys"), SubResource("AtlasTexture_547ig"), SubResource("AtlasTexture_y1m8c"), SubResource("AtlasTexture_en1yf")])
+world_textures = Array[Texture2D]([SubResource("AtlasTexture_5fjcl"), SubResource("AtlasTexture_yl6ys"), SubResource("AtlasTexture_547ig"), SubResource("AtlasTexture_y1m8c"), SubResource("AtlasTexture_en1yf")])
 metadata/_custom_type_script = "uid://vbc6xdhtpl5q"

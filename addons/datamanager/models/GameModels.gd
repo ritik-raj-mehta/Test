@@ -117,6 +117,7 @@ class ProgressionData extends BaseModel:
 	var current_level: int = 1
 	var unlocked_levels: int = 1
 	var level_stars: Dictionary = {} # level_id -> int
+	var taptap_cleared_levels: Dictionary = {} # level_id -> bool
 	var xp: int = 0
 	var areas: Dictionary = {} # area_id -> AreaProgress
 	var achievements_unlocked: Array = []

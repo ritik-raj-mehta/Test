@@ -1,10 +1,19 @@
 [gd_scene format=3 uid="uid://dngbv3afyckws"]
 
 [ext_resource type="Script" uid="uid://lel5w5epmf0a" path="res://game/scenes/boot/BootScene.gd" id="1_boot"]
-[ext_resource type="Script" uid="uid://dfqvnfy7dnn8l" path="res://game/autoloads/GameService.gd" id="2_services"]
+[ext_resource type="Script" uid="uid://brmdmhncksmvo" path="res://game/autoloads/GameService.gd" id="2_services"]
+[ext_resource type="Texture2D" uid="uid://hf6tnin0mb3b" path="res://game/assets/sprites/single/ui/Loading_dummy.png" id="3_v3k1e"]
 
 [node name="Boot" type="Node" unique_id=394416768]
 script = ExtResource("1_boot")
 
 [node name="GameService" type="Node" parent="." unique_id=187324297]
 script = ExtResource("2_services")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=570498763]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_v3k1e")

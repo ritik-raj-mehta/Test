@@ -1,0 +1,156 @@
+[gd_scene format=3 uid="uid://cdn4jvsxnu3bd"]
+
+[ext_resource type="Script" uid="uid://pi0cea1eler0" path="res://game/scenes/ui/hfw/NetworkPopup.gd" id="1_j1sve"]
+[ext_resource type="Texture2D" uid="uid://c6tojp8wakcrg" path="res://game/assets/sprites/single/ui/popup.png" id="2_rac61"]
+[ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_p861o"]
+[ext_resource type="Texture2D" uid="uid://dqfpjs37l872m" path="res://game/assets/sprites/single/ui/blueBtn.png" id="4_eshjt"]
+[ext_resource type="Texture2D" uid="uid://cl4e627sd7g88" path="res://game/assets/sprites/single/ui/Reff/Urgent_reff.png" id="6_csuk0"]
+
+[node name="NetworkPopup" type="Control" unique_id=1513163033 node_paths=PackedStringArray("_window", "_try_again_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_j1sve")
+_window = NodePath("Holder/Window")
+_try_again_button = NodePath("Holder/Window/TextureRect/TextureButton")
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=2109479275]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5882353)
+
+[node name="Holder" type="Control" parent="." unique_id=1570605328]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Window" type="MarginContainer" parent="Holder" unique_id=295000572]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 100
+
+[node name="TextureRect" type="TextureRect" parent="Holder/Window" unique_id=708517249]
+custom_minimum_size = Vector2(0, 500)
+custom_maximum_size = Vector2(800, 800)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_rac61")
+
+[node name="TitleLabel" type="Label" parent="Holder/Window/TextureRect" unique_id=1475051613]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -245.5
+offset_right = 240.5
+offset_bottom = 144.0
+grow_horizontal = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(-0.82, 1.61)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/shadow_offset_x = -1
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_outline_size = 8
+theme_override_fonts/font = ExtResource("3_p861o")
+theme_override_font_sizes/font_size = 81
+text = "Error"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="ParaLabel" type="Label" parent="Holder/Window/TextureRect" unique_id=164556113]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -384.0
+offset_top = -170.0
+offset_right = 382.0
+offset_bottom = 73.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 7
+theme_override_fonts/font = ExtResource("3_p861o")
+theme_override_font_sizes/font_size = 58
+text = "Looks like you're offline. Please check your internet
+ connection and try again."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureButton" type="TextureButton" parent="Holder/Window/TextureRect" unique_id=906353277]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -242.0
+offset_top = 150.0
+offset_right = 243.0
+offset_bottom = 284.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("4_eshjt")
+texture_pressed = ExtResource("4_eshjt")
+
+[node name="Label" type="Label" parent="Holder/Window/TextureRect/TextureButton" unique_id=33335139]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -115.5
+offset_top = -51.0
+offset_right = 116.5
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_p861o")
+theme_override_font_sizes/font_size = 70
+text = "Try Again"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=999334523]
+visible = false
+self_modulate = Color(1, 1, 1, 0.4627451)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_csuk0")
+expand_mode = 1

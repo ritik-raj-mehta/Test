@@ -70,6 +70,14 @@ func show_result(
 			)
 			_progress_from = next_ratio
 			_progress_to = next_ratio
+		elif (progress_to <= 0.0 or progress_from <= 0.0) and _player_progress:
+			var current_taps := _player_progress.get_current_progress()
+			var curr_ratio := clampf(
+				float(current_taps) / float(CharacterProgress.REQUIRED_TAPS),
+				0.0, 1.0
+			)
+			_progress_from = curr_ratio
+			_progress_to = curr_ratio
 		else:
 			_progress_from = clampf(progress_from, 0.0, 1.0)
 			_progress_to = clampf(progress_to, 0.0, 1.0)

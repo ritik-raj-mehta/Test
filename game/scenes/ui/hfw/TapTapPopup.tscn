@@ -2,11 +2,14 @@
 
 [ext_resource type="Texture2D" uid="uid://4x1sfc5by0yq" path="res://icon.svg" id="1_tex"]
 [ext_resource type="Texture2D" uid="uid://4l8fuwt6uylo" path="res://game/assets/sprites/single/Panels/TapTapPanel.png" id="2_ok5le"]
-[ext_resource type="Script" uid="uid://c8a40r8yyoowg" path="res://game/scenes/ui/hfw/TapTapPopup.gd" id="2_scr"]
+[ext_resource type="Script" uid="uid://2i0q241na2r" path="res://game/scenes/ui/hfw/TapTapPopup.gd" id="2_scr"]
 [ext_resource type="PackedScene" uid="uid://8tb47baum5hu" path="res://game/scenes/ui/components/CharacterView.tscn" id="3_pac"]
 [ext_resource type="Texture2D" uid="uid://tt1aivwu1ejl" path="res://game/assets/sprites/Fonts/Tap Tap.png" id="4_ok5le"]
 [ext_resource type="PackedScene" uid="uid://dlgg04c5t1o3" path="res://game/scenes/ui/components/SkinProgress.tscn" id="4_pac"]
 [ext_resource type="PackedScene" uid="uid://bpjblnky6w8br" path="res://game/scenes/ui/hfw/PanelCountDown.tscn" id="7_p5rie"]
+[ext_resource type="Texture2D" uid="uid://git25tv0dhtp" path="res://game/assets/sprites/Fonts/achievement.png" id="8_5mwqr"]
+[ext_resource type="Texture2D" uid="uid://c80emh845o3lx" path="res://game/assets/sprites/single/ui/Button/continue_button.png" id="8_53hpr"]
+[ext_resource type="Texture2D" uid="uid://bcm4tnt88oihi" path="res://game/assets/sprites/single/ui/Button/equip_button.png" id="9_5mwqr"]
 
 [node name="TapTapPopup" type="Control" unique_id=1967025571]
 layout_mode = 3
@@ -141,31 +144,29 @@ grow_vertical = 2
 theme_override_constants/separation = 100
 alignment = 1
 
+[node name="Title" type="TextureRect" parent="UnlockPanel/UnlockContent" unique_id=133594766]
+layout_mode = 2
+texture = ExtResource("8_5mwqr")
+
 [node name="UnlockChar" parent="UnlockPanel/UnlockContent" unique_id=1190953928 instance=ExtResource("3_pac")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Title" type="Label" parent="UnlockPanel/UnlockContent" unique_id=125005880]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.49014854, 0.3044156, 0.18435174, 1)
-theme_override_font_sizes/font_size = 60
-text = "New Character Unlocked"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="ButtonContent" type="HBoxContainer" parent="UnlockPanel/UnlockContent" unique_id=1125188144]
 layout_mode = 2
-theme_override_constants/separation = 100
+theme_override_constants/separation = 20
 alignment = 1
 
-[node name="Equip" type="Button" parent="UnlockPanel/UnlockContent/ButtonContent" unique_id=1711931697]
+[node name="Continue" type="TextureButton" parent="UnlockPanel/UnlockContent/ButtonContent" unique_id=1982112503]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 60
-text = "Equip"
+texture_normal = ExtResource("8_53hpr")
+texture_pressed = ExtResource("8_53hpr")
+stretch_mode = 5
 
-[node name="Continue" type="Button" parent="UnlockPanel/UnlockContent/ButtonContent" unique_id=101674267]
+[node name="Equip" type="TextureButton" parent="UnlockPanel/UnlockContent/ButtonContent" unique_id=1468106866]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 60
-text = "Continue"
+texture_normal = ExtResource("9_5mwqr")
+texture_pressed = ExtResource("9_5mwqr")
+stretch_mode = 5

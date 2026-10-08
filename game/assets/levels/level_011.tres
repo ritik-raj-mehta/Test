@@ -101,7 +101,7 @@ properties = {
 script = ExtResource("1_cvfmi")
 object_id = "gear_r"
 position = Vector2(1000, -304)
-scale = Vector2(3, 3)
+scale = Vector2(3.5, 3.5)
 properties = {
 "has_rod": false,
 "rod_has_collision": false,

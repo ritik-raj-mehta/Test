@@ -73,10 +73,26 @@ func go_to(scene_path: String) -> void:
 		if _logger:
 			_logger.error("Scene load failed", { "path": scene_path })
 		return
-	# get_tree().paused = false
-	get_tree().change_scene_to_packed(packed)
-	await get_tree().process_frame
-	_auto_inject_scene(get_tree().current_scene)
+	var old_scene := get_tree().current_scene
+	var new_scene: Node = packed.instantiate()
+
+	# Ensure GameService (if child of Boot) persists under root before freeing Boot
+	if old_scene and is_instance_valid(old_scene):
+		if old_scene.has_node("GameService"):
+			var gs: Node = old_scene.get_node("GameService")
+			if gs.get_parent() != get_tree().root:
+				gs.reparent(get_tree().root)
+
+	get_tree().root.add_child(new_scene)
+	get_tree().current_scene = new_scene
+	_auto_inject_scene(new_scene)
+
+	if old_scene and is_instance_valid(old_scene):
+		old_scene.queue_free()
+
+	var audio := SoundRegistry.get_audio(self)
+	if audio:
+		SoundRegistry.play_bgm(self)
 	_loading = false
 	transition_finished.emit(scene_path)
 

@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://cedncu07phqsj"]
 
 [ext_resource type="Script" uid="uid://ck2ia54cxpmfn" path="res://game/scenes/ui/components/CharacterView.gd" id="1_8s6o8"]
-[ext_resource type="Texture2D" uid="uid://c2se2vd1acokc" path="res://game/scenes/Skins/char4.png" id="2_j5tnw"]
-[ext_resource type="Texture2D" uid="uid://cy1maug43d6sg" path="res://game/assets/sprites/single/ui/Characters/char2.png" id="3_8s6o8"]
+[ext_resource type="Texture2D" uid="uid://d0vcxxd6kiywj" path="res://game/assets/sprites/single/ui/Characters/char4.png" id="3_j5tnw"]
 
 [node name="CharacterView" type="Control" unique_id=1190953928 node_paths=PackedStringArray("_body", "_lock")]
 custom_minimum_size = Vector2(520, 520)
@@ -25,7 +24,7 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_j5tnw")
+texture = ExtResource("3_j5tnw")
 expand_mode = 1
 stretch_mode = 5
 
@@ -47,6 +46,6 @@ offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("3_8s6o8")
+texture = ExtResource("3_j5tnw")
 expand_mode = 1
 stretch_mode = 5

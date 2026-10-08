@@ -268,6 +268,23 @@ func complete_level(level: int, stars: int = 3, xp_reward: int = 150) -> void:
 			d.xp += xp_reward
 		)
 
+## Checks if TapTap progress chance has been cleared/used for a given level.
+func is_taptap_cleared_for_level(level: int) -> bool:
+	if progression_data == null:
+		return false
+	if not ("taptap_cleared_levels" in progression_data):
+		return false
+	return bool(progression_data.taptap_cleared_levels.get("stage_%d" % level, false))
+
+## Marks TapTap progress chance as cleared/used for a given level.
+func mark_taptap_cleared_for_level(level: int) -> void:
+	if progression:
+		progression.mutate(func(d: GameModels.ProgressionData):
+			if not ("taptap_cleared_levels" in d):
+				d.taptap_cleared_levels = {}
+			d.taptap_cleared_levels["stage_%d" % level] = true
+		)
+
 # ==============================================================================
 # ⚡ DIRECT PROPERTY ACCESS EXAMPLES (Without Mutate / Batch Dirty Marking)
 # ==============================================================================

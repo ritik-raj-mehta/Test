@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dm40ba5fbtwmj"]
 
-[ext_resource type="Script" uid="uid://dj73xq2d5a6ih" path="res://game/scenes/ui/components/CharacterView.gd" id="1_08rl3"]
+[ext_resource type="Script" uid="uid://ck2ia54cxpmfn" path="res://game/scenes/ui/components/CharacterView.gd" id="1_08rl3"]
 [ext_resource type="Texture2D" uid="uid://cy1maug43d6sg" path="res://game/assets/sprites/single/ui/Characters/char2.png" id="3_08rl3"]
 
 [node name="CharacterView" type="Control" unique_id=1190953928 node_paths=PackedStringArray("_body", "_lock")]

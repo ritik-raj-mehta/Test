@@ -33,9 +33,9 @@ properties = {
 [sub_resource type="Resource" id="Resource_su33r"]
 script = ExtResource("1_5w1ya")
 object_id = "trigger_area"
-position = Vector2(743.00464, 961.1986)
+position = Vector2(743, 961)
 properties = {
-"area_height": 150.0,
+"area_height": 50.0,
 "area_width": 500.0,
 "trigger_tag": "trap_1"
 }
@@ -44,7 +44,7 @@ properties = {
 script = ExtResource("1_5w1ya")
 object_id = "falling_stone"
 position = Vector2(1335, -109)
-scale = Vector2(3.5, 3.5)
+scale = Vector2(3, 3)
 properties = {
 "fall_speed": 2400.0,
 "initial_direction_mode": "Down-Left (135°)",
@@ -107,9 +107,9 @@ properties = {
 [sub_resource type="Resource" id="Resource_3ngno"]
 script = ExtResource("1_5w1ya")
 object_id = "trigger_area"
-position = Vector2(1267.9774, 45.796722)
+position = Vector2(1268, 46)
 properties = {
-"area_height": 150.0,
+"area_height": 50.0,
 "area_width": 400.0,
 "trigger_tag": "trap_2"
 }
@@ -118,7 +118,7 @@ properties = {
 script = ExtResource("1_5w1ya")
 object_id = "falling_stone"
 position = Vector2(657, -841)
-scale = Vector2(3.5, 3.5)
+scale = Vector2(3, 3)
 properties = {
 "fall_speed": 2000.0,
 "initial_direction_mode": "Down-Right (45°)",
@@ -135,7 +135,7 @@ script = ExtResource("1_5w1ya")
 object_id = "trigger_area"
 position = Vector2(716, -774)
 properties = {
-"area_height": 150.0,
+"area_height": 50.0,
 "area_width": 400.0,
 "trigger_tag": "trap_3"
 }

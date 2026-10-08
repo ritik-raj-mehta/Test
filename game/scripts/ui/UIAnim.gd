@@ -84,6 +84,10 @@ static func _offscreen_position(node: Control, edge: Edge, rest: Vector2, margin
 static func capture_rest(node: Control) -> void:
 	_rest_position(node)
 
+static func reset_rest(node: Control) -> void:
+	if node and node.has_meta(_REST_META):
+		node.remove_meta(_REST_META)
+
 ## Park a control off-screen instantly (no animation). Pair with slide_in().
 static func hide_offscreen(node: Control, edge: Edge) -> void:
 	node.position = _offscreen_position(node, edge, _rest_position(node))

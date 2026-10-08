@@ -43,6 +43,9 @@ func _on_ready() -> void:
 	if _bus == null or _game_manager == null:
 		push_error("GamePlay: bus / game manager not injected.")
 		return
+	var margin := _home_layer.get_node_or_null("Margin") as Control if _home_layer else null
+	if margin:
+		margin.modulate.a = 0.0
 	_bind_home_ui()
 	if not _bus.tap_tap_started.is_connected(
 		_open_tap_tap
@@ -119,11 +122,15 @@ func _start_level(data: LevelData) -> void:
 	if data == null:
 		push_error("GamePlay: Failed to obtain LevelData")
 		return
+	WorldThemeRegistry.set_current_theme(data.world_theme)
+	var bg_tex := WorldThemeRegistry.get_background_texture(data.world_theme)
+	if bg_tex and _background:
+		_background.texture = bg_tex
 	var level := _spawn_level(data)
 	var player := _setup_game(level, data)
 	if player == null:
 		return
-	# _apply_world_theme(data, player)
+	_apply_world_theme(data, player)
 	_refresh_level_info(data)
 	_enter_tap_to_play()
 
@@ -134,7 +141,7 @@ func _spawn_level(data: LevelData) -> Node:
 
 	var level: Node = null
 	var path := _resolve_level_scene_path(data)
-	if _resource_exists(path):
+	if path != "" and _resource_exists(path):
 		var packed := load(path) as PackedScene
 		if packed:
 			level = packed.instantiate()
@@ -154,9 +161,10 @@ func _resolve_level_scene_path(data: LevelData) -> String:
 	if _resource_exists(path):
 		return path
 	path = "res://game/assets/levels/" + data.level_id + ".tscn"
-	if not _resource_exists(path):
-		LevelManager.bake_level_to_tscn(data, path)
-	return path
+	if _resource_exists(path):
+		return path
+	# Direct in-memory loading is faster and avoid runtime disk-write stalls
+	return ""
 
 
 func _resource_exists(path: String) -> bool:
@@ -230,7 +238,7 @@ func _apply_world_theme(data: LevelData, player: Player) -> void:
 	if bg_tex:
 		if _background:
 			_background.texture = bg_tex
-		if player.has_method("set_background_texture"):
+		if player and player.has_method("set_background_texture"):
 			player.call("set_background_texture", bg_tex)
 	# _parallax_world.apply_theme(data.world_theme)
 
@@ -256,9 +264,13 @@ func _selected_level() -> int:
 
 func _enter_tap_to_play() -> void:
 	_started = false
-	_game_manager.reset()
-	_game_manager.start()
-	# _game_manager.pause()
+	if _game_manager:
+		_game_manager.reset()
+		_game_manager.start()
+	await get_tree().process_frame
+	var margin := _home_layer.get_node_or_null("Margin") as Control if _home_layer else null
+	if margin:
+		margin.modulate.a = 1.0
 	_show_home_ui()
 
 
@@ -267,7 +279,8 @@ func _on_tap_to_play() -> void:
 		return
 	_started = true
 	_click()
-	_game_manager.resume()
+	if _game_manager:
+		_game_manager.resume()
 	_hide_home_ui()
 	_bus.tap_locked.emit(false)  
 
@@ -286,6 +299,7 @@ func _show_home_ui() -> void:
 	_home_layer.show()
 	_tap_area.show()
 	for slide in _home_slides():
+		UIAnim.reset_rest(slide[0])
 		_home_tweens.append(UIAnim.slide_in(slide[0], slide[1], slide[2]))
 	_tap_label.modulate.a = 0.0
 	_fade_tap_label(1.0, 0.3)

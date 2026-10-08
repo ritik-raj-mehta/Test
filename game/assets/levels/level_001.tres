@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://cxsfxrroebki7"]
 
-[ext_resource type="Script" uid="uid://dio6y8xlxndqe" path="res://game/scripts/data/ObjectData.gd" id="1_x3hui"]
-[ext_resource type="Script" uid="uid://cchkb64d6eyw1" path="res://game/scripts/data/LevelData.gd" id="2_85dqg"]
+[ext_resource type="Script" uid="uid://cyu66d57u6u66" path="res://game/scripts/data/ObjectData.gd" id="1_x3hui"]
+[ext_resource type="Script" uid="uid://rvbsp8ahmcnm" path="res://game/scripts/data/LevelData.gd" id="2_85dqg"]
 
 [sub_resource type="Resource" id="Resource_6jo0m"]
 script = ExtResource("1_x3hui")
