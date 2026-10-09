@@ -72,12 +72,14 @@ enum MoveDirection {
 	set(v):
 		move_speed = max(0.0, v)
 		_update_caches()
+		_check_process_state()
 
 @export_group("Interval Movement & Speed Curve")
 @export var enable_interval_movement: bool = false:
 	set(v):
 		enable_interval_movement = v
 		_update_caches()
+		_check_process_state()
 		if Engine.is_editor_hint():
 			queue_redraw()
 
@@ -114,6 +116,7 @@ enum MoveDirection {
 @export var rotation_speed: float = 2.0:
 	set(v):
 		rotation_speed = v
+		_check_process_state()
 
 @export_range(1, 10, 1) var gear_count: int = 2:
 	set(v):
@@ -186,12 +189,21 @@ func _on_ready() -> void:
 	_update_path_geometry()
 	_update_caches()
 	_apply_theme()
+	_check_process_state()
+
+func _check_process_state() -> void:
+	if Engine.is_editor_hint():
+		set_physics_process(false)
+		return
+	var has_motion: bool = (rotation_speed != 0.0) or (move_speed > 0.0) or enable_interval_movement
+	set_physics_process(has_motion)
 
 func update_components() -> void:
 	_rebuild_gears()
 	_update_path_geometry()
 	_update_caches()
 	_apply_theme()
+	_check_process_state()
 
 func apply_theme(theme_id: String) -> void:
 	world_theme = theme_id

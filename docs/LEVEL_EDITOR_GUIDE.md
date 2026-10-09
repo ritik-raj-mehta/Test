@@ -103,7 +103,7 @@ The **Zumpa Level Editor** is located at `addons/zumpa_level_editor/` and integr
 ### 1. `gear_path` (Path / Shape Moving Gear)
 A multi-shape trajectory hazard that travels in closed geometric loops with corner pauses, variable rotation speeds, connecting theme rods, and sinusoidal speed wave curves.
 
-* **Scene**: `res://game/scenes/Obstacles/PathMovingGear.tscn`
+* **Scene**: `res://game/scenes/obstacles/PathMovingGear.tscn`
 * **Controller**: `PathMovingGearController.gd`
 * **Key Properties**:
   - `path_shape`: Geometric path shape (`"Diamond"`, `"Rectangle"`, `"Square"`, `"Triangle"`, `"Circle"`).
@@ -131,8 +131,8 @@ A multi-shape trajectory hazard that travels in closed geometric loops with corn
 ### 2. `gear_m` (Moving Gear) & ZigZag Track System
 Linear and diagonal zigzag moving gear with independent positive/negative travel distances, customizable angles, start delays, direction change delays, theme rods, loop wrap-around, and interval speed modulation curves.
 
-* **Scene**: `res://game/scenes/Obstacles/MovingGear.tscn`
-* **Controller**: [`MovingGearController.gd`](file:///e:/Test/Test/game/scenes/Obstacles/MovingGearController.gd)
+* **Scene**: `res://game/scenes/obstacles/MovingGear.tscn`
+* **Controller**: [`MovingGearController.gd`](file:///e:/Test/Test/game/scenes/obstacles/MovingGearController.gd)
 * **Key Properties**:
   - `move_angle`: Travel direction in degrees (`0` = Right, `90` = Down, `180` = Left, `-90` = Up, or any custom angle).
   - `move_dist_pos`: Distance to travel in the positive direction along `move_angle`.
@@ -176,7 +176,7 @@ Linear and diagonal zigzag moving gear with independent positive/negative travel
 ### 3. `gear_with_rod` (Moving Gear with Fixed Rod)
 A mechanical track obstacle featuring a stationary background rod with gears traveling along its length. Unified within `MovingGear.tscn` (`has_rod = true, has_gear = true`).
 
-* **Scene**: `res://game/scenes/Obstacles/MovingGear.tscn`
+* **Scene**: `res://game/scenes/obstacles/MovingGear.tscn`
 * **Controller**: `MovingGearController.gd`
 * **Key Properties**:
   - `move_distance`: Total length of the track rod in pixels.
@@ -195,7 +195,7 @@ A mechanical track obstacle featuring a stationary background rod with gears tra
 ### 4. `gear_r` (Rotating Gear)
 A stationary hazard that continuously rotates in place to block pathways. Unified within `MovingGear.tscn` (`has_rod = false, has_gear = true, move_speed = 0.0`).
 
-* **Scene**: `res://game/scenes/Obstacles/MovingGear.tscn`
+* **Scene**: `res://game/scenes/obstacles/MovingGear.tscn`
 * **Controller**: `MovingGearController.gd`
 * **Key Properties**:
   - `rotation_speed`: Angular rotation speed in radians per second (positive for clockwise, negative for counter-clockwise).
@@ -206,7 +206,7 @@ A stationary hazard that continuously rotates in place to block pathways. Unifie
 ### 5. `gear_rod` (Static Gear Rod Barrier)
 A solid metallic obstacle rod that blocks player jumps and acts as terrain or structure. Unified within `MovingGear.tscn` (`has_rod = true, has_gear = false, rod_has_collision = true`).
 
-* **Scene**: `res://game/scenes/Obstacles/MovingGear.tscn`
+* **Scene**: `res://game/scenes/obstacles/MovingGear.tscn`
 * **Controller**: `MovingGearController.gd`
 * **Key Properties**:
   - `length`: Length of the rod in pixels.
@@ -219,7 +219,7 @@ A solid metallic obstacle rod that blocks player jumps and acts as terrain or st
 ### 6. `falling_stone` & `falling_stone_spike`
 Dynamic falling boulder hazards triggered by proximity or custom trigger tags from a `TriggerArea`. Unified within `FallingStone.tscn` with `is_lethal` configuration.
 
-* **Scene**: `res://game/scenes/Obstacles/FallingStone.tscn`
+* **Scene**: `res://game/scenes/obstacles/FallingStone.tscn`
 * **Controller**: `FallingStoneController.gd`
 * **Key Properties**:
   - `is_lethal`: Whether contact is fatal (`true` for Spike Stone) or delivers physical knockback (`false` for Falling Stone).
@@ -236,7 +236,7 @@ Dynamic falling boulder hazards triggered by proximity or custom trigger tags fr
 ### 7. `booster` (Directional Launch Booster)
 Launches the player with high velocity in the direction the booster is facing.
 
-* **Scene**: `res://game/scenes/Obstacles/Booster.tscn`
+* **Scene**: `res://game/scenes/obstacles/Booster.tscn`
 * **Controller**: `BoosterController.gd`
 * **Key Properties**:
   - `force_tier`: Pre-calibrated jump impulse presets:
@@ -262,7 +262,7 @@ Camera control and event trigger volumes.
 ### 9. `spike` (Spike Trap)
 Hazard obstacle that kills the player on contact. Supports replicating multiple spikes in a continuous row along walls or floors from a single node with unified high-performance collision.
 
-* **Scene**: `res://game/scenes/Obstacles/Spike.tscn`
+* **Scene**: `res://game/scenes/obstacles/Spike.tscn`
 * **Controller**: `SpikeController.gd`
 * **Key Properties**:
   - `spike_count`: Number of spikes generated sequentially in one direction (1 to 100).
@@ -308,7 +308,7 @@ When `WorldThemeRegistry.set_current_theme("world_2")` or `LevelLoader.load_leve
 
 To make a new obstacle scene available in the Level Editor palette, Inspector, and LevelLoader:
 
-1. Create the Godot scene under `game/scenes/Obstacles/MyObstacle.tscn`.
+1. Create the Godot scene under `game/scenes/obstacles/MyObstacle.tscn`.
 2. Attach a script inheriting `ObstacleController` or `Node2D` with `@tool`.
 3. Implement `update_components()`, `apply_theme()`, and `reset()`.
 4. Open `game/scripts/registries/object_registry.gd` and add:
@@ -317,7 +317,7 @@ To make a new obstacle scene available in the Level Editor palette, Inspector, a
 "my_obstacle": {
     "id": "my_obstacle",
     "name": "Laser Hazard",
-    "scene_path": "res://game/scenes/Obstacles/LaserHazard.tscn",
+    "scene_path": "res://game/scenes/obstacles/LaserHazard.tscn",
     "category": "Obstacles", # "Obstacles", "Platforms", "Triggers", "Walls"
     "default_properties": {
         "rotation_speed": 0.0,

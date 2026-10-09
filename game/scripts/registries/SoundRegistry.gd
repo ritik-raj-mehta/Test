@@ -46,17 +46,25 @@ static func get_stream(sound_id: StringName) -> AudioStream:
 		return stream
 	return null
 
+static var _audio_cache: AudioManager = null
+static var _save_cache: SaveManager = null
+
 ## Helper to resolve AudioManager from ServiceRegistry
-static func get_audio(node: Node) -> AudioManager:
-	if node == null or not node.is_inside_tree():
-		return null
-	var tree := node.get_tree()
+static func get_audio(node: Node = null) -> AudioManager:
+	if _audio_cache and is_instance_valid(_audio_cache):
+		return _audio_cache
+	var tree: SceneTree = null
+	if node != null and node.is_inside_tree():
+		tree = node.get_tree()
+	elif Engine.get_main_loop() is SceneTree:
+		tree = Engine.get_main_loop() as SceneTree
 	if tree and tree.root:
 		var registry: Node = tree.root.get_node_or_null("ServiceRegistry")
 		if registry and registry.has_method("get_service"):
 			var a = registry.get_service(&"audio")
 			if a:
-				return a as AudioManager
+				_audio_cache = a as AudioManager
+				return _audio_cache
 	return null
 
 ## Centralized method to play any sound effect with fine-tuned pitch & volume
@@ -110,15 +118,23 @@ static func play_bgm(node: Node) -> void:
 	audio.play_music(stream, -3.0)
 
 static func _saved_flag(node: Node, flag: String) -> bool:
-	if node == null or not node.is_inside_tree():
+	if _save_cache and is_instance_valid(_save_cache):
+		if _save_cache.settings_data:
+			return bool(_save_cache.settings_data.get(flag))
 		return true
-	var tree := node.get_tree()
+	var tree: SceneTree = null
+	if node != null and node.is_inside_tree():
+		tree = node.get_tree()
+	elif Engine.get_main_loop() is SceneTree:
+		tree = Engine.get_main_loop() as SceneTree
 	if tree and tree.root:
 		var registry: Node = tree.root.get_node_or_null("ServiceRegistry")
 		if registry and registry.has_method("get_service"):
 			var save := registry.get_service(&"save") as SaveManager
-			if save and save.settings_data:
-				return bool(save.settings_data.get(flag))
+			if save:
+				_save_cache = save
+				if _save_cache.settings_data:
+					return bool(_save_cache.settings_data.get(flag))
 	return true
 
 static func preload_all() -> void:

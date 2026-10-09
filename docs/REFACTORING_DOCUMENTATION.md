@@ -68,7 +68,7 @@ This document records the comprehensive architectural refactoring, performance o
 
 ### 4.2 Cross-Platform Naming Normalization
 * **Parentheses Removal:** Renamed `CharacterSkin(1).tscn` – `(6).tscn` to `CharacterSkin_1.tscn` – `CharacterSkin_6.tscn`. Updated references in `Skins.tscn`.
-* **Casing Consistency:** Normalized `GamePLay.tscn` to `GamePlay.tscn` and `game/scenes/Obstacles/` to `game/scenes/obstacles/`. Updated all `.tscn`, `.tres`, and script paths across the codebase.
+* **Casing Consistency:** Normalized `GamePLay.tscn` to `GamePlay.tscn` and `game/scenes/obstacles/` to `game/scenes/obstacles/`. Updated all `.tscn`, `.tres`, and script paths across the codebase.
 * **Temp File Cleanup:** Deleted leftover `.tmp` crash artifacts (`Player.tscn3468045736.tmp`, `Boot.tscn696341505.tmp`).
 
 ---
@@ -86,44 +86,44 @@ res://
 │   ├── datamanager/                  # 13 Unified data repositories
 │   └── zumpa_level_editor/           # In-engine visual level editor
 └── game/
-    ├── assets/
-    │   ├── audio/
-    │   │   ├── music/                # Background music
-    │   │   └── sfx/                  # Sound effects
-    │   ├── fonts/                    # Typography (.ttf)
-    │   ├── levels/                   # Level data resources (.tres, .tscn)
-    │   └── sprites/
-    │       ├── atlases/              # Spritesheets & animations
-    │       ├── single/               # UI buttons, icons & standalone sprites
-    │       └── backgrounds/          # Parallax & background textures
-    ├── autoloads/
-    │   ├── ServiceRegistry.gd        # Only engine autoload
-    │   ├── GameService.gd            # Boot composition root
-    │   ├── GameBus.gd                # Event bus
-    │   ├── GameConfig.gd             # Environment flags
-    │   └── Logger.gd                 # Logging utility
-    ├── scenes/
-    │   ├── boot/                     # Boot.tscn (Application entry point)
-    │   ├── Home/                     # Main Menu
-    │   ├── loading/                  # Loading.tscn (Async scene loader)
-    │   ├── Skins/                    # Skin catalog & selection screen
-    │   ├── Worlds/                   # World selection screen
-    │   ├── gameplay/                 # GamePlay.tscn, Level instances
-    │   │   └── effects/              # Trail.tscn, PlayerDeathEffect.tscn, EatingEffect.tscn
-    │   ├── obstacles/                # MovingGear.tscn, Spike.tscn, Booster.tscn, Goal.tscn
-    │   └── ui/
-    │       ├── hfw/                  # SettingsPopup, TapTapPopup, LevelCompletedPopup
-    │       └── components/           # CharacterView, CharacterSkin_1..6, SkinProgress
-    └── scripts/
-        ├── controllers/              # PlayerController, UIController, CameraController, AppView
-        │   └── effects/              # PlayerTrail, ObjectTrail
-        ├── managers/                 # GameManager, AudioManager, SaveManager, SceneManager, UIManager
-        ├── features/                 # FeatureFactory, GameFeature, GameFlowFeature
-        ├── data/                     # Data definitions (SkinCatalog, LevelData, BoosterData)
-        ├── registries/               # SoundRegistry, ObjectRegistry, WorldThemeRegistry
-        ├── services/                 # LevelManager, LevelLoader, CameraDragState
-        ├── saveData/                 # PlayerProgress, CharacterProgress
-        └── utils/                    # PlatformUtils, UIAnim, SettingsApplier, LevelLauncher
+	├── assets/
+	│   ├── audio/
+	│   │   ├── music/                # Background music
+	│   │   └── sfx/                  # Sound effects
+	│   ├── fonts/                    # Typography (.ttf)
+	│   ├── levels/                   # Level data resources (.tres, .tscn)
+	│   └── sprites/
+	│       ├── atlases/              # Spritesheets & animations
+	│       ├── single/               # UI buttons, icons & standalone sprites
+	│       └── backgrounds/          # Parallax & background textures
+	├── autoloads/
+	│   ├── ServiceRegistry.gd        # Only engine autoload
+	│   ├── GameService.gd            # Boot composition root
+	│   ├── GameBus.gd                # Event bus
+	│   ├── GameConfig.gd             # Environment flags
+	│   └── Logger.gd                 # Logging utility
+	├── scenes/
+	│   ├── boot/                     # Boot.tscn (Application entry point)
+	│   ├── Home/                     # Main Menu
+	│   ├── loading/                  # Loading.tscn (Async scene loader)
+	│   ├── Skins/                    # Skin catalog & selection screen
+	│   ├── Worlds/                   # World selection screen
+	│   ├── gameplay/                 # GamePlay.tscn, Level instances
+	│   │   └── effects/              # Trail.tscn, PlayerDeathEffect.tscn, EatingEffect.tscn
+	│   ├── obstacles/                # MovingGear.tscn, Spike.tscn, Booster.tscn, Goal.tscn
+	│   └── ui/
+	│       ├── hfw/                  # SettingsPopup, TapTapPopup, LevelCompletedPopup
+	│       └── components/           # CharacterView, CharacterSkin_1..6, SkinProgress
+	└── scripts/
+		├── controllers/              # PlayerController, UIController, CameraController, AppView
+		│   └── effects/              # PlayerTrail, ObjectTrail
+		├── managers/                 # GameManager, AudioManager, SaveManager, SceneManager, UIManager
+		├── features/                 # FeatureFactory, GameFeature, GameFlowFeature
+		├── data/                     # Data definitions (SkinCatalog, LevelData, BoosterData)
+		├── registries/               # SoundRegistry, ObjectRegistry, WorldThemeRegistry
+		├── services/                 # LevelManager, LevelLoader, CameraDragState
+		├── saveData/                 # PlayerProgress, CharacterProgress
+		└── utils/                    # PlatformUtils, UIAnim, SettingsApplier, LevelLauncher
 ```
 
 ---

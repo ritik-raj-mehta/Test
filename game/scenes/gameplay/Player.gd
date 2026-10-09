@@ -63,6 +63,14 @@ var _approach_offset := Vector2.ZERO
 # SIGNALS & DEPENDENCY INJECTION
 # ============================================================
 
+var _haptics: HapticsManager
+
+func inject_services(registry: Node) -> void:
+	if not registry:
+		return
+	super.inject_services(registry)
+	_haptics = registry.get_service(&"haptics") as HapticsManager
+
 func _on_ready() -> void:
 	if _bus:
 		setup(_bus)
@@ -225,11 +233,14 @@ func _update_tilt(delta: float) -> void:
 	visual.rotation = lerp_angle(visual.rotation, target, 1.0 - exp(-k * delta))
 
 func _get_haptics() -> HapticsManager:
-	if not is_inside_tree():
-		return null
-	var registry: Node = get_tree().root.get_node_or_null("ServiceRegistry") if get_tree() and get_tree().root else null
-	if registry and registry.has_method("get_service"):
-		return registry.get_service(&"haptics") as HapticsManager
+	if _haptics and is_instance_valid(_haptics):
+		return _haptics
+	var main_loop := Engine.get_main_loop()
+	if main_loop is SceneTree and main_loop.root:
+		var registry: Node = main_loop.root.get_node_or_null("ServiceRegistry")
+		if registry and registry.has_method("get_service"):
+			_haptics = registry.get_service(&"haptics") as HapticsManager
+			return _haptics
 	return null
 
 

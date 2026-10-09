@@ -347,6 +347,8 @@ static func get_entry(id: String) -> Dictionary:
 			id = "goal"
 		"gear_rode":
 			id = "gear_rod"
+		"booster_chain":
+			id = "booster"
 	if _registry.has(id):
 		return _registry[id]
 	if _fallback_objects.has(id):
@@ -355,7 +357,7 @@ static func get_entry(id: String) -> Dictionary:
 
 static func has_object(id: String) -> bool:
 	match id:
-		"obs_1", "obs_2", "win_area", "win_area_node", "gear_rode":
+		"obs_1", "obs_2", "win_area", "win_area_node", "gear_rode", "booster_chain":
 			return true
 	return _registry.has(id) or _fallback_objects.has(id)
 

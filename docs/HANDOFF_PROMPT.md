@@ -35,11 +35,11 @@ Please confirm you have reviewed the documentation, acknowledge the current proj
 
 ### Core Active Source Files:
 - **Obstacle Controllers**:
-  - [`game/scenes/Obstacles/MovingGearController.gd`](file:///e:/Test/Test/game/scenes/Obstacles/MovingGearController.gd)
-  - [`game/scenes/Obstacles/PathMovingGearController.gd`](file:///e:/Test/Test/game/scenes/Obstacles/PathMovingGearController.gd)
-  - [`game/scenes/Obstacles/SpikeController.gd`](file:///e:/Test/Test/game/scenes/Obstacles/SpikeController.gd)
-  - [`game/scenes/Obstacles/BoosterController.gd`](file:///e:/Test/Test/game/scenes/Obstacles/BoosterController.gd)
-  - [`game/scenes/Obstacles/FallingStoneController.gd`](file:///e:/Test/Test/game/scenes/Obstacles/FallingStoneController.gd)
+  - [`game/scenes/obstacles/MovingGearController.gd`](file:///e:/Test/Test/game/scenes/obstacles/MovingGearController.gd)
+  - [`game/scenes/obstacles/PathMovingGearController.gd`](file:///e:/Test/Test/game/scenes/obstacles/PathMovingGearController.gd)
+  - [`game/scenes/obstacles/SpikeController.gd`](file:///e:/Test/Test/game/scenes/obstacles/SpikeController.gd)
+  - [`game/scenes/obstacles/BoosterController.gd`](file:///e:/Test/Test/game/scenes/obstacles/BoosterController.gd)
+  - [`game/scenes/obstacles/FallingStoneController.gd`](file:///e:/Test/Test/game/scenes/obstacles/FallingStoneController.gd)
 - **Level Editor Plugin**:
   - [`addons/zumpa_level_editor/level_editor.tscn`](file:///e:/Test/Test/addons/zumpa_level_editor/level_editor.tscn)
   - [`addons/zumpa_level_editor/level_editor.gd`](file:///e:/Test/Test/addons/zumpa_level_editor/level_editor.gd)

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dccu8u74rggu4" path="res://addons/zumpa_level_editor/level_editor.gd" id="1_ed"]
 [ext_resource type="Script" uid="uid://dyjituoi57nhl" path="res://addons/zumpa_level_editor/level_canvas.gd" id="2_cv"]
 [ext_resource type="Script" uid="uid://cg2g0w41okk2a" path="res://addons/zumpa_level_editor/atlas_palette_picker.gd" id="4_ap"]
-[ext_resource type="Texture2D" uid="uid://cw24ethkpyv6o" path="res://game/assets/sprites/atlases/tiles/Tile3.png" id="4_vy7eb"]
+[ext_resource type="Texture2D" uid="uid://j26fapbcmhsg" path="res://game/assets/sprites/atlases/tiles/Tile3.png" id="4_vy7eb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vy7eb"]
 atlas = ExtResource("4_vy7eb")

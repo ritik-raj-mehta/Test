@@ -5,15 +5,15 @@ This document contains a comprehensive record of all scenes, scripts, level edit
 ---
 
 ## 1. 🗑️ Deleted Scenes & Cleaned Files
-- **`res://game/scenes/Obstacles/Wall.tscn`**: Removed completely from the codebase to streamline obstacle architectures and eliminate redundant scene dependencies.
+- **`res://game/scenes/obstacles/Wall.tscn`**: Removed completely from the codebase to streamline obstacle architectures and eliminate redundant scene dependencies.
 - **Transient Test Assets**: Cleaned up all temporary test GDScripts and test scenes, ensuring no test files remain in the workspace.
 
 ---
 
 ## 2. 📝 Scene & Script Modifications
 
-### A. Moving Gear Obstacle & ZigZag Track System (`res://game/scenes/Obstacles/MovingGear.tscn`)
-* **Controller**: [`MovingGearController.gd`](file:///e:/Test/Test/game/scenes/Obstacles/MovingGearController.gd)
+### A. Moving Gear Obstacle & ZigZag Track System (`res://game/scenes/obstacles/MovingGear.tscn`)
+* **Controller**: [`MovingGearController.gd`](file:///e:/Test/Test/game/scenes/obstacles/MovingGearController.gd)
 * **Key Enhancements**:
   1. **Continuous Diagonal ZigZag Trajectory Generation**:
      - Generates diagonal zigzag track nodes (`Left -> Center -> Right -> Center -> Left ...`) using customizable diagonal angle (`zigzag_angle`: $5^\circ$ to $85^\circ$, default $45^\circ$), step height math ($\text{half\_w} \times \tan(\theta)$), and step levels (`zigzag_count`).
@@ -32,8 +32,8 @@ This document contains a comprehensive record of all scenes, scripts, level edit
   6. **Scale & Path Independence (`gear_scale`)**:
      - Resizing `gear_scale` modifies gear graphics sprite scale and collision radius (`CircleShape2D.radius`) without affecting zigzag track geometry or width.
 
-### B. Path Moving Gear Obstacle (`res://game/scenes/Obstacles/PathMovingGear.tscn`)
-* **Controller**: [`PathMovingGearController.gd`](file:///e:/Test/Test/game/scenes/Obstacles/PathMovingGearController.gd)
+### B. Path Moving Gear Obstacle (`res://game/scenes/obstacles/PathMovingGear.tscn`)
+* **Controller**: [`PathMovingGearController.gd`](file:///e:/Test/Test/game/scenes/obstacles/PathMovingGearController.gd)
 * **Key Enhancements**:
   1. **Uniform Gear Scale (`gear_scale`)**: Added a single scale multiplier that resizes all primary and pooled clone gears uniformly, updating sprite scale and physics collision shapes (`CircleShape2D.radius`) in 1:1 ratio.
   2. **Theme-Skinned Connecting Rods (`show_path_rods` & `rod_breadth`)**: Added rendering of theme-skinned connecting rods (`WorldThemeRegistry.gear_rod_texture`) along all perimeter path sides (Circle, Rectangle, Square, Triangle, Diamond).
@@ -67,10 +67,10 @@ This document contains a comprehensive record of all scenes, scripts, level edit
 
 | File Path | Status | Key Feature / Change |
 |---|---|---|
-| [`game/scenes/Obstacles/Wall.tscn`](file:///e:/Test/Test/game/scenes/Obstacles/Wall.tscn) | 🗑️ Deleted | Removed wall scene per project guidelines |
-| [`game/scenes/Obstacles/MovingGearController.gd`](file:///e:/Test/Test/game/scenes/Obstacles/MovingGearController.gd) | 📝 Modified | ZigZag trajectory generator, middle center nodes, every-node interval pause, start bottom/flip toggles, dynamic gear spacing math |
-| [`game/scenes/Obstacles/PathMovingGearController.gd`](file:///e:/Test/Test/game/scenes/Obstacles/PathMovingGearController.gd) | 📝 Modified | `gear_scale`, connecting theme rods, interval speed curves |
-| [`game/scenes/Obstacles/PathMovingGear.tscn`](file:///e:/Test/Test/game/scenes/Obstacles/PathMovingGear.tscn) | 📝 Modified | Gear node pooling and structure configuration |
+| [`game/scenes/obstacles/Wall.tscn`](file:///e:/Test/Test/game/scenes/obstacles/Wall.tscn) | 🗑️ Deleted | Removed wall scene per project guidelines |
+| [`game/scenes/obstacles/MovingGearController.gd`](file:///e:/Test/Test/game/scenes/obstacles/MovingGearController.gd) | 📝 Modified | ZigZag trajectory generator, middle center nodes, every-node interval pause, start bottom/flip toggles, dynamic gear spacing math |
+| [`game/scenes/obstacles/PathMovingGearController.gd`](file:///e:/Test/Test/game/scenes/obstacles/PathMovingGearController.gd) | 📝 Modified | `gear_scale`, connecting theme rods, interval speed curves |
+| [`game/scenes/obstacles/PathMovingGear.tscn`](file:///e:/Test/Test/game/scenes/obstacles/PathMovingGear.tscn) | 📝 Modified | Gear node pooling and structure configuration |
 | [`addons/zumpa_level_editor/level_editor.tscn`](file:///e:/Test/Test/addons/zumpa_level_editor/level_editor.tscn) | 📝 Modified | Consolidated left panel into Inspector; added Interval & ZigZag UI rows |
 | [`addons/zumpa_level_editor/level_editor.gd`](file:///e:/Test/Test/addons/zumpa_level_editor/level_editor.gd) | 📝 Modified | Inspector reordering, top bar toggles, ZigZag track UI controls & serialization |
 | [`addons/zumpa_level_editor/atlas_palette_picker.gd`](file:///e:/Test/Test/addons/zumpa_level_editor/atlas_palette_picker.gd) | 📝 Modified | Multi-tile palette selection logic |

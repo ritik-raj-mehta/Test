@@ -5,12 +5,17 @@ extends RefCounted
 static var current_level_data: LevelData = null
 static var active_level_path: String = "res://game/assets/levels/level_001.tres"
 
+static var _save_manager_cache: SaveManager = null
+
 static func _get_save_manager() -> SaveManager:
+	if _save_manager_cache and is_instance_valid(_save_manager_cache):
+		return _save_manager_cache
 	var main_loop := Engine.get_main_loop()
 	if main_loop is SceneTree and main_loop.root:
 		var registry: Node = main_loop.root.get_node_or_null("ServiceRegistry")
 		if registry and registry.has_method("get_service"):
-			return registry.get_service(&"save") as SaveManager
+			_save_manager_cache = registry.get_service(&"save") as SaveManager
+			return _save_manager_cache
 	return null
 
 static func set_active_level_path(path: String) -> void:

@@ -107,6 +107,7 @@ func _register_services() -> void:
 	registry.register(&"player_progress", player_progress)
 	registry.register(&"scene", scene)
 	registry.register(&"ui", ui)
+	registry.register(&"backdrop", backdrop)
 	
 
 func _instantiate_and_add(script_path: String, node_name: String) -> Node:

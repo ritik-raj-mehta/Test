@@ -126,6 +126,7 @@ func inject_services(registry: Node) -> void:
 
 
 func _on_ready() -> void:
+	set_process(true)
 	# Connect unlock buttons
 	_on_press(_equip_button, _on_unlock_equip)
 	_on_press(_continue_button, _on_unlock_continue)
