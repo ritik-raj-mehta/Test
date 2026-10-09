@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://4x1sfc5by0yq" path="res://icon.svg" id="1_tex"]
 [ext_resource type="Texture2D" uid="uid://4l8fuwt6uylo" path="res://game/assets/sprites/single/Panels/TapTapPanel.png" id="2_ok5le"]
-[ext_resource type="Script" uid="uid://2i0q241na2r" path="res://game/scenes/ui/hfw/TapTapPopup.gd" id="2_scr"]
+[ext_resource type="Script" uid="uid://c8a40r8yyoowg" path="res://game/scenes/ui/hfw/TapTapPopup.gd" id="2_scr"]
 [ext_resource type="PackedScene" uid="uid://8tb47baum5hu" path="res://game/scenes/ui/components/CharacterView.tscn" id="3_pac"]
 [ext_resource type="Texture2D" uid="uid://tt1aivwu1ejl" path="res://game/assets/sprites/Fonts/Tap Tap.png" id="4_ok5le"]
 [ext_resource type="PackedScene" uid="uid://dlgg04c5t1o3" path="res://game/scenes/ui/components/SkinProgress.tscn" id="4_pac"]

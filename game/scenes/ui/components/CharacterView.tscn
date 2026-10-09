@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://8tb47baum5hu"]
 
-[ext_resource type="Script" uid="uid://dj73xq2d5a6ih" path="res://game/scenes/ui/components/CharacterView.gd" id="1_scr"]
+[ext_resource type="Script" uid="uid://ck2ia54cxpmfn" path="res://game/scenes/ui/components/CharacterView.gd" id="1_scr"]
 [ext_resource type="Texture2D" uid="uid://baoc52omuthkq" path="res://game/assets/sprites/single/ui/character.png" id="2_wf35u"]
 [ext_resource type="Texture2D" uid="uid://tdufvch8bohi" path="res://game/assets/sprites/single/ui/DailyMissionLockIcon.png" id="3_3cqo0"]
 [ext_resource type="Texture2D" uid="uid://cm02bi0r1olax" path="res://game/assets/sprites/single/ui/Characters/char1.png" id="3_640me"]

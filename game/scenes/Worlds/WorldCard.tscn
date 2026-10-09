@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c782i88d10f30"]
 
-[ext_resource type="Script" uid="uid://cvpp3nn02cxp7" path="res://game/scenes/Worlds/WorldCard.gd" id="1_wcs"]
+[ext_resource type="Script" uid="uid://u8s55sfx2rpf" path="res://game/scenes/Worlds/WorldCard.gd" id="1_wcs"]
 [ext_resource type="Texture2D" uid="uid://m7ha37km2etj" path="res://game/assets/sprites/single/ui/World Card/World (1).png" id="2_ujxq0"]
 
 [node name="WorldCard" type="Control" unique_id=264362281 node_paths=PackedStringArray("_preview", "_number", "_name")]

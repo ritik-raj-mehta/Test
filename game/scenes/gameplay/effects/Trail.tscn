@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dw1tbdikujs75"]
 
-[ext_resource type="Script" path="res://game/scripts/controllers/effects/PlayerTrail.gd" id="1_dahur"]
+[ext_resource uid="uid://bqe35ayt5og6r" type="Script" path="res://game/scripts/controllers/effects/PlayerTrail.gd" id="1_dahur"]
 
 [sub_resource type="Curve" id="Curve_ntjbb"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.99999994, 0), 0.0, 0.0, 0, 0]

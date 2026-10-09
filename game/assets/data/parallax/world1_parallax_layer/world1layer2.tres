@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="ParallaxLayerData" format=3 uid="uid://bg3tn4lkxsv4q"]
 
-[ext_resource type="Script" uid="uid://oyfhexd111du" path="res://game/scripts/data/ParallaxLayerData.gd" id="1_u7xyi"]
+[ext_resource type="Script" uid="uid://bljskvhrii41" path="res://game/scripts/data/ParallaxLayerData.gd" id="1_u7xyi"]
 [ext_resource type="Texture2D" uid="uid://bvb6v2ibxif2p" path="res://game/assets/sprites/parallax/world_1/blue2.png" id="2_nn6nq"]
 
 [resource]

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bx44asopwnhnr"]
 
-[ext_resource type="Script" path="res://game/scenes/test/ManualTest.gd" id="1_25bc4"]
+[ext_resource uid="uid://dfega73r5sly1" type="Script" path="res://game/scenes/test/ManualTest.gd" id="1_25bc4"]
 
 [node name="ManualTest" type="Control" unique_id=1552848442]
 layout_mode = 3

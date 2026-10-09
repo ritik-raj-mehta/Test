@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://yx400vungere"]
 
-[ext_resource type="Script" uid="uid://nhrciyfpi562" path="res://game/scenes/Home/Home.gd" id="1_scr"]
+[ext_resource type="Script" uid="uid://cttr7gy0j8mf2" path="res://game/scenes/Home/Home.gd" id="1_scr"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="3_mnhq6"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/components/Clouds.tscn" id="4_pac"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="5_mnhq6"]

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bocg5a51t316l"]
 
-[ext_resource type="Script" uid="uid://chd1ewy5psg2l" path="res://game/scenes/ui/hfw/QuitPopup.gd" id="1_a4v14"]
+[ext_resource type="Script" uid="uid://d0qi32njwjjtv" path="res://game/scenes/ui/hfw/QuitPopup.gd" id="1_a4v14"]
 [ext_resource type="Texture2D" uid="uid://dfge57xjxnq56" path="res://game/assets/sprites/single/ui/Popup/social_popup.png" id="2_mrin3"]
 [ext_resource type="Texture2D" uid="uid://b8whabbodx8su" path="res://game/assets/sprites/single/ui/Button/No_Btn.png" id="3_a4v14"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_axs0x"]

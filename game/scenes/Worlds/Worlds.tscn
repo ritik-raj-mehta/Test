@@ -3,7 +3,7 @@
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_3b831"]
 [ext_resource type="Texture2D" uid="uid://crarc7ywgq8un" path="res://game/assets/sprites/single/ui/BGs/backgrounds.png" id="3_547ig"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="3_lfd2g"]
-[ext_resource type="Script" uid="uid://uek643mxu3fm" path="res://game/scenes/Worlds/Worlds.gd" id="3_scr"]
+[ext_resource type="Script" uid="uid://cof2nys46rtrg" path="res://game/scenes/Worlds/Worlds.gd" id="3_scr"]
 [ext_resource type="Texture2D" uid="uid://db8jly2hmwrgj" path="res://game/assets/sprites/single/ui/leftArrow.png" id="3_uua01"]
 [ext_resource type="PackedScene" uid="uid://d2b3n20q8x6ym" path="res://game/scenes/Worlds/LevelTile.tscn" id="4_pac"]
 [ext_resource type="Texture2D" uid="uid://buv2tvm4go7h6" path="res://game/assets/sprites/single/ui/numberTray.png" id="5_naaav"]

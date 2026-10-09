@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cdn4jvsxnu3bd"]
 
-[ext_resource type="Script" uid="uid://pi0cea1eler0" path="res://game/scenes/ui/hfw/NetworkPopup.gd" id="1_j1sve"]
+[ext_resource type="Script" uid="uid://fi1xrqb2s3hg" path="res://game/scenes/ui/hfw/NetworkPopup.gd" id="1_j1sve"]
 [ext_resource type="Texture2D" uid="uid://c6tojp8wakcrg" path="res://game/assets/sprites/single/ui/popup.png" id="2_rac61"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_p861o"]
 [ext_resource type="Texture2D" uid="uid://dqfpjs37l872m" path="res://game/assets/sprites/single/ui/blueBtn.png" id="4_eshjt"]

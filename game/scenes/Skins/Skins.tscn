@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bifh6tn11towv" path="res://game/scenes/ui/components/CharacterSkin_1.tscn" id="6_hs8q2"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="6_hywlw"]
 [ext_resource type="PackedScene" uid="uid://dm40ba5fbtwmj" path="res://game/scenes/ui/components/CharacterSkin_2.tscn" id="7_fs46r"]
-[ext_resource type="Script" uid="uid://dj5g1o4jl0qts" path="res://game/scenes/Skins/SkinCarousel.gd" id="8_car"]
+[ext_resource type="Script" uid="uid://byvsngbf08orr" path="res://game/scenes/Skins/SkinCarousel.gd" id="8_car"]
 [ext_resource type="PackedScene" uid="uid://rpn37gt2ukl3" path="res://game/scenes/ui/components/CharacterSkin_3.tscn" id="8_vls40"]
 [ext_resource type="PackedScene" uid="uid://cedncu07phqsj" path="res://game/scenes/ui/components/CharacterSkin_4.tscn" id="9_6r0gt"]
 [ext_resource type="PackedScene" uid="uid://d2v7qbu1wb74s" path="res://game/scenes/ui/components/CharacterSkin_5.tscn" id="10_qyhv8"]

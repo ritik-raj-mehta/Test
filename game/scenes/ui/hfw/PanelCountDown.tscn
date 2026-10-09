@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bpjblnky6w8br"]
 
-[ext_resource type="Script" uid="uid://i8h3oyfhfxxh" path="res://game/scenes/ui/hfw/PanelCountdown.gd" id="1_t4fkd"]
+[ext_resource type="Script" uid="uid://duemx2dd2x6ov" path="res://game/scenes/ui/hfw/PanelCountdown.gd" id="1_t4fkd"]
 [ext_resource type="Texture2D" uid="uid://cp72vgbajuvku" path="res://game/assets/sprites/single/ui/countdown.png" id="1_yewt7"]
 [ext_resource type="FontFile" uid="uid://d3tr41vk7r53g" path="res://game/assets/fonts/Fredoka-SemiBold.ttf" id="3_8k638"]
 [ext_resource type="Texture2D" uid="uid://c7feb60ywwpdd" path="res://game/assets/sprites/single/ui/fillcountdown.png" id="3_t4fkd"]

@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-ServiceRegistry="*uid://bjfmmcc4vuu44"
+ServiceRegistry="*res://game/autoloads/ServiceRegistry.gd"
 
 [display]
 

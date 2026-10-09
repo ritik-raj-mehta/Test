@@ -1,18 +1,18 @@
-[gd_scene format=3 uid="uid://b5kq74nnbxmjy"]
+[gd_scene load_steps=12 format=3 uid="uid://b5kq74nnbxmjy"]
 
-[ext_resource type="Texture2D" uid="uid://bxel875u6617l" path="res://game/assets/sprites/single/ui/LoadingBg.png" id="2_ylmfo"]
-[ext_resource type="Texture2D" uid="uid://dk4pgtdfj0tb0" path="res://game/assets/sprites/single/ui/Reff/Loading_Reff.png" id="3_emt6b"]
+[ext_resource type="Texture2D" uid="uid://bxel875u6617l" path="res://game/assets/sprites/single/ui/LoadingBg.png" id="1_ylmfo"]
+[ext_resource type="Texture2D" uid="uid://dk4pgtdfj0tb0" path="res://game/assets/sprites/single/ui/Reff/Loading_Reff.png" id="2_emt6b"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/components/Clouds.tscn" id="3_pac"]
-[ext_resource type="Script" uid="uid://b2hbt6g0o5g7h" path="res://game/scenes/loading/Loading.gd" id="4_scr"]
-[ext_resource type="Texture2D" uid="uid://cqc0y1epach0g" path="res://game/assets/sprites/single/ui/ZumpaJumpLogo.png" id="4_ylmfo"]
+[ext_resource type="Script" uid="uid://cbcuapmygo1va" path="res://game/scenes/loading/Loading.gd" id="4_scr"]
+[ext_resource type="Texture2D" uid="uid://cqc0y1epach0g" path="res://game/assets/sprites/single/ui/ZumpaJumpLogo.png" id="5_ylmfo"]
 [ext_resource type="Texture2D" uid="uid://u0eaiwupti1" path="res://game/assets/sprites/atlases/ui/UIButtons.png" id="6_rhkrw"]
 [ext_resource type="FontFile" uid="uid://n6n2r0mt7t5r" path="res://game/assets/fonts/TitanOne-Regular.ttf" id="7_18uoc"]
 
-[sub_resource type="Gradient" id="1_grad"]
+[sub_resource type="Gradient" id="Gradient_1"]
 colors = PackedColorArray(0.184, 0.608, 1, 1, 0.769, 0.918, 1, 1)
 
-[sub_resource type="GradientTexture2D" id="2_grad"]
-gradient = SubResource("1_grad")
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2"]
+gradient = SubResource("Gradient_1")
 fill_to = Vector2(0, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uvm4r"]
@@ -23,7 +23,7 @@ region = Rect2(2706, 200, 633, 82)
 atlas = ExtResource("6_rhkrw")
 region = Rect2(2714, 312, 626, 67)
 
-[node name="Loading" type="Control" unique_id=243706705]
+[node name="Loading" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,7 +32,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_scr")
 
-[node name="Background" type="TextureRect" parent="." unique_id=305460367]
+[node name="Background" type="TextureRect" parent="."]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -41,10 +41,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("2_grad")
+texture = SubResource("GradientTexture2D_2")
 expand_mode = 1
 
-[node name="Background2" type="TextureRect" parent="." unique_id=1931500429]
+[node name="Background2" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,12 +52,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_ylmfo")
+texture = ExtResource("1_ylmfo")
 expand_mode = 1
 
-[node name="Background3" type="TextureRect" parent="." unique_id=1906274943]
+[node name="Background3" type="TextureRect" parent="."]
 visible = false
-self_modulate = Color(1, 1, 1, 0.3529412)
+self_modulate = Color(1, 1, 1, 0.352941)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -65,14 +65,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("3_emt6b")
+texture = ExtResource("2_emt6b")
 expand_mode = 1
 
-[node name="Clouds" parent="." unique_id=184012311 instance=ExtResource("3_pac")]
+[node name="Clouds" parent="." instance=ExtResource("3_pac")]
 visible = false
 layout_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="." unique_id=1237614057]
+[node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -85,11 +85,11 @@ theme_override_constants/margin_top = 56
 theme_override_constants/margin_right = 48
 theme_override_constants/margin_bottom = 80
 
-[node name="Column" type="Control" parent="Margin" unique_id=906263529]
+[node name="Column" type="Control" parent="Margin"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="LogoHolder" type="Control" parent="Margin/Column" unique_id=153180716]
+[node name="LogoHolder" type="Control" parent="Margin/Column"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -99,7 +99,7 @@ offset_bottom = 200.0
 grow_horizontal = 2
 mouse_filter = 2
 
-[node name="Logo" type="TextureRect" parent="Margin/Column/LogoHolder" unique_id=938172087]
+[node name="Logo" type="TextureRect" parent="Margin/Column/LogoHolder"]
 custom_minimum_size = Vector2(700, 405)
 layout_mode = 1
 anchors_preset = 5
@@ -111,11 +111,11 @@ offset_right = 374.0
 offset_bottom = 474.0
 grow_horizontal = 2
 mouse_filter = 2
-texture = ExtResource("4_ylmfo")
+texture = ExtResource("5_ylmfo")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Control" type="Control" parent="Margin/Column" unique_id=505907607]
+[node name="Control" type="Control" parent="Margin/Column"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -129,7 +129,7 @@ offset_bottom = -344.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="LoadingBar" type="TextureProgressBar" parent="Margin/Column/Control" unique_id=116138595]
+[node name="LoadingBar" type="TextureProgressBar" parent="Margin/Column/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 1
@@ -149,15 +149,11 @@ size_flags_vertical = 4
 mouse_filter = 2
 max_value = 1.0
 step = 0.001
-stretch_margin_left = 22
-stretch_margin_top = 22
-stretch_margin_right = 22
-stretch_margin_bottom = 22
 texture_under = SubResource("AtlasTexture_uvm4r")
 texture_progress = SubResource("AtlasTexture_3f7wr")
 texture_progress_offset = Vector2(5, 8)
 
-[node name="LoadingLabel" type="Label" parent="Margin/Column/Control" unique_id=1837304063]
+[node name="LoadingLabel" type="Label" parent="Margin/Column/Control"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -171,8 +167,8 @@ offset_bottom = 121.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
-theme_override_colors/font_outline_color = Color(0.10980392, 0.3529412, 0.7058824, 1)
+theme_override_colors/font_shadow_color = Color(0.109804, 0.352941, 0.705882, 1)
+theme_override_colors/font_outline_color = Color(0.109804, 0.352941, 0.705882, 1)
 theme_override_constants/shadow_offset_x = 0
 theme_override_constants/shadow_offset_y = 1
 theme_override_constants/outline_size = 3

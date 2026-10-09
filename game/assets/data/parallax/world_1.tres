@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="ParallaxTheme" format=3 uid="uid://cvb0r0vcs30qn"]
 
-[ext_resource type="Script" uid="uid://oyfhexd111du" path="res://game/scripts/data/ParallaxLayerData.gd" id="1_83343"]
-[ext_resource type="Script" uid="uid://bjvova0ae7oef" path="res://game/scripts/data/ParallaxTheme.gd" id="1_d1hf8"]
+[ext_resource type="Script" uid="uid://bljskvhrii41" path="res://game/scripts/data/ParallaxLayerData.gd" id="1_83343"]
+[ext_resource type="Script" uid="uid://lk7ny14esgpc" path="res://game/scripts/data/ParallaxTheme.gd" id="1_d1hf8"]
 [ext_resource type="Resource" uid="uid://bwknnv7230vx8" path="res://game/assets/data/parallax/world1_parallax_layer/world1layer1.tres" id="2_rubbm"]
 [ext_resource type="Resource" uid="uid://bg3tn4lkxsv4q" path="res://game/assets/data/parallax/world1_parallax_layer/world1layer2.tres" id="3_6u4om"]
 [ext_resource type="Resource" uid="uid://bef8mci2yfqs7" path="res://game/assets/data/parallax/world1_parallax_layer/world1layer3.tres" id="4_3lnos"]
